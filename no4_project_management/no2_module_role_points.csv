@@ -1,0 +1,481 @@
+﻿Module,Sub-Module,User Story,Role,Construction Points,Operation Points
+User Management,身分驗證,登入,AI Engineer,0,0
+User Management,身分驗證,登入,App RD,0,0
+User Management,身分驗證,登入,Backend RD,50,2
+User Management,身分驗證,登入,Data Engineer,0,0
+User Management,身分驗證,登入,Marketing,0,0
+User Management,身分驗證,登入,Operations,0,0
+User Management,身分驗證,登入,PDM,30,1
+User Management,身分驗證,登入,PJM,20,1
+User Management,身分驗證,登入,QA,30,1
+User Management,身分驗證,登入,UI Designer,0,0
+User Management,身分驗證,登入,UX Designer,0,0
+User Management,身分驗證,登入,Web RD,0,0
+User Management,身分驗證,登出,AI Engineer,0,0
+User Management,身分驗證,登出,App RD,0,0
+User Management,身分驗證,登出,Backend RD,20,1
+User Management,身分驗證,登出,Data Engineer,0,0
+User Management,身分驗證,登出,Marketing,0,0
+User Management,身分驗證,登出,Operations,0,0
+User Management,身分驗證,登出,PDM,10,0
+User Management,身分驗證,登出,PJM,10,0
+User Management,身分驗證,登出,QA,10,0
+User Management,身分驗證,登出,UI Designer,0,0
+User Management,身分驗證,登出,UX Designer,0,0
+User Management,身分驗證,登出,Web RD,0,0
+User Management,身分驗證,首次登入初始化,AI Engineer,0,0
+User Management,身分驗證,首次登入初始化,App RD,0,0
+User Management,身分驗證,首次登入初始化,Backend RD,80,3
+User Management,身分驗證,首次登入初始化,Data Engineer,0,0
+User Management,身分驗證,首次登入初始化,Marketing,0,0
+User Management,身分驗證,首次登入初始化,Operations,0,0
+User Management,身分驗證,首次登入初始化,PDM,40,2
+User Management,身分驗證,首次登入初始化,PJM,20,1
+User Management,身分驗證,首次登入初始化,QA,40,2
+User Management,身分驗證,首次登入初始化,UI Designer,0,0
+User Management,身分驗證,首次登入初始化,UX Designer,0,0
+User Management,身分驗證,首次登入初始化,Web RD,0,0
+User Management,偏好設定,多語言,AI Engineer,0,0
+User Management,偏好設定,多語言,App RD,0,0
+User Management,偏好設定,多語言,Backend RD,30,1
+User Management,偏好設定,多語言,Data Engineer,0,0
+User Management,偏好設定,多語言,Marketing,0,0
+User Management,偏好設定,多語言,Operations,0,0
+User Management,偏好設定,多語言,PDM,20,1
+User Management,偏好設定,多語言,PJM,10,0
+User Management,偏好設定,多語言,QA,20,1
+User Management,偏好設定,多語言,UI Designer,0,0
+User Management,偏好設定,多語言,UX Designer,0,0
+User Management,偏好設定,多語言,Web RD,0,0
+User Management,偏好設定,多幣別,AI Engineer,0,0
+User Management,偏好設定,多幣別,App RD,0,0
+User Management,偏好設定,多幣別,Backend RD,30,1
+User Management,偏好設定,多幣別,Data Engineer,0,0
+User Management,偏好設定,多幣別,Marketing,0,0
+User Management,偏好設定,多幣別,Operations,0,0
+User Management,偏好設定,多幣別,PDM,20,1
+User Management,偏好設定,多幣別,PJM,10,0
+User Management,偏好設定,多幣別,QA,20,1
+User Management,偏好設定,多幣別,UI Designer,0,0
+User Management,偏好設定,多幣別,UX Designer,0,0
+User Management,偏好設定,多幣別,Web RD,0,0
+User Management,偏好設定,主題切換,AI Engineer,0,0
+User Management,偏好設定,主題切換,App RD,0,0
+User Management,偏好設定,主題切換,Backend RD,30,1
+User Management,偏好設定,主題切換,Data Engineer,0,0
+User Management,偏好設定,主題切換,Marketing,0,0
+User Management,偏好設定,主題切換,Operations,0,0
+User Management,偏好設定,主題切換,PDM,20,1
+User Management,偏好設定,主題切換,PJM,10,0
+User Management,偏好設定,主題切換,QA,20,1
+User Management,偏好設定,主題切換,UI Designer,0,0
+User Management,偏好設定,主題切換,UX Designer,0,0
+User Management,偏好設定,主題切換,Web RD,0,0
+Accounting App,交易與自動化,支出管理,AI Engineer,0,0
+Accounting App,交易與自動化,支出管理,App RD,180,3
+Accounting App,交易與自動化,支出管理,Backend RD,30,1
+Accounting App,交易與自動化,支出管理,Data Engineer,0,0
+Accounting App,交易與自動化,支出管理,Marketing,0,5
+Accounting App,交易與自動化,支出管理,Operations,0,0
+Accounting App,交易與自動化,支出管理,PDM,150,3
+Accounting App,交易與自動化,支出管理,PJM,90,2
+Accounting App,交易與自動化,支出管理,QA,50,1
+Accounting App,交易與自動化,支出管理,UI Designer,240,4
+Accounting App,交易與自動化,支出管理,UX Designer,160,3
+Accounting App,交易與自動化,支出管理,Web RD,0,0
+Accounting App,交易與自動化,收入管理,AI Engineer,0,0
+Accounting App,交易與自動化,收入管理,App RD,180,3
+Accounting App,交易與自動化,收入管理,Backend RD,30,1
+Accounting App,交易與自動化,收入管理,Data Engineer,0,0
+Accounting App,交易與自動化,收入管理,Marketing,0,5
+Accounting App,交易與自動化,收入管理,Operations,0,0
+Accounting App,交易與自動化,收入管理,PDM,150,3
+Accounting App,交易與自動化,收入管理,PJM,90,2
+Accounting App,交易與自動化,收入管理,QA,50,1
+Accounting App,交易與自動化,收入管理,UI Designer,240,4
+Accounting App,交易與自動化,收入管理,UX Designer,160,3
+Accounting App,交易與自動化,收入管理,Web RD,0,0
+Accounting App,交易與自動化,轉帳管理,AI Engineer,0,0
+Accounting App,交易與自動化,轉帳管理,App RD,250,3
+Accounting App,交易與自動化,轉帳管理,Backend RD,40,1
+Accounting App,交易與自動化,轉帳管理,Data Engineer,0,0
+Accounting App,交易與自動化,轉帳管理,Marketing,0,5
+Accounting App,交易與自動化,轉帳管理,Operations,0,0
+Accounting App,交易與自動化,轉帳管理,PDM,200,3
+Accounting App,交易與自動化,轉帳管理,PJM,120,2
+Accounting App,交易與自動化,轉帳管理,QA,70,1
+Accounting App,交易與自動化,轉帳管理,UI Designer,300,4
+Accounting App,交易與自動化,轉帳管理,UX Designer,200,3
+Accounting App,交易與自動化,轉帳管理,Web RD,0,0
+Accounting App,交易與自動化,定期交易,AI Engineer,0,0
+Accounting App,交易與自動化,定期交易,App RD,520,10
+Accounting App,交易與自動化,定期交易,Backend RD,80,2
+Accounting App,交易與自動化,定期交易,Data Engineer,0,0
+Accounting App,交易與自動化,定期交易,Marketing,0,10
+Accounting App,交易與自動化,定期交易,Operations,0,10
+Accounting App,交易與自動化,定期交易,PDM,310,8
+Accounting App,交易與自動化,定期交易,PJM,190,5
+Accounting App,交易與自動化,定期交易,QA,150,1
+Accounting App,交易與自動化,定期交易,UI Designer,200,10
+Accounting App,交易與自動化,定期交易,UX Designer,400,7
+Accounting App,交易與自動化,定期交易,Web RD,0,0
+Accounting App,資產管理,帳戶管理,AI Engineer,0,0
+Accounting App,資產管理,帳戶管理,App RD,180,3
+Accounting App,資產管理,帳戶管理,Backend RD,30,1
+Accounting App,資產管理,帳戶管理,Data Engineer,0,0
+Accounting App,資產管理,帳戶管理,Marketing,0,5
+Accounting App,資產管理,帳戶管理,Operations,0,0
+Accounting App,資產管理,帳戶管理,PDM,100,3
+Accounting App,資產管理,帳戶管理,PJM,60,2
+Accounting App,資產管理,帳戶管理,QA,50,1
+Accounting App,資產管理,帳戶管理,UI Designer,180,4
+Accounting App,資產管理,帳戶管理,UX Designer,120,3
+Accounting App,資產管理,帳戶管理,Web RD,0,0
+Accounting App,資產管理,類別管理,AI Engineer,0,0
+Accounting App,資產管理,類別管理,App RD,200,3
+Accounting App,資產管理,類別管理,Backend RD,30,1
+Accounting App,資產管理,類別管理,Data Engineer,0,0
+Accounting App,資產管理,類別管理,Marketing,0,5
+Accounting App,資產管理,類別管理,Operations,0,0
+Accounting App,資產管理,類別管理,PDM,110,3
+Accounting App,資產管理,類別管理,PJM,70,2
+Accounting App,資產管理,類別管理,QA,50,1
+Accounting App,資產管理,類別管理,UI Designer,210,4
+Accounting App,資產管理,類別管理,UX Designer,140,3
+Accounting App,資產管理,類別管理,Web RD,0,0
+Accounting App,資產管理,預設資料,AI Engineer,0,0
+Accounting App,資產管理,預設資料,App RD,115,2
+Accounting App,資產管理,預設資料,Backend RD,20,1
+Accounting App,資產管理,預設資料,Data Engineer,0,0
+Accounting App,資產管理,預設資料,Marketing,0,3
+Accounting App,資產管理,預設資料,Operations,0,0
+Accounting App,資產管理,預設資料,PDM,60,2
+Accounting App,資產管理,預設資料,PJM,40,1
+Accounting App,資產管理,預設資料,QA,30,1
+Accounting App,資產管理,預設資料,UI Designer,120,3
+Accounting App,資產管理,預設資料,UX Designer,80,2
+Accounting App,資產管理,預設資料,Web RD,0,0
+Accounting App,資產管理,多幣別支援,AI Engineer,0,0
+Accounting App,資產管理,多幣別支援,App RD,360,8
+Accounting App,資產管理,多幣別支援,Backend RD,50,1
+Accounting App,資產管理,多幣別支援,Data Engineer,0,0
+Accounting App,資產管理,多幣別支援,Marketing,0,10
+Accounting App,資產管理,多幣別支援,Operations,0,5
+Accounting App,資產管理,多幣別支援,PDM,210,5
+Accounting App,資產管理,多幣別支援,PJM,130,3
+Accounting App,資產管理,多幣別支援,QA,100,2
+Accounting App,資產管理,多幣別支援,UI Designer,270,6
+Accounting App,資產管理,多幣別支援,UX Designer,180,4
+Accounting App,資產管理,多幣別支援,Web RD,0,0
+Accounting App,資產管理,解除限制,AI Engineer,0,0
+Accounting App,資產管理,解除限制,App RD,100,5
+Accounting App,資產管理,解除限制,Backend RD,50,1
+Accounting App,資產管理,解除限制,Data Engineer,0,0
+Accounting App,資產管理,解除限制,Marketing,0,15
+Accounting App,資產管理,解除限制,Operations,0,20
+Accounting App,資產管理,解除限制,PDM,60,2
+Accounting App,資產管理,解除限制,PJM,40,1
+Accounting App,資產管理,解除限制,QA,40,1
+Accounting App,資產管理,解除限制,UI Designer,60,3
+Accounting App,資產管理,解除限制,UX Designer,40,2
+Accounting App,資產管理,解除限制,Web RD,0,0
+Accounting App,資料與同步,離線支援,AI Engineer,0,0
+Accounting App,資料與同步,離線支援,App RD,400,0
+Accounting App,資料與同步,離線支援,Backend RD,50,3
+Accounting App,資料與同步,離線支援,Data Engineer,0,0
+Accounting App,資料與同步,離線支援,Marketing,0,3
+Accounting App,資料與同步,離線支援,Operations,0,0
+Accounting App,資料與同步,離線支援,PDM,290,0
+Accounting App,資料與同步,離線支援,PJM,170,0
+Accounting App,資料與同步,離線支援,QA,100,2
+Accounting App,資料與同步,離線支援,UI Designer,540,12
+Accounting App,資料與同步,離線支援,UX Designer,360,8
+Accounting App,資料與同步,離線支援,Web RD,0,0
+Accounting App,資料與同步,雲端同步,AI Engineer,0,0
+Accounting App,資料與同步,雲端同步,App RD,2340,50
+Accounting App,資料與同步,雲端同步,Backend RD,300,15
+Accounting App,資料與同步,雲端同步,Data Engineer,0,0
+Accounting App,資料與同步,雲端同步,Marketing,0,20
+Accounting App,資料與同步,雲端同步,Operations,0,30
+Accounting App,資料與同步,雲端同步,PDM,960,10
+Accounting App,資料與同步,雲端同步,PJM,580,6
+Accounting App,資料與同步,雲端同步,QA,600,6
+Accounting App,資料與同步,雲端同步,UI Designer,100,15
+Accounting App,資料與同步,雲端同步,UX Designer,500,10
+Accounting App,資料與同步,雲端同步,Web RD,0,0
+Accounting App,資料與同步,資料匯入,AI Engineer,0,0
+Accounting App,資料與同步,資料匯入,App RD,200,0
+Accounting App,資料與同步,資料匯入,Backend RD,50,2
+Accounting App,資料與同步,資料匯入,Data Engineer,0,0
+Accounting App,資料與同步,資料匯入,Marketing,0,5
+Accounting App,資料與同步,資料匯入,Operations,0,5
+Accounting App,資料與同步,資料匯入,PDM,200,5
+Accounting App,資料與同步,資料匯入,PJM,120,3
+Accounting App,資料與同步,資料匯入,QA,60,1
+Accounting App,資料與同步,資料匯入,UI Designer,200,6
+Accounting App,資料與同步,資料匯入,UX Designer,500,4
+Accounting App,資料與同步,資料匯入,Web RD,0,0
+Accounting App,儀表板與體驗,首頁儀表板,AI Engineer,0,0
+Accounting App,儀表板與體驗,首頁儀表板,App RD,200,0
+Accounting App,儀表板與體驗,首頁儀表板,Backend RD,50,1
+Accounting App,儀表板與體驗,首頁儀表板,Data Engineer,0,0
+Accounting App,儀表板與體驗,首頁儀表板,Marketing,0,8
+Accounting App,儀表板與體驗,首頁儀表板,Operations,0,0
+Accounting App,儀表板與體驗,首頁儀表板,PDM,230,5
+Accounting App,儀表板與體驗,首頁儀表板,PJM,140,3
+Accounting App,儀表板與體驗,首頁儀表板,QA,60,1
+Accounting App,儀表板與體驗,首頁儀表板,UI Designer,600,7
+Accounting App,儀表板與體驗,首頁儀表板,UX Designer,200,4
+Accounting App,儀表板與體驗,首頁儀表板,Web RD,0,0
+Accounting App,儀表板與體驗,搜尋功能,AI Engineer,0,0
+Accounting App,儀表板與體驗,搜尋功能,App RD,100,0
+Accounting App,儀表板與體驗,搜尋功能,Backend RD,30,1
+Accounting App,儀表板與體驗,搜尋功能,Data Engineer,0,0
+Accounting App,儀表板與體驗,搜尋功能,Marketing,0,2
+Accounting App,儀表板與體驗,搜尋功能,Operations,0,0
+Accounting App,儀表板與體驗,搜尋功能,PDM,70,0
+Accounting App,儀表板與體驗,搜尋功能,PJM,40,0
+Accounting App,儀表板與體驗,搜尋功能,QA,30,1
+Accounting App,儀表板與體驗,搜尋功能,UI Designer,132,3
+Accounting App,儀表板與體驗,搜尋功能,UX Designer,88,2
+Accounting App,儀表板與體驗,搜尋功能,Web RD,0,0
+Accounting App,儀表板與體驗,多語言,AI Engineer,0,0
+Accounting App,儀表板與體驗,多語言,App RD,100,0
+Accounting App,儀表板與體驗,多語言,Backend RD,20,1
+Accounting App,儀表板與體驗,多語言,Data Engineer,0,0
+Accounting App,儀表板與體驗,多語言,Marketing,0,5
+Accounting App,儀表板與體驗,多語言,Operations,0,0
+Accounting App,儀表板與體驗,多語言,PDM,80,0
+Accounting App,儀表板與體驗,多語言,PJM,50,0
+Accounting App,儀表板與體驗,多語言,QA,30,1
+Accounting App,儀表板與體驗,多語言,UI Designer,150,3
+Accounting App,儀表板與體驗,多語言,UX Designer,100,2
+Accounting App,儀表板與體驗,多語言,Web RD,0,0
+Accounting App,儀表板與體驗,配色主題系統,AI Engineer,0,0
+Accounting App,儀表板與體驗,配色主題系統,App RD,250,0
+Accounting App,儀表板與體驗,配色主題系統,Backend RD,0,0
+Accounting App,儀表板與體驗,配色主題系統,Data Engineer,0,0
+Accounting App,儀表板與體驗,配色主題系統,Marketing,0,0
+Accounting App,儀表板與體驗,配色主題系統,Operations,0,0
+Accounting App,儀表板與體驗,配色主題系統,PDM,100,0
+Accounting App,儀表板與體驗,配色主題系統,PJM,60,0
+Accounting App,儀表板與體驗,配色主題系統,QA,100,0
+Accounting App,儀表板與體驗,配色主題系統,UI Designer,300,0
+Accounting App,儀表板與體驗,配色主題系統,UX Designer,150,0
+Accounting App,儀表板與體驗,配色主題系統,Web RD,0,0
+Accounting App,儀表板與體驗,主題切換介面,AI Engineer,0,0
+Accounting App,儀表板與體驗,主題切換介面,App RD,100,0
+Accounting App,儀表板與體驗,主題切換介面,Backend RD,0,0
+Accounting App,儀表板與體驗,主題切換介面,Data Engineer,0,0
+Accounting App,儀表板與體驗,主題切換介面,Marketing,0,0
+Accounting App,儀表板與體驗,主題切換介面,Operations,0,0
+Accounting App,儀表板與體驗,主題切換介面,PDM,0,0
+Accounting App,儀表板與體驗,主題切換介面,PJM,0,0
+Accounting App,儀表板與體驗,主題切換介面,QA,50,0
+Accounting App,儀表板與體驗,主題切換介面,UI Designer,150,0
+Accounting App,儀表板與體驗,主題切換介面,UX Designer,50,0
+Accounting App,儀表板與體驗,主題切換介面,Web RD,0,0
+Accounting App,儀表板與體驗,新增配色主題,AI Engineer,0,0
+Accounting App,儀表板與體驗,新增配色主題,App RD,30,0
+Accounting App,儀表板與體驗,新增配色主題,Backend RD,0,0
+Accounting App,儀表板與體驗,新增配色主題,Data Engineer,0,0
+Accounting App,儀表板與體驗,新增配色主題,Marketing,0,0
+Accounting App,儀表板與體驗,新增配色主題,Operations,0,0
+Accounting App,儀表板與體驗,新增配色主題,PDM,0,0
+Accounting App,儀表板與體驗,新增配色主題,PJM,0,0
+Accounting App,儀表板與體驗,新增配色主題,QA,40,0
+Accounting App,儀表板與體驗,新增配色主題,UI Designer,80,0
+Accounting App,儀表板與體驗,新增配色主題,UX Designer,0,0
+Accounting App,儀表板與體驗,新增配色主題,Web RD,0,0
+Accounting App,儀表板與體驗,序號驗證,AI Engineer,0,0
+Accounting App,儀表板與體驗,序號驗證,App RD,100,0
+Accounting App,儀表板與體驗,序號驗證,Backend RD,80,5
+Accounting App,儀表板與體驗,序號驗證,Data Engineer,0,0
+Accounting App,儀表板與體驗,序號驗證,Marketing,0,5
+Accounting App,儀表板與體驗,序號驗證,Operations,0,10
+Accounting App,儀表板與體驗,序號驗證,PDM,60,2
+Accounting App,儀表板與體驗,序號驗證,PJM,40,1
+Accounting App,儀表板與體驗,序號驗證,QA,60,1
+Accounting App,儀表板與體驗,序號驗證,UI Designer,0,0
+Accounting App,儀表板與體驗,序號驗證,UX Designer,40,0
+Accounting App,儀表板與體驗,序號驗證,Web RD,0,0
+Accounting App,儀表板與體驗,序號兌換,AI Engineer,0,0
+Accounting App,儀表板與體驗,序號兌換,App RD,100,0
+Accounting App,儀表板與體驗,序號兌換,Backend RD,30,1
+Accounting App,儀表板與體驗,序號兌換,Data Engineer,0,0
+Accounting App,儀表板與體驗,序號兌換,Marketing,0,8
+Accounting App,儀表板與體驗,序號兌換,Operations,0,3
+Accounting App,儀表板與體驗,序號兌換,PDM,50,0
+Accounting App,儀表板與體驗,序號兌換,PJM,30,0
+Accounting App,儀表板與體驗,序號兌換,QA,50,1
+Accounting App,儀表板與體驗,序號兌換,UI Designer,120,2
+Accounting App,儀表板與體驗,序號兌換,UX Designer,80,1
+Accounting App,儀表板與體驗,序號兌換,Web RD,0,0
+Accounting App,儀表板與體驗,序號管理,AI Engineer,0,0
+Accounting App,儀表板與體驗,序號管理,App RD,0,0
+Accounting App,儀表板與體驗,序號管理,Backend RD,0,0
+Accounting App,儀表板與體驗,序號管理,Data Engineer,0,0
+Accounting App,儀表板與體驗,序號管理,Marketing,0,5
+Accounting App,儀表板與體驗,序號管理,Operations,0,8
+Accounting App,儀表板與體驗,序號管理,PDM,20,1
+Accounting App,儀表板與體驗,序號管理,PJM,10,1
+Accounting App,儀表板與體驗,序號管理,QA,0,0
+Accounting App,儀表板與體驗,序號管理,UI Designer,0,0
+Accounting App,儀表板與體驗,序號管理,UX Designer,0,0
+Accounting App,儀表板與體驗,序號管理,Web RD,0,0
+Web Console,高密度資料瀏覽,表格視圖,AI Engineer,0,0
+Web Console,高密度資料瀏覽,表格視圖,App RD,0,0
+Web Console,高密度資料瀏覽,表格視圖,Backend RD,400,22
+Web Console,高密度資料瀏覽,表格視圖,Data Engineer,0,80
+Web Console,高密度資料瀏覽,表格視圖,Marketing,0,40
+Web Console,高密度資料瀏覽,表格視圖,Operations,0,10
+Web Console,高密度資料瀏覽,表格視圖,PDM,580,12
+Web Console,高密度資料瀏覽,表格視圖,PJM,340,7
+Web Console,高密度資料瀏覽,表格視圖,QA,300,3
+Web Console,高密度資料瀏覽,表格視圖,UI Designer,800,33
+Web Console,高密度資料瀏覽,表格視圖,UX Designer,300,22
+Web Console,高密度資料瀏覽,表格視圖,Web RD,800,30
+Web Console,高密度資料瀏覽,進階匯出,AI Engineer,0,0
+Web Console,高密度資料瀏覽,進階匯出,App RD,0,0
+Web Console,高密度資料瀏覽,進階匯出,Backend RD,120,6
+Web Console,高密度資料瀏覽,進階匯出,Data Engineer,0,20
+Web Console,高密度資料瀏覽,進階匯出,Marketing,0,8
+Web Console,高密度資料瀏覽,進階匯出,Operations,0,0
+Web Console,高密度資料瀏覽,進階匯出,PDM,220,5
+Web Console,高密度資料瀏覽,進階匯出,PJM,130,3
+Web Console,高密度資料瀏覽,進階匯出,QA,80,2
+Web Console,高密度資料瀏覽,進階匯出,UI Designer,330,13
+Web Console,高密度資料瀏覽,進階匯出,UX Designer,220,8
+Web Console,高密度資料瀏覽,進階匯出,Web RD,200,10
+Web Console,進階篩選與查詢,JQL 介面,AI Engineer,0,0
+Web Console,進階篩選與查詢,JQL 介面,App RD,0,0
+Web Console,進階篩選與查詢,JQL 介面,Backend RD,600,28
+Web Console,進階篩選與查詢,JQL 介面,Data Engineer,0,45
+Web Console,進階篩選與查詢,JQL 介面,Marketing,0,18
+Web Console,進階篩選與查詢,JQL 介面,Operations,0,10
+Web Console,進階篩選與查詢,JQL 介面,PDM,480,18
+Web Console,進階篩選與查詢,JQL 介面,PJM,280,11
+Web Console,進階篩選與查詢,JQL 介面,QA,250,2
+Web Console,進階篩選與查詢,JQL 介面,UI Designer,300,34
+Web Console,進階篩選與查詢,JQL 介面,UX Designer,500,23
+Web Console,進階篩選與查詢,JQL 介面,Web RD,500,20
+Web Console,進階篩選與查詢,視圖儲存,AI Engineer,0,0
+Web Console,進階篩選與查詢,視圖儲存,App RD,0,0
+Web Console,進階篩選與查詢,視圖儲存,Backend RD,120,6
+Web Console,進階篩選與查詢,視圖儲存,Data Engineer,0,8
+Web Console,進階篩選與查詢,視圖儲存,Marketing,0,4
+Web Console,進階篩選與查詢,視圖儲存,Operations,0,0
+Web Console,進階篩選與查詢,視圖儲存,PDM,160,0
+Web Console,進階篩選與查詢,視圖儲存,PJM,90,0
+Web Console,進階篩選與查詢,視圖儲存,QA,60,1
+Web Console,進階篩選與查詢,視圖儲存,UI Designer,210,7
+Web Console,進階篩選與查詢,視圖儲存,UX Designer,140,4
+Web Console,進階篩選與查詢,視圖儲存,Web RD,150,5
+Web Console,客製化報表,自訂維度,AI Engineer,0,0
+Web Console,客製化報表,自訂維度,App RD,0,0
+Web Console,客製化報表,自訂維度,Backend RD,600,28
+Web Console,客製化報表,自訂維度,Data Engineer,0,85
+Web Console,客製化報表,自訂維度,Marketing,0,42
+Web Console,客製化報表,自訂維度,Operations,0,10
+Web Console,客製化報表,自訂維度,PDM,620,18
+Web Console,客製化報表,自訂維度,PJM,380,11
+Web Console,客製化報表,自訂維度,QA,350,3
+Web Console,客製化報表,自訂維度,UI Designer,800,34
+Web Console,客製化報表,自訂維度,UX Designer,300,23
+Web Console,客製化報表,自訂維度,Web RD,800,30
+Web Console,客製化報表,報表匯出,AI Engineer,0,0
+Web Console,客製化報表,報表匯出,App RD,0,0
+Web Console,客製化報表,報表匯出,Backend RD,120,6
+Web Console,客製化報表,報表匯出,Data Engineer,0,15
+Web Console,客製化報表,報表匯出,Marketing,0,8
+Web Console,客製化報表,報表匯出,Operations,0,0
+Web Console,客製化報表,報表匯出,PDM,160,0
+Web Console,客製化報表,報表匯出,PJM,90,0
+Web Console,客製化報表,報表匯出,QA,60,1
+Web Console,客製化報表,報表匯出,UI Designer,210,7
+Web Console,客製化報表,報表匯出,UX Designer,140,4
+Web Console,客製化報表,報表匯出,Web RD,150,5
+AI Advisor,預測與診斷,現金流預測,AI Engineer,400,20
+AI Advisor,預測與診斷,現金流預測,App RD,0,0
+AI Advisor,預測與診斷,現金流預測,Backend RD,240,12
+AI Advisor,預測與診斷,現金流預測,Data Engineer,0,135
+AI Advisor,預測與診斷,現金流預測,Marketing,0,45
+AI Advisor,預測與診斷,現金流預測,Operations,0,0
+AI Advisor,預測與診斷,現金流預測,PDM,720,12
+AI Advisor,預測與診斷,現金流預測,PJM,430,7
+AI Advisor,預測與診斷,現金流預測,QA,1700,110
+AI Advisor,預測與診斷,現金流預測,UI Designer,210,7
+AI Advisor,預測與診斷,現金流預測,UX Designer,140,4
+AI Advisor,預測與診斷,現金流預測,Web RD,600,22
+AI Advisor,預測與診斷,健康評分,AI Engineer,200,10
+AI Advisor,預測與診斷,健康評分,App RD,0,0
+AI Advisor,預測與診斷,健康評分,Backend RD,120,6
+AI Advisor,預測與診斷,健康評分,Data Engineer,0,45
+AI Advisor,預測與診斷,健康評分,Marketing,0,18
+AI Advisor,預測與診斷,健康評分,Operations,0,0
+AI Advisor,預測與診斷,健康評分,PDM,450,0
+AI Advisor,預測與診斷,健康評分,PJM,270,0
+AI Advisor,預測與診斷,健康評分,QA,1100,55
+AI Advisor,預測與診斷,健康評分,UI Designer,138,7
+AI Advisor,預測與診斷,健康評分,UX Designer,92,4
+AI Advisor,預測與診斷,健康評分,Web RD,350,12
+AI Advisor,預測與診斷,AI 對話,AI Engineer,500,25
+AI Advisor,預測與診斷,AI 對話,App RD,0,0
+AI Advisor,預測與診斷,AI 對話,Backend RD,120,6
+AI Advisor,預測與診斷,AI 對話,Data Engineer,0,90
+AI Advisor,預測與診斷,AI 對話,Marketing,0,45
+AI Advisor,預測與診斷,AI 對話,Operations,0,0
+AI Advisor,預測與診斷,AI 對話,PDM,390,12
+AI Advisor,預測與診斷,AI 對話,PJM,230,7
+AI Advisor,預測與診斷,AI 對話,QA,600,58
+AI Advisor,預測與診斷,AI 對話,UI Designer,138,7
+AI Advisor,預測與診斷,AI 對話,UX Designer,92,4
+AI Advisor,預測與診斷,AI 對話,Web RD,600,22
+Macro Data,B2B 數據服務,市場儀表板,AI Engineer,1150,110
+Macro Data,B2B 數據服務,市場儀表板,App RD,0,0
+Macro Data,B2B 數據服務,市場儀表板,Backend RD,240,22
+Macro Data,B2B 數據服務,市場儀表板,Data Engineer,400,180
+Macro Data,B2B 數據服務,市場儀表板,Marketing,0,90
+Macro Data,B2B 數據服務,市場儀表板,Operations,0,50
+Macro Data,B2B 數據服務,市場儀表板,PDM,770,22
+Macro Data,B2B 數據服務,市場儀表板,PJM,460,13
+Macro Data,B2B 數據服務,市場儀表板,QA,400,10
+Macro Data,B2B 數據服務,市場儀表板,UI Designer,800,34
+Macro Data,B2B 數據服務,市場儀表板,UX Designer,300,23
+Macro Data,B2B 數據服務,市場儀表板,Web RD,600,20
+Macro Data,B2B 數據服務,競品分析,AI Engineer,1150,110
+Macro Data,B2B 數據服務,競品分析,App RD,0,0
+Macro Data,B2B 數據服務,競品分析,Backend RD,240,22
+Macro Data,B2B 數據服務,競品分析,Data Engineer,400,180
+Macro Data,B2B 數據服務,競品分析,Marketing,0,90
+Macro Data,B2B 數據服務,競品分析,Operations,0,50
+Macro Data,B2B 數據服務,競品分析,PDM,770,22
+Macro Data,B2B 數據服務,競品分析,PJM,460,13
+Macro Data,B2B 數據服務,競品分析,QA,400,10
+Macro Data,B2B 數據服務,競品分析,UI Designer,800,34
+Macro Data,B2B 數據服務,競品分析,UX Designer,300,23
+Macro Data,B2B 數據服務,競品分析,Web RD,600,20
+Macro Data,B2B 數據服務,總經 API,AI Engineer,1150,110
+Macro Data,B2B 數據服務,總經 API,App RD,0,0
+Macro Data,B2B 數據服務,總經 API,Backend RD,240,22
+Macro Data,B2B 數據服務,總經 API,Data Engineer,450,180
+Macro Data,B2B 數據服務,總經 API,Marketing,0,90
+Macro Data,B2B 數據服務,總經 API,Operations,0,50
+Macro Data,B2B 數據服務,總經 API,PDM,580,22
+Macro Data,B2B 數據服務,總經 API,PJM,350,13
+Macro Data,B2B 數據服務,總經 API,QA,500,10
+Macro Data,B2B 數據服務,總經 API,UI Designer,0,0
+Macro Data,B2B 數據服務,總經 API,UX Designer,0,0
+Macro Data,B2B 數據服務,總經 API,Web RD,950,58
+Macro Data,B2B 數據服務,隱私合規,AI Engineer,1150,110
+Macro Data,B2B 數據服務,隱私合規,App RD,0,0
+Macro Data,B2B 數據服務,隱私合規,Backend RD,240,22
+Macro Data,B2B 數據服務,隱私合規,Data Engineer,600,45
+Macro Data,B2B 數據服務,隱私合規,Marketing,0,45
+Macro Data,B2B 數據服務,隱私合規,Operations,0,100
+Macro Data,B2B 數據服務,隱私合規,PDM,410,22
+Macro Data,B2B 數據服務,隱私合規,PJM,240,13
+Macro Data,B2B 數據服務,隱私合規,QA,300,10
+Macro Data,B2B 數據服務,隱私合規,UI Designer,0,0
+Macro Data,B2B 數據服務,隱私合規,UX Designer,0,0
+Macro Data,B2B 數據服務,隱私合規,Web RD,240,22
