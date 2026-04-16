@@ -1,9 +1,4 @@
-# 外部服務 — 第三方 SaaS，不自建
-
----
-
-
-## LLM Provider — AI 推理服務
+# LLM Provider — AI 推理服務
 
 - **功能：**
     - 提供 LLM 推理 API，供 AI Advisor 使用
