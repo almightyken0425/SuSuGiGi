@@ -7,7 +7,6 @@
     - 作為 Delta batch sync 的雲端資料來源，確保付費使用者的跨裝置資料最終一致
 - **做法：**
     - App 一律讀取本地資料庫，採 Local-First 架構
-    - Firestore 僅作為 Tier 1+ 付費版使用者的備份與同步中心
     - App 嚴禁直接讀寫 Firestore 來驅動 UI，Auth 流程的必要檢查是唯一例外
     - Collections 對應 WatermelonDB 表格
       - accounts
