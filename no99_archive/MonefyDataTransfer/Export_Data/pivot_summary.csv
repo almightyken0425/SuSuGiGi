@@ -1,0 +1,151 @@
+﻿Account,Category,RecordType,Amount
+One,薪資,transaction,4159381.0
+One,轉入自 鎂薪,transfer,2321669.28
+One,補給,transaction,1597601.39
+One,轉入自 借錢,transfer,1391000.0
+One,轉入自 虛幣,transfer,410903.0
+One,轉入自 台股,transfer,221989.0
+One,轉入自 美股,transfer,179089.0
+One,轉入自 美幣,transfer,96368.0
+One,轉入自 Two,transfer,35000.0
+One,賭博,transaction,395.0
+One,轉出至 印鈔,transfer,-7165.0
+One,轉出至 日円,transfer,-11964.0
+One,機啪,transaction,-15018.0
+One,機暖,transaction,-18695.0
+One,借過,transaction,-23800.0
+One,頭暈,transaction,-24313.0
+One,公司,transaction,-29075.7
+One,屋伯,transaction,-30861.6
+One,轉出至 鎂薪,transfer,-31658.0
+One,玩玩,transaction,-39841.0
+One,機車,transaction,-39998.0
+One,機維,transaction,-41521.0
+One,汽啪,transaction,-41671.0
+One,講話,transaction,-55682.0
+One,苦口,transaction,-56479.0
+One,霧狀,transaction,-74818.84
+One,一起,transaction,-80663.9
+One,汽車,transaction,-87580.0
+One,豆漿,transaction,-98023.05
+One,轉出至 台股,transfer,-142514.0
+One,汽暖,transaction,-148449.0
+One,有益,transaction,-152002.69
+One,保險,transaction,-195714.0
+One,寶包,transaction,-230975.0
+One,轉出至 虛幣,transfer,-243374.0
+One,帳單,transaction,-279984.66
+One,遮羞,transaction,-306414.0
+One,孝親,transaction,-351670.75
+One,熊仔,transaction,-410100.15
+One,睡覺,transaction,-412000.0
+One,五金,transaction,-418877.46
+One,該死,transaction,-454235.71
+One,轉出至 借錢,transfer,-923508.0
+One,增肥,transaction,-1094279.8
+One,轉出至 婚禮,transfer,-1121206.0
+One,轉出至 Two,transfer,-1228411.36
+One,轉出至 美幣,transfer,-1304363.0
+Two,轉入自 One,transfer,1228411.36
+Two,補給,transaction,921783.0
+Two,賭博,transaction,30.0
+Two,機啪,transaction,-90.0
+Two,豆漿,transaction,-254.0
+Two,寶包,transaction,-400.0
+Two,有益,transaction,-720.0
+Two,保險,transaction,-857.0
+Two,金莎,transaction,-1000.0
+Two,孝親,transaction,-3820.0
+Two,帳單,transaction,-4127.0
+Two,頭暈,transaction,-4945.0
+Two,借過,transaction,-5200.0
+Two,遮羞,transaction,-6321.0
+Two,一起,transaction,-7394.0
+Two,講話,transaction,-10920.0
+Two,屋伯,transaction,-14898.0
+Two,苦口,transaction,-18432.0
+Two,熊仔,transaction,-18720.0
+Two,轉出至 印鈔,transfer,-24014.0
+Two,轉出至 One,transfer,-35000.0
+Two,溜扣,transaction,-42439.0
+Two,汽暖,transaction,-50217.0
+Two,汽啪,transaction,-50652.0
+Two,汽車,transaction,-80312.0
+Two,五金,transaction,-280528.0
+Two,該死,transaction,-282899.03
+Two,睡覺,transaction,-514722.0
+Two,增肥,transaction,-758162.33
+借錢,轉入自 One,transfer,923508.0
+借錢,帳單,transaction,-125504.0
+借錢,轉出至 One,transfer,-1391000.0
+印鈔,轉入自 Two,transfer,11843366.59
+印鈔,轉入自 美幣,transfer,4434000.0
+印鈔,轉入自 One,transfer,3535029.42
+印鈔,機啪,transaction,-2000.0
+印鈔,寶包,transaction,-7000.0
+印鈔,汽暖,transaction,-17000.0
+印鈔,汽啪,transaction,-25000.0
+印鈔,五金,transaction,-51500.0
+印鈔,頭暈,transaction,-257392.0
+印鈔,霧狀,transaction,-280000.0
+印鈔,講話,transaction,-500000.0
+印鈔,屋伯,transaction,-1660000.0
+印鈔,增肥,transaction,-8348764.0
+印鈔,該死,transaction,-8663740.0
+台股,轉入自 One,transfer,142514.0
+台股,賭博,transaction,97528.0
+台股,轉出至 One,transfer,-221989.0
+婚禮,轉入自 One,transfer,1121206.0
+婚禮,補給,transaction,347593.0
+婚禮,溜扣,transaction,-587406.0
+婚禮,金莎,transaction,-881393.0
+寶包,苦口,transaction,-1940.0
+日円,補給,transaction,77350.01
+日円,薪資,transaction,73742.0
+日円,轉入自 One,transfer,54999.99
+日円,霧狀,transaction,-660.0
+日円,遮羞,transaction,-3377.0
+日円,五金,transaction,-7200.0
+日円,寶包,transaction,-7223.0
+日円,熊仔,transaction,-7548.0
+日円,帳單,transaction,-9444.0
+日円,一起,transaction,-9910.0
+日円,轉出至 馬幣,transfer,-10000.0
+日円,該死,transaction,-11620.0
+日円,溜扣,transaction,-18400.0
+日円,增肥,transaction,-94764.0
+美幣,轉入自 One,transfer,45614.98
+美幣,轉入自 美股,transfer,3318.0
+美幣,補給,transaction,2034.0
+美幣,一起,transaction,-1.75
+美幣,溜扣,transaction,-50.0
+美幣,熊仔,transaction,-50.0
+美幣,轉出至 韓元,transfer,-150.0
+美幣,帳單,transaction,-235.85
+美幣,轉出至 印鈔,transfer,-300.0
+美幣,轉出至 魯幣,transfer,-300.0
+美幣,轉出至 One,transfer,-3290.4
+美幣,轉出至 美股,transfer,-45994.98
+美股,賭博,transaction,54352.02
+美股,轉入自 美幣,transfer,45994.98
+美股,轉出至 美幣,transfer,-3318.0
+美股,轉出至 One,transfer,-5706.0
+虛幣,轉入自 One,transfer,243374.0
+虛幣,薪資,transaction,112630.76
+虛幣,賭博,transaction,55863.24
+虛幣,帳單,transaction,-965.0
+虛幣,轉出至 One,transfer,-410903.0
+鎂薪,薪資,transaction,69055.8
+鎂薪,補給,transaction,4100.0
+鎂薪,轉入自 One,transfer,1014.54
+鎂薪,有益,transaction,-1000.0
+鎂薪,轉出至 One,transfer,-73170.34
+韓元,轉入自 美幣,transfer,203500.0
+韓元,帳單,transaction,-9000.0
+韓元,屋伯,transaction,-10000.0
+韓元,一起,transaction,-20300.0
+韓元,五金,transaction,-134000.0
+馬幣,轉入自 日円,transfer,300.0
+魯幣,轉入自 美幣,transfer,1107.4
+魯幣,豆漿,transaction,-5.0
+魯幣,溜扣,transaction,-1102.4
