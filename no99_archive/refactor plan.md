@@ -176,12 +176,12 @@ deleteSchedule(scheduleId, mode: 'THIS_INSTANCE' | 'FUTURE', targetInstanceId, i
 
 ---
 
-## R5：CurrencyRateList 缺少 LEVEL_0 管控 ⏸ BLOCKED ON R9
+## R5：CurrencyRateList 缺少 LEVEL_0 管控 ✅ DONE (2026-04-27)
 
 - **Spec 側：** `no16_preference_screen.md` 的匯率管理互動目前無 LEVEL 分流；補 LEVEL_0 → PaywallScreen 的分流邏輯
 - **Impl 側：** `PreferenceScreen.tsx` 的 Exchange Rate Management 入口直接導航至 CurrencyRateListScreen；加入付費牆分流判斷
 
-> **狀態：** 規劃凍結於 2026-04-24。R5 的 Impl 寫法必須走 `canUserPerformAction('manageCurrencyRate', ...)` 才能正確表達「LEVEL_0 一律禁止、無總數 fallback」語義；但 Impl 層的 `premiumLogic.ts` 仍是舊 API `checkPremiumAccess(userId, currentTier, requiredTier)`，其 fallback 邏輯會讓 LEVEL_0 帳戶<3 且類別<10 的使用者誤入匯率管理。等 R9 Impl 完成 API 轉換後，R5 方可依本章節 R5-b / R5-c 定義執行。
+> **狀態：** 2026-04-27 隨 R9 一同落地。Spec 側：`no17_subscription_gate_logic.md` 補第 9 個 actionId `manageCurrencyRate`（LEVEL_0 一律禁止）、`no16_preference_screen.md` 匯率管理入口加 LEVEL 分流呼叫 `canUserPerformAction('manageCurrencyRate')`。Impl 側：`PreferenceScreen.tsx` 匯率管理 onPress 改 async handler，禁止則導 PaywallScreen。Spec git commit `32738d9`、Impl git commit `b2788ae`，皆於 `feat/r9-action-id-authorization` branch 已 push。等待使用者 merge 兩層到 main。
 
 > **檔名更正：** 原寫 `no15_preference_screen.md`，實際檔名是 `no16_preference_screen.md`，匯率管理互動在 line 84-85。
 
@@ -354,12 +354,12 @@ R6 的 guard 形式一致（`if (!x) return;`）。
 
 ---
 
-## R7：updateSetting 無 Premium 判斷 ⏸ BLOCKED ON R9
+## R7：updateSetting 無 Premium 判斷 ✅ DONE (2026-04-27)
 
 - **Spec 側：** `no5_settings_management.md` 的 `updateUserPreferences` 無 LEVEL 分流；補「Premium 篩選」段落走 `canUserPerformAction('triggerCloudSync', ...)`，LEVEL_0 結束不寫 Firestore
 - **Impl 側：** `PreferenceContext.tsx` 的 `updateSetting` 無條件呼叫 `updateUserPreferences`（Firestore 寫入），不區分方案等級；加入 `currentTier < PlanTier.LEVEL_1` 提早 return，本地 DB 寫入保留不受影響
 
-> **狀態：** 規劃凍結於 2026-04-24。R7 的 Spec 改動須走 `canUserPerformAction('triggerCloudSync', ...)`（對齊 R9 已改的 CategoryEditorScreen / no17 spec 風格）；Impl 寫法會與 R9 Impl 的「呼叫點轉 actionId」任務交織。使用者指示凍結節奏與 R5 一致，等 R9 Impl 完成 API 轉換後，R7 方可依本章節 R7-b / R7-c 定義執行。R7 不受 R5 那種「`checkPremiumAccess` fallback 誤允許」風險影響（R7 Impl 直接比 tier 不經 `checkPremiumAccess`），純為節奏管理凍結。
+> **狀態：** 2026-04-27 隨 R9 一同落地。Spec 側：`no5_settings_management.md` 的 `updateUserPreferences` 補「Premium 篩選」段落（呼叫 `canUserPerformAction('triggerCloudSync')`、IF 禁止則結束）。Impl 側：`PreferenceContext.tsx` 的 `updateSetting` 在 Firestore 寫入前 gate `canUserPerformAction(currentTier, 'triggerCloudSync')`，LEVEL_0 直接 return；本地 DB 寫入保留。Spec git commit `32738d9`、Impl git commit `b2788ae`，皆於 `feat/r9-action-id-authorization` branch 已 push。等待使用者 merge 兩層到 main。
 
 ### R7-a. 上游層級審視結論（Product git）
 
@@ -524,13 +524,16 @@ R6 的 guard 形式一致（`if (!x) return;`）。
 
 ---
 
-## R9：LEVEL 授權檢查改為動作識別碼式 API
+## R9：LEVEL 授權檢查改為動作識別碼式 API ✅ DONE (2026-04-27)
+
+> **狀態：** 2026-04-27 執行完成。Spec git commit `32738d9`、Impl git commit `b2788ae`，皆於 `feat/r9-action-id-authorization` branch，subject 與 body 完全一致 `feat(premium): switch authorization to canUserPerformAction(actionId)`，已 push origin。同一 commit 解鎖 R5 + R7（兩者本身無單獨 branch 與 commit，併入此 R9 commit）。Spec 側 `no17_subscription_gate_logic.md` 共 9 個 actionId（含 R5 帶入的 `manageCurrencyRate`）；Impl 側 `premiumLogic.ts` 新介面 `canUserPerformAction(currentTier, actionId)` + 8 既有 caller 轉換 + 2 新增 caller（PreferenceScreen 匯率管理 / PreferenceContext.updateSetting）。`entitlements.ts` LEVEL_2 註解修正完成。`HomeScreen.tsx` dead import 順手清理。等待使用者 merge 兩層到 main。
 
 - **Spec 側：** 已完成
-  - `no17_subscription_gate_logic.md` 定義 `canUserPerformAction` 的 8 個動作識別碼與 LEVEL_0 規則
+  - `no17_subscription_gate_logic.md` 定義 `canUserPerformAction` 的 9 個動作識別碼與 LEVEL_0 規則（含 R5 帶入的 `manageCurrencyRate`）
   - 相關 screen spec 的 IF LEVEL_0 分支已改寫為呼叫此方法
   - `no6_premium_logic.md` 移除 `checkPremiumAccess`，授權判斷交由 `canUserPerformAction`
-  - **待 R5 解鎖時補完：** `no17_subscription_gate_logic.md` 需新增第 9 個 actionId `manageCurrencyRate`（LEVEL_0 禁止）；`no16_preference_screen.md` 匯率管理入口加 LEVEL 分流。詳見 R5-b。
+  - `no16_preference_screen.md` 匯率管理入口加 LEVEL 分流（R5 解鎖落地）
+  - `no5_settings_management.md` 的 `updateUserPreferences` 補 Premium 篩選段落（R7 解鎖落地）
 - **Impl 側：**
   - `premiumLogic.ts` 的 `checkPremiumAccess(userId, currentTier, requiredTier)` 改為 `canUserPerformAction(currentTier, actionId)`，介面不再接收 `requiredTier`，改以 `actionId` 決定查何種上限
   - 依 `actionId` 分支實作 8 種判斷：
