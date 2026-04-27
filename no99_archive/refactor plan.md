@@ -559,25 +559,30 @@ R6 的 guard 形式一致（`if (!x) return;`）。
 
 ---
 
-## R10：PostAuthLogic 雙向同步流程未實作
+## R10：PostAuthLogic 雙向同步流程未實作 ✅ DONE (2026-04-27)
+
+> **狀態：** 2026-04-27 執行完成。Impl git commit `a207f76` on `feat/r10-post-auth-bidirectional-sync`，subject `feat(auth): orchestrate post-auth bidirectional Settings sync`，已 merge 至 main。Spec 早已完成無改動。
 
 - **Spec 側：** 已完成
   - `no3_post_auth_logic.md` 定義 `handlePostAuth` 應依 Firestore `users/{uid}` 文件存在與否分派 `syncSettingsFromCloud` 或 `initializeNewUser`
 - **Impl 側：**
-  - `AuthContext.tsx` 登入後僅呼叫 `syncUserToFirestore`，缺少讀取 Firestore 用戶文件再分派的雙向流程
-  - `userService.ts` 的 `syncUserToFirestore` 是單向寫入，不執行 Last Write Wins 比對
-  - 需新增 `syncSettingsFromCloud`：讀取雲端 preferences 與 updatedAt，與本機 Settings 表 updatedOn 比對，遠端較新時覆寫本機
-  - 需新增 `initializeNewUser`：依裝置 Locale 決定預設值，建立本機 Users / Settings 記錄與預設分類帳戶；Premium 有效時建立雲端 `users/{uid}` 文件
-  - PreferenceContext 已透過 `subscribeToUser` 接收雲端變更，可作為部分基礎，但缺少登入時的「首次拉取」分派流程
+  - `userService.ts` 新增 4 個函式：`getUserDocument`（一次性讀 Firestore）、`syncSettingsFromCloud`（LWW 比對 remote.updatedAt vs local.updatedOn 覆寫本機）、`initializeNewUser`（idempotent，建本機 User/Settings 用 Locale 預設、呼叫 createInitialUserData seed、Premium 才建 Firestore 文件）、`handlePostAuth`（主分派）
+  - 新增 `src/database/helpers/createInitialUserData.ts`：建 1 個 cash account（用 Locale 預設幣別）+ 全部標準類別（StandardCategory.json）；不產交易
+  - 新增 `src/utils/localeDefaults.ts`：抽提 `detectDeviceLocaleDefaults()` helper（RNLocalize + Currency.json + Intl.DateTimeFormat）
+  - `AuthContext.tsx` 重構：移除 `syncUserToLocalDb` 內部 hardcoded Settings + `seedInitialData` 呼叫；移除無條件 `syncUserToFirestore` 呼叫；改為 `runPostAuth` orchestrator 從 `iapService.getAvailablePurchases` 直接讀 isPremium、呼叫 `handlePostAuth`、再 setUser
+  - 設計關鍵：AuthContext 不依賴 PremiumContext 取 isPremium（Provider 順序 Auth → Premium → Preference，AuthContext 是外層無法 useContext PremiumContext）；繞過此循環依賴方法為直接讀 iapService 模組級別 service
+  - PreferenceContext.subscribeToUser 保持不動，與 R10 共存：R10 處理登入瞬間首次拉取 LWW；subscribe 處理後續持續變更
 
 ---
 
-## R11：登出未清除 Premium 快取與每日配額計數
+## R11：登出未清除 Premium 快取與每日配額計數 ✅ DONE (2026-04-27)
+
+> **狀態：** 2026-04-27 執行完成。Impl git commit `9e318c0` on `feat/r11-logout-clear-quota`，subject `feat(auth): clear Firestore quota counters on logout`，已 merge 至 main。Spec 早已完成無改動。
 
 - **Spec 側：** 已完成
   - `no2_login_logout_logic.md` 定義 logout 應清除本地 Premium 快取狀態與每日 Firestore 讀寫計數
 - **Impl 側：**
-  - `AuthContext.tsx` 的 logout 流程僅呼叫 `signOut`，未清除本機 Premium tier 狀態與配額計數
-  - `PremiumContext.tsx` 雖在 user 變為 null 時會走 mockTier 清理，但未重置 `quotaService` 的計數
-  - 需於 logout 流程中呼叫 `quotaService.reset` 並清除 PremiumContext 的快取狀態
-  - 規格亦提及 `handleReLogin` 流程（重新登入時的處理路徑）需另行實作
+  - `AuthContext.tsx` 的 `signOut` 在 `firebaseSignOut` 之後、`setUser(null)` 之前呼叫 `await quotaService.reset()`，清零跨日 Firestore 讀寫計數
+  - PremiumContext 快取走 user→null implicit 清（line 77-79 既有）：因 Provider 順序 Auth 在外層，AuthContext 無法 useContext PremiumContext，implicit 清是唯一可行路徑
+  - `quotaService.ts` 的 `reset()` 註解從「Debug only」改為「logout 時呼叫」，正式化此用法
+  - **handleReLogin 留待後續：** Spec 另定義「同 user 重登 LWW vs 不同 user 提示清資料」流程；同 user 重登已由 R10 `handlePostAuth.syncSettingsFromCloud` 自然涵蓋；不同 user 切換需另外規劃 prev_user_id 持久化、Alert prompt、本機 wipe 策略，scope 屬獨立議題
