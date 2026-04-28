@@ -2,7 +2,9 @@
 
 # Logout / ReLogin / Firebase 同步生態系
 
-> **狀態：** 2026-04-27 完成 Phase 1 盤點與 R1-R8 規劃，候選清單記錄於此供後續挑選實作。每個 R 實際執行時各自開新 plan / Explore / branch，依新工作流（commit to feature branch + IDE Source Control Graph review）落地。
+> **狀態：** 2026-04-27 完成 Phase 1 盤點與 R1-R8 規劃，候選清單記錄於此供後續挑選實作。每個 R 實際執行時各自開新 plan 加 Explore 加 branch，依新工作流落地：commit 到 feature branch 後以 IDE Source Control Graph review。
+>
+> **2026-04-28 更新：** 拍板採用方案 B 三階段節奏。詳細流程見下方執行節奏 方案 B 一節。
 
 ## 盤點結論摘要
 
@@ -15,6 +17,33 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 | Firebase 通訊點錯誤通知策略 OK 嗎？                | **整體 OK**。前景跳 Alert（signIn / signOut / export / import / IAP purchase）；背景 silent（sync / quota / preference）。沒有重大「該跳沒跳」或「不該跳卻跳」 |
 | logout 前 backup 大量資料撞 quota 嗎？             | **會**。Daily 2000 writes 上限；5000 筆當日無法完成；無分日續傳。R1 決策後改走 CSV path 規避此問題                                                             |
 | ReLogin 拉全量會撞冷卻？反覆 logout/login 是攻擊？ | **5 分鐘冷卻 Spec 有 Impl 沒做**（漏洞 → R3）；**logout reset quota 等於繞過 daily limit**（漏洞 → R2，Round 1 R11 引入）                                      |
+
+---
+
+## 執行節奏 方案 B
+
+- **拍板：** 2026-04-28 採用方案 B
+- **R1 完整落地：**
+    - 範圍：Product git 與 Spec git 同 branch `feat/r1-cloud-architecture-decision`
+    - 多檔同步：cloud_sync 加 macro_data 加 analytics_pipeline 產品圖加 root value 立場文件加 subscription gate logic 規格
+    - 完成判準：兩 git merge to main，Spec ground truth 已更新
+- **R2-R8 重整：**
+    - 時機：R1 已 merge to main 之後
+    - branch：Product git `feat/r1-followup-refactor-plan-rework`
+    - 範圍：純改本檔，無 Spec 與 Impl 動作
+    - 校正內容：
+        - R2 加 R3 加 R7 加 R8 條目仍有效則不動
+        - R4 加 R6 wording 對齊新 entitlement 名稱 cloud_backup 加 multi_device_sync
+        - 衍生新 R 編號與位置：R-privacy-page 加 R-fullbackup-format 加 R-leveling-rework 三個 short-term
+        - 重畫執行順序建議表
+        - R-bigquery-pipeline 加 R-future-eu-rework 留 backlog 不編號
+    - 完成判準：本檔 merge to main，主序列 R 條目對齊 post-R1 Spec
+- **各 R 順序落地：**
+    - 依重整後序列每 session 一 R 一 branch
+    - 每 R 自帶 plan 加 Explore 加對應 git branch
+    - 多主題拆分：前一 R 完整 commit 加 merge 加 push 才開下一 R
+- **不採方案 A 理由：** R1 後 Spec 已變但 R2-R8 wording 仍舊；每 session 進場要重新對齊；衍生新 R 沒納入序列易遺忘
+- **不採方案 C 理由：** R1 Spec 落地細節有微調空間；paper-flow 用想像中的 post-R1 Spec 重整會與真實落地有落差
 
 ---
 
@@ -293,6 +322,8 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 ---
 
 ## 執行順序建議
+
+- **狀態：** 方案 B 各 R 順序落地的初版序列；待 R2-R8 重整 session 完成後依結果調整
 
 | Phase | R            | 說明                                             |
 | ----- | ------------ | ------------------------------------------------ |
