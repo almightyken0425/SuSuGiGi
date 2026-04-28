@@ -27,6 +27,7 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
     - 範圍：Product git 與 Spec git 同 branch `feat/r1-cloud-architecture-decision`
     - 多檔同步：cloud_sync 加 macro_data 加 analytics_pipeline 產品圖加 root value 立場文件加 subscription gate logic 規格
     - 完成判準：兩 git merge to main，Spec ground truth 已更新
+    - 狀態：已完成 2026-04-28；Product git 已 merge，Spec git 同步狀態未確認
 - **R2-R8 重整：**
     - 時機：R1 已 merge to main 之後
     - branch：Product git `feat/r1-followup-refactor-plan-rework`
@@ -49,6 +50,7 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 
 ## R1：雲端架構決策
 
+- **狀態：** 已完成 2026-04-28，Product git merge to main；Spec git 同步狀態未確認
 - 性質: 產品決策加上 Spec 層 entitlement 名稱拆解
 - impl 不動
 - 完整方案空間與五輪收斂歷程記錄於 R1 決策矩陣文件
