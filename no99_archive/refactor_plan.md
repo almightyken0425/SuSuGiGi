@@ -18,91 +18,192 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 
 ---
 
-## R1：雲端架構決策（Round 5 拍板）
+## R1：雲端架構決策
 
-**性質：** 產品決策 + Spec 層 entitlement 名稱拆解。impl 不動。完整方案空間與五輪收斂歷程見 `r1_decision_matrix.md`。
+- 性質: 產品決策加上 Spec 層 entitlement 名稱拆解
+- impl 不動
+- 完整方案空間與五輪收斂歷程記錄於 R1 決策矩陣文件
 
-**決策摘要：**
+---
 
-| 子題 | 拍板 |
-|------|------|
-| A 免費版跨裝置遷移 | A2 only：手動全量檔，user 自選 OS Share Intent 位置 |
-| E 個人化財務分析 | E2：後端 API 跑分析 |
-| L2 Preference 同步 | Firebase Firestore（全 user 享有） |
-| P 蒐集範圍 | P1：全 user 統一蒐集（含免費版） |
-| Q L3 儲存 | Q1：Firestore + BigQuery extension 鏡像 |
-| Q' BigQuery 啟動時機 | **延後啟動**，條件性 backlog |
-| S 法律基礎 | **opt-out UX-α**：不跳通知，Settings > Privacy 子頁可關 |
+### 子題拍板摘要
+
+- **A 免費版跨裝置遷移:**
+    - 採 A2 only
+    - 手動全量檔，user 自選 OS Share Intent 位置
+- **E 個人化財務分析:**
+    - 採 E2
+    - 後端 API 跑分析
+- **L2 Preference 同步:**
+    - 採 Firebase Firestore
+    - 全 user 享有
+- **P 蒐集範圍:**
+    - 採 P1
+    - 全 user 統一蒐集
+    - 含免費版
+- **Q L3 儲存:**
+    - 採 Q1
+    - Firestore 加 BigQuery extension 鏡像
+- **Q' BigQuery 啟動時機:**
+    - 採延後啟動
+    - 條件性 backlog
+- **S 法律基礎:**
+    - 採 opt-out UX-α
+    - 不跳通知
+    - Settings 之下 Privacy 子頁可關
+
+---
 
 ### 架構分層
 
-```
-[所有 user] (LEVEL_0 ~ LEVEL_3，預設 analyticsConsent=true)
-    │
-    ├──> L1 Firebase Auth                                    (登入)
-    │
-    ├──> L2 Firestore  users/{uid}/preferences               (主貨幣、主題、語言…，全 user 享有)
-    │
-    ├──> L3 Firestore  users/{uid}/{transactions,transfers,accounts,categories,...}
-    │       │                                                (全 user 寫入；analyticsConsent 不影響 Firestore 本身)
-    │       │
-    │       └──> [未啟動] BigQuery via firestore-bigquery-export extension
-    │              │     觸發條件擇一發生時 enable：
-    │              │       (a) E2 個人化分析功能要 ship
-    │              │       (b) macro_data.md B2B 變現要啟動
-    │              │       (c) LEVEL_3 AI 顧問要 ship
-    │              │     啟動時加 filter：where analyticsConsent == true
-    │              │
-    │              └──> [未啟動] 自建 analytics API
-    │
-    └──> L4 全量檔 by OS Share Intent (A2)
-            (所有 user，與 analyticsConsent 完全脫鉤；user 主動觸發)
-```
+- **L1 Firebase Auth:**
+    - 角色: 登入
+- **L2 Firestore preferences:**
+    - 路徑: `users/{uid}/preferences`
+    - 內容: 主貨幣與主題與語言
+    - 涵蓋: 全 user 享有
+- **L3 Firestore 業務集合:**
+    - 路徑: `users/{uid}/{transactions, transfers, accounts, categories, currency_rates, schedules}`
+    - 涵蓋: 全 user 寫入
+    - 與 analyticsConsent 解耦
+    - 鏡像至 BigQuery: 未啟動
+- **L3 BigQuery 鏡像 via firestore-bigquery-export extension:**
+    - 啟動時機: 延後啟動
+    - 啟動 filter: 只取 analyticsConsent 為 true
+    - 啟動觸發條件擇一發生:
+        - E2 個人化分析功能要 ship
+        - macro_data B2B 變現要啟動
+        - LEVEL_3 AI 顧問要 ship
+    - 後段自建 analytics API: 未啟動
+- **L4 全量檔走 OS Share Intent:**
+    - 對應 A2
+    - 涵蓋: 所有 user
+    - 與 analyticsConsent 完全脫鉤
+    - user 主動觸發
+
+---
 
 ### opt-out UX-α 流程
 
-1. 使用者下載、Google 登入、進主畫面（不跳同意對話框、登入頁無條款連結）
-2. 使用者建立時系統預設 `analyticsConsent = true`
-3. Settings > Privacy 子頁整合 4 項：條款 / 「資料分析貢獻」toggle（預設開）/ 「申請刪除歷史資料」/ 「我們蒐集了什麼」
-4. 關閉 toggle 後（BigQuery 啟動後才實際生效）：BigQuery extension filter 過濾，停止新蒐集；歷史資料採寬鬆派保留，user 可走刪除流程
+- **首次安裝段:**
+    - 使用者下載 App
+    - Google 登入
+    - 進主畫面
+    - 不跳同意對話框
+    - 登入頁與 onboarding 無條款連結
+- **預設 flag:**
+    - 使用者建立時 analyticsConsent 預設為 true
+- **Settings 之下 Privacy 子頁整合四項:**
+    - 條款
+    - 資料分析貢獻 toggle，預設開
+    - 申請刪除歷史資料連結
+    - 蒐集說明連結
+- **關閉 toggle 後行為:**
+    - BigQuery 啟動後才實際生效
+    - BigQuery extension filter 過濾，停止新蒐集
+    - 歷史資料採寬鬆派保留
+    - user 可走刪除流程
+
+---
 
 ### 服務使用清單
 
-| 服務 | 用途 | 狀態 |
-|------|------|------|
-| Firebase Auth | 登入 | 已用 |
-| Firestore | L2 preference + L3 記帳紀錄（全 user） | 已用，spec 需重新拆 entitlement |
-| OS Share Intent | L4 A2 全量檔自選位置 | 待 R-fullbackup-format 落地 |
-| BigQuery + firestore-bigquery-export extension | L3' analytics warehouse | **延後啟動**，待觸發條件 |
-| 自建 analytics API（Cloud Functions / Cloud Run） | E2 個人化分析、macro_data B2B | **延後啟動**，待 BigQuery 啟動後 |
-| Firebase Storage | 不用 | — |
-| Google Drive API | 不用 | — |
-| iCloud native 整合 | 不用 | — |
-| 同意對話框 | 不用（opt-out UX-α） | — |
+- **Firebase Auth:**
+    - 用途: 登入
+    - 狀態: 已用
+- **Firestore:**
+    - 用途: L2 preference 加 L3 記帳紀錄涵蓋全 user
+    - 狀態: 已用
+    - 後續: spec 需重新拆 entitlement
+- **OS Share Intent:**
+    - 用途: L4 A2 全量檔自選位置
+    - 狀態: 待 R-fullbackup-format 落地
+- **BigQuery 加 firestore-bigquery-export extension:**
+    - 用途: L3 鏡像分析 warehouse
+    - 狀態: 延後啟動
+- **自建 analytics API:**
+    - 部署於 Cloud Functions 或 Cloud Run
+    - 用途: E2 個人化分析與 macro_data B2B
+    - 狀態: 延後啟動
+- **Firebase Storage:**
+    - 不用
+- **Google Drive API:**
+    - 不用
+- **iCloud native 整合:**
+    - 不用
+- **同意對話框:**
+    - 不用，採 opt-out UX-α
+
+---
 
 ### 衍生新 R 排隊
 
-| 新 R | 內容 | 屬性 | 時程 |
-|------|------|------|------|
-| R-privacy-page | 新增 Settings > Privacy 子頁，整合條款 + toggle + 刪除請求 + 蒐集說明；toggle 同步 `analyticsConsent` 到 Firestore preferences；wording 用「我們將會」（因 BigQuery 延後）| 中 | short-term |
-| R-fullbackup-format | A2 全量檔格式（JSON ZIP，含 Settings + 所有 entity + referential mapping）；export 走 OS Share Intent | 中 | short-term |
-| R-leveling-rework | LEVEL_0 entitlement 拆 `cloud_backup` vs `multi_device_sync`；UI 隱藏 LEVEL_0 多裝置同步入口 | 小 | short-term |
-| R-bigquery-pipeline | firestore-bigquery-export extension + analyticsConsent filter；analytics API；含一次性 backfill 規劃 | 中 | conditional backlog |
-| R-future-eu-rework | 進歐美市場前：(1) opt-out 改為 opt-in 或地區切換、(2) 補登入頁/onboarding 條款連結 | 大 | backlog |
+- **R-privacy-page:**
+    - 內容: 新增 Settings 之下 Privacy 子頁，整合條款加 toggle 加刪除請求加蒐集說明
+    - toggle 同步 analyticsConsent 至 Firestore preferences
+    - wording 用 will 語氣，因 BigQuery 延後
+    - 屬性: 中
+    - 時程: short-term
+- **R-fullbackup-format:**
+    - 內容: A2 全量檔格式為 JSON ZIP，含 Settings 加所有 entity 加 referential mapping
+    - export 走 OS Share Intent
+    - 屬性: 中
+    - 時程: short-term
+- **R-leveling-rework:**
+    - 內容: LEVEL_0 entitlement 拆 cloud_backup 與 multi_device_sync
+    - UI 隱藏 LEVEL_0 多裝置同步入口
+    - 屬性: 小
+    - 時程: short-term
+- **R-bigquery-pipeline:**
+    - 內容: firestore-bigquery-export extension 加 analyticsConsent filter 加 analytics API 加一次性 backfill 規劃
+    - 屬性: 中
+    - 時程: conditional backlog
+- **R-future-eu-rework:**
+    - 觸發: 進歐美市場前
+    - 內容 一: opt-out 改為 opt-in 或地區切換
+    - 內容 二: 補登入頁與 onboarding 條款連結
+    - 屬性: 大
+    - 時程: backlog
+
+---
 
 ### 法律 caveat
 
-opt-out UX-α 對歐盟 GDPR 不合規（Art.7 要求有效同意必須是 freely given, specific, informed, unambiguous）；加州 CCPA 可接受但 Privacy toggle 必須顯眼。短期亞洲市場 OK，**上歐美前必走 R-future-eu-rework**。
+- **歐盟 GDPR:**
+    - opt-out UX-α 不合規
+    - GDPR Art.7 要求有效同意
+    - 有效同意必須是 freely given
+    - 必須是 specific
+    - 必須是 informed
+    - 必須是 unambiguous
+- **加州 CCPA:**
+    - 可接受
+    - Privacy toggle 必須顯眼
+- **短期適用:**
+    - 亞洲市場為主時 OK
+- **中期動作:**
+    - 上歐美前必走 R-future-eu-rework
+
+---
 
 ### 落地文件清單
 
-- 新增 `no99_archive/r1_decision_matrix.md`：完整方案比較與五輪收斂歷程
-- 更新 `no2_product_planning/no2_product_map/app/cloud_sync.md`：拆 L2/L3/L4
-- 更新 `no2_product_planning/no2_product_map/cloud_service/macro_data.md`：DataPipeline 來源改 BigQuery 鏡像 + opt-out filter
-- 新增 `no2_product_planning/no2_product_map/cloud_service/analytics_pipeline.md`：BigQuery pipeline 設計
-- 更新 `no1_product_initiation/no2_root_value.md`：隱私聲明改寫
-- 更新 `no3_product_specs/no2_accounting_app/no3_logics/no17_subscription_gate_logic.md`：拆 entitlement（Spec git）
-- Branch：Product git + Spec git 同 branch `feat/r1-cloud-architecture-decision`
+- **新增 R1 決策矩陣文件:**
+    - 位於 archive 層
+    - 內容: 完整方案比較與五輪收斂歷程
+- **更新 cloud_sync 產品圖文件:**
+    - 拆 L2 加 L3 加 L4
+- **更新 macro_data 產品圖文件:**
+    - DataPipeline 來源改為 BigQuery 鏡像加 opt-out filter
+- **新增 analytics_pipeline 產品圖文件:**
+    - BigQuery pipeline 設計
+- **更新 root value 立場文件:**
+    - 隱私聲明改寫
+- **更新 subscription gate logic 規格:**
+    - 拆 entitlement
+    - 屬 Spec git
+- **Branch:**
+    - Product git 與 Spec git 同 branch feat/r1-cloud-architecture-decision
 
 ---
 
