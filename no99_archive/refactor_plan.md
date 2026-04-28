@@ -18,35 +18,91 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 
 ---
 
-## R1：雲端架構決策（先決條件，文件層）
+## R1：雲端架構決策（Round 5 拍板）
 
-**性質：** 產品決策 / 文件層 R，**無 client code 改動**，純 Product Map 落地。
+**性質：** 產品決策 + Spec 層 entitlement 名稱拆解。impl 不動。完整方案空間與五輪收斂歷程見 `r1_decision_matrix.md`。
 
-**決策內容：**
+**決策摘要：**
 
-### 軌道 1：資料分析（未來需求）
-- 既有 Cloud Firestore 持續同步資料留作未來分析來源
-- 具體分析做法（直接 read Firestore / 其他擴充）屬後端 / DevOps 設計題，本 plan 不展開
-- 客戶端 App 不需配合改動
+| 子題 | 拍板 |
+|------|------|
+| A 免費版跨裝置遷移 | A2 only：手動全量檔，user 自選 OS Share Intent 位置 |
+| E 個人化財務分析 | E2：後端 API 跑分析 |
+| L2 Preference 同步 | Firebase Firestore（全 user 享有） |
+| P 蒐集範圍 | P1：全 user 統一蒐集（含免費版） |
+| Q L3 儲存 | Q1：Firestore + BigQuery extension 鏡像 |
+| Q' BigQuery 啟動時機 | **延後啟動**，條件性 backlog |
+| S 法律基礎 | **opt-out UX-α**：不跳通知，Settings > Privacy 子頁可關 |
 
-### 軌道 2：使用者備份（影響 R6）
-- 路徑：App 產生 CSV → OS Share Intent → User 自選存到 Drive / iCloud / Dropbox / 任意位置
-- **不**另做 Google Drive API 整合（避免擴大 OAuth scope）
-- **不**另做 Firebase Storage 上傳（app 不需保管使用者檔案）
-- **不**另做 logout 前 Firebase 備份特殊路徑（Firestore 持續同步本身就是雲端備份）
+### 架構分層
+
+```
+[所有 user] (LEVEL_0 ~ LEVEL_3，預設 analyticsConsent=true)
+    │
+    ├──> L1 Firebase Auth                                    (登入)
+    │
+    ├──> L2 Firestore  users/{uid}/preferences               (主貨幣、主題、語言…，全 user 享有)
+    │
+    ├──> L3 Firestore  users/{uid}/{transactions,transfers,accounts,categories,...}
+    │       │                                                (全 user 寫入；analyticsConsent 不影響 Firestore 本身)
+    │       │
+    │       └──> [未啟動] BigQuery via firestore-bigquery-export extension
+    │              │     觸發條件擇一發生時 enable：
+    │              │       (a) E2 個人化分析功能要 ship
+    │              │       (b) macro_data.md B2B 變現要啟動
+    │              │       (c) LEVEL_3 AI 顧問要 ship
+    │              │     啟動時加 filter：where analyticsConsent == true
+    │              │
+    │              └──> [未啟動] 自建 analytics API
+    │
+    └──> L4 全量檔 by OS Share Intent (A2)
+            (所有 user，與 analyticsConsent 完全脫鉤；user 主動觸發)
+```
+
+### opt-out UX-α 流程
+
+1. 使用者下載、Google 登入、進主畫面（不跳同意對話框、登入頁無條款連結）
+2. 使用者建立時系統預設 `analyticsConsent = true`
+3. Settings > Privacy 子頁整合 4 項：條款 / 「資料分析貢獻」toggle（預設開）/ 「申請刪除歷史資料」/ 「我們蒐集了什麼」
+4. 關閉 toggle 後（BigQuery 啟動後才實際生效）：BigQuery extension filter 過濾，停止新蒐集；歷史資料採寬鬆派保留，user 可走刪除流程
 
 ### 服務使用清單
 
-| 服務             | 用途                                         |
-| ---------------- | -------------------------------------------- |
-| Cloud Firestore  | 持續同步資料庫（已用，唯一 source of truth） |
-| Firebase Storage | 不用                                         |
-| Google Drive API | 不用（OS share intent 替代）                 |
+| 服務 | 用途 | 狀態 |
+|------|------|------|
+| Firebase Auth | 登入 | 已用 |
+| Firestore | L2 preference + L3 記帳紀錄（全 user） | 已用，spec 需重新拆 entitlement |
+| OS Share Intent | L4 A2 全量檔自選位置 | 待 R-fullbackup-format 落地 |
+| BigQuery + firestore-bigquery-export extension | L3' analytics warehouse | **延後啟動**，待觸發條件 |
+| 自建 analytics API（Cloud Functions / Cloud Run） | E2 個人化分析、macro_data B2B | **延後啟動**，待 BigQuery 啟動後 |
+| Firebase Storage | 不用 | — |
+| Google Drive API | 不用 | — |
+| iCloud native 整合 | 不用 | — |
+| 同意對話框 | 不用（opt-out UX-α） | — |
 
-**落地：**
-- Product Map `no2_product_planning/no2_product_map/app/cloud_sync.md`：在 BatchSync 或 SyncEngine 段落補策略說明
-- Branch（執行時）：Product git `feat/r1-cloud-architecture-decision`
-- Spec / Impl 不動
+### 衍生新 R 排隊
+
+| 新 R | 內容 | 屬性 | 時程 |
+|------|------|------|------|
+| R-privacy-page | 新增 Settings > Privacy 子頁，整合條款 + toggle + 刪除請求 + 蒐集說明；toggle 同步 `analyticsConsent` 到 Firestore preferences；wording 用「我們將會」（因 BigQuery 延後）| 中 | short-term |
+| R-fullbackup-format | A2 全量檔格式（JSON ZIP，含 Settings + 所有 entity + referential mapping）；export 走 OS Share Intent | 中 | short-term |
+| R-leveling-rework | LEVEL_0 entitlement 拆 `cloud_backup` vs `multi_device_sync`；UI 隱藏 LEVEL_0 多裝置同步入口 | 小 | short-term |
+| R-bigquery-pipeline | firestore-bigquery-export extension + analyticsConsent filter；analytics API；含一次性 backfill 規劃 | 中 | conditional backlog |
+| R-future-eu-rework | 進歐美市場前：(1) opt-out 改為 opt-in 或地區切換、(2) 補登入頁/onboarding 條款連結 | 大 | backlog |
+
+### 法律 caveat
+
+opt-out UX-α 對歐盟 GDPR 不合規（Art.7 要求有效同意必須是 freely given, specific, informed, unambiguous）；加州 CCPA 可接受但 Privacy toggle 必須顯眼。短期亞洲市場 OK，**上歐美前必走 R-future-eu-rework**。
+
+### 落地文件清單
+
+- 新增 `no99_archive/r1_decision_matrix.md`：完整方案比較與五輪收斂歷程
+- 更新 `no2_product_planning/no2_product_map/app/cloud_sync.md`：拆 L2/L3/L4
+- 更新 `no2_product_planning/no2_product_map/cloud_service/macro_data.md`：DataPipeline 來源改 BigQuery 鏡像 + opt-out filter
+- 新增 `no2_product_planning/no2_product_map/cloud_service/analytics_pipeline.md`：BigQuery pipeline 設計
+- 更新 `no1_product_initiation/no2_root_value.md`：隱私聲明改寫
+- 更新 `no3_product_specs/no2_accounting_app/no3_logics/no17_subscription_gate_logic.md`：拆 entitlement（Spec git）
+- Branch：Product git + Spec git 同 branch `feat/r1-cloud-architecture-decision`
 
 ---
 

@@ -9,7 +9,8 @@
     - 企業版付費功能，以去識別化的聚合使用者資料提供總體市場洞察
 - **做法：**
     - K-Anonymity 隱私合規處理，聚合去識別化資料後對外提供 API
-    - DataPipeline 從 Firestore 定期提取資料
+    - DataPipeline 從 BigQuery analytics warehouse 提取資料（BigQuery 透過 firestore-bigquery-export extension 從 Firestore 鏡像而來，僅含 `analyticsConsent==true` 的 user）
+    - BigQuery 啟動條件與 pipeline 設計參考 `analytics_pipeline.md`
 - **排除：**
     - 個人資料直接出售
     - 個人層級的資料外洩
@@ -22,19 +23,22 @@
 ## DataPipeline — 資料擷取管道
 
 - **功能：**
-    - 定期從 Firestore 擷取使用者資料，進行去識別化處理後寫入分析資料庫
+    - 從 BigQuery analytics warehouse 擷取使用者資料，進行去識別化處理後寫入聚合分析資料源
 - **目的：**
     - 為 MarketIntelligence 和 EnterpriseDataService 提供持續更新的聚合資料來源
 - **做法：**
-    - 架構待定，於 Macro Data Service 確立
-    - 排程批次讀取 Firestore
+    - 資料來源：BigQuery（上游由 firestore-bigquery-export extension 從 Firestore 鏡像，僅含 `analyticsConsent==true` 的 user）
+    - 排程批次讀取 BigQuery
     - 個人識別資訊在聚合前移除
+    - Pipeline 啟動條件與 schema 對映設計參考 `analytics_pipeline.md`
 - **排除：**
     - 即時資料流
     - 個人層級資料的留存
+    - opt-out user 的資料（已在上游 BigQuery extension filter 過濾）
 - **利弊：**
     - 批次處理降低成本，但資料即時性有限
-    - 需確保隱私合規流程在管道中正確執行
+    - 上游 filter 確保 opt-out user 不被處理，符合 Settings > Privacy 同意機制
+    - 需確保 K-Anonymity 隱私合規流程在管道中正確執行
 
 ---
 

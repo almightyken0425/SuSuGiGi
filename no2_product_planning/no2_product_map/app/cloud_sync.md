@@ -1,4 +1,55 @@
-## CloudSync / AppClient — 雲端同步用戶端
+## CloudSync — 雲端同步生態
+
+R1 Round 5 拍板後拆為四條軌道，各自獨立：
+
+- **L2 PreferenceSync**：全域設定同步，全 user 享有
+- **L3 TransactionBackup**：記帳紀錄 silent backup 寫入 Firestore，全 user 寫入
+- **L3 MultiDeviceSync**：跨裝置即時同步 UI，LEVEL_1+ 才開放
+- **L4 FullBackupExport**：A2 全量檔 by OS Share Intent，全 user 享有
+
+四條軌道的訂閱授權拆解見 `no17_subscription_gate_logic.md`。BigQuery 鏡像與 analytics 管道見 `cloud_service/analytics_pipeline.md`。
+
+---
+
+### L2 PreferenceSync — Preference 同步
+
+- **功能：**
+    - 主貨幣、主題、語言、時區等全域設定的雙向同步
+- **目的：**
+    - 跨裝置 UX 一致性，不論訂閱層級
+- **做法：**
+    - 寫入 Firestore `users/{uid}/preferences`
+    - 全 user 享有，與付費層級無關
+    - 與 `analyticsConsent` flag 完全脫鉤
+- **排除：**
+    - 記帳紀錄（屬 L3 TransactionBackup）
+- **利弊：**
+    - 量小（單 user <1KB）成本可忽略；無分析價值，純為跨裝置 UX
+    - 既有「LEVEL_0 禁雲端同步」spec 與此衝突，由 `cloud_backup` entitlement 拆解承接
+
+---
+
+### L3 TransactionBackup — 記帳紀錄 Silent Backup
+
+- **功能：**
+    - 所有 user 的記帳紀錄寫入 Firestore，無多裝置同步 UI
+- **目的：**
+    - 為未來 BigQuery analytics 鏡像提供唯一資料來源
+    - 為使用者提供雲端備份保險（換手機等情境的 fallback）
+- **做法：**
+    - 寫入 Firestore `users/{uid}/{transactions, transfers, accounts, categories, currency_rates, schedules}`
+    - 全 user（含 LEVEL_0）寫入
+    - 不受 `analyticsConsent` flag 影響（flag 只影響未來啟動 BigQuery 時是否被 mirror）
+- **排除：**
+    - 多裝置同步 UI（屬 L3 MultiDeviceSync）
+    - BigQuery mirror（屬 `cloud_service/analytics_pipeline.md`）
+- **利弊：**
+    - 全 user 統一寫入，架構一致；資料量小成本可忽略
+    - 與既有「LEVEL_0 禁雲端同步」spec 衝突，由 `cloud_backup` entitlement 拆解承接
+
+---
+
+### L3 MultiDeviceSync — 多裝置同步（LEVEL_1+）
 
 - **功能：**
     - Firestore 批次雙向同步，App 端
@@ -27,7 +78,7 @@
 
 ---
 
-### SyncEngine — 同步引擎
+#### SyncEngine — 同步引擎
 
 - **功能：**
     - 本地與 Firestore 的雙向 Delta 批次同步。
@@ -49,7 +100,7 @@
 
 ---
 
-#### BatchSync — 批次同步機制
+##### BatchSync — 批次同步機制
 
 - **功能：**
     - Delta 差量上傳與下載，僅傳輸上次同步後有異動的資料
@@ -68,7 +119,7 @@
 
 ---
 
-#### ConflictResolution — 衝突解決策略
+##### ConflictResolution — 衝突解決策略
 
 - **功能：**
     - Last-Write-Wins 衝突解決
@@ -83,7 +134,7 @@
 
 ---
 
-### QuotaManagement — 配額管控
+#### QuotaManagement — 配額管控
 
 - **功能：**
     - 本地計數追蹤每日 Firestore 讀寫次數
@@ -96,3 +147,27 @@
     - 多裝置全域配額統計，評估可接受
 - **利弊：**
     - 本地計數實作簡單，但無法限制多裝置的全域總量，存在少量 Quota 漏洞，評估可接受
+
+---
+
+### L4 FullBackupExport — A2 全量檔 by OS Share Intent
+
+- **功能：**
+    - A2 全量檔 export，user 主動觸發
+    - 走 OS Share Intent，讓 user 自選存放位置
+- **目的：**
+    - 讓使用者完全擁有自己資料的副本，與我方後端脫鉤
+    - 跨裝置遷移、誤刪保險、隱私退出 三場景共用
+- **做法：**
+    - 全量檔格式為 JSON ZIP，含 Settings + 所有 entity + referential mapping
+    - 走 OS Share Intent，user 自選 iCloud / Drive / Dropbox / AirDrop / Email / 任意位置
+    - 全 user 享有，與訂閱層級無關
+    - 與 `analyticsConsent` flag 完全脫鉤（即使 user 關閉分析仍可 export）
+- **排除：**
+    - Google Drive API 直接整合
+    - iCloud native 整合
+    - Firebase Storage 上傳
+    - 自動定期備份
+- **利弊：**
+    - 工程簡單，零後端成本；跨平台統一（所有 OS 都有 Share Intent）
+    - 手動觸發，user 不主動就無備份；詳細格式設計待 R-fullbackup-format 落地
