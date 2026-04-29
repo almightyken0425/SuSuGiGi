@@ -116,4 +116,4 @@ R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enab
 - **利弊：**
     - 單一 flag 控制 filter 行為
     - 邏輯簡單
-    - 詳細 UX 設計屬 R-privacy-page
+    - 詳細 UX 設計屬 Privacy 設定子頁專屬規格
