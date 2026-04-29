@@ -2,9 +2,9 @@
 
 # Logout / ReLogin / Firebase 同步生態系
 
-> **狀態：** 2026-04-28 R1 雲端架構決策完成 Product git merge to main，Spec git 同步 branch 待 merge。R2-R8 經 R1-followup 重整為 R2-R11 主序列加兩條 backlog；每個 R 為一個 session 的工作單位，編號等於建議執行順序。
+> **狀態：** 2026-04-29 主序列進度：R1（雲端架構決策）、R2（quota reset on logout）、R3（5 分鐘冷卻）皆已 commit + merge to main；Pre-flight admin 已完成；下一個工作單位為 R4。R 編號等於建議執行順序，每個 R 為一個 session 的工作單位。
 >
-> **2026-04-28 第二次更新：** R1-followup 重整完成。本檔結構：盤點摘要 → 執行節奏（已歷史化）→ Pre-flight admin → R1（已完成快照）→ R2-R11 主序列 → Backlog → 執行順序表 → Round 2 不做的事。
+> **2026-04-28 重整：** R1-followup 重整完成。本檔結構：盤點摘要 → 執行節奏（已歷史化）→ Pre-flight admin → R1-R11 主序列 → Backlog → 執行順序表 → Round 2 不做的事。
 
 ## 盤點結論摘要
 
@@ -26,12 +26,14 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 - **R1 完整落地：** 已完成 2026-04-28
     - 範圍：Product git 與 Spec git 同 branch `feat/r1-cloud-architecture-decision`
     - 多檔同步：cloud_sync 加 macro_data 加 analytics_pipeline 產品圖加 root value 立場文件加 subscription gate logic 規格
-    - 狀態：Product git 已 merge to main（HEAD ef5e78e）；Spec git 仍在 feat branch 待 merge（pre-flight 待動作）
+    - 狀態：Product git 已 merge to main（HEAD ef5e78e）；Spec git 已於 Pre-flight admin merge to main（HEAD 59a3936）
 - **R1-followup 重整：** 已完成 2026-04-28
     - branch：Product git `feat/r1-followup-refactor-plan-rework`
     - 範圍：純改本檔，無 Spec 與 Impl 動作
     - 校正內容：R 序列重新編號 R2-R11；R-privacy-page／R-fullbackup-format／R-leveling-rework 升入主序列為 R5／R4／R6；舊 R4／R6 wording 對齊 JSON ZIP（原 CSV）；R-bigquery-pipeline 與 R-future-eu-rework 留 backlog 不編號；新增 Pre-flight admin 段；重畫執行順序表
 - **各 R 順序落地：** 進行中
+    - R2 已完成 2026-04-28（Spec git eaac468、Impl git 75b7113）
+    - R3 已完成 2026-04-29（Spec git 6fb92de、Impl git 89d8660）
     - 依本檔 R 編號順序每 session 一 R 一 branch
     - 每 R 自帶 plan 加 Explore 加對應 git branch
     - 多主題拆分：前一 R 完整 commit 加 merge 加 push 才開下一 R
@@ -40,6 +42,7 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 
 ## Pre-flight admin
 
+- **狀態：** 已完成 2026-04-28
 - **動作：** Spec git `feat/r1-cloud-architecture-decision` branch merge to main
 - **理由：** R1 在 Spec git 已完成 entitlement 拆解（`no3_logics/no17_subscription_gate_logic.md` 拆 triggerCloudBackup 加 triggerMultiDeviceSync），但 branch 尚未 merge；R6（LEVEL_0 多裝置同步入口隱藏）依賴此 entitlement 名稱已 ground truth 化
 - **Scope：** 純 admin，不開 plan、不開 Explore；本機 ff merge 加 push 即可
@@ -49,7 +52,7 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 
 ## R1：雲端架構決策
 
-- **狀態：** 已完成 2026-04-28，Product git merge to main；Spec git 同步 branch 待 merge（見 Pre-flight admin）
+- **狀態：** 已完成 2026-04-28，Product git 與 Spec git 皆 merge to main（Spec git 經 Pre-flight admin 同步）
 - 性質：產品決策加上 Spec 層 entitlement 名稱拆解
 - impl 不動
 - 完整方案空間與五輪收斂歷程記錄於 R1 決策矩陣文件
@@ -208,23 +211,25 @@ Phase 1 派 3 組 Explore 平行盤點，整合對使用者 5 個提問的直接
 
 ## R2：quota reset on logout 漏洞修正（🔴 嚴重，Round 1 R11 引入）
 
+- **狀態：** 已完成 2026-04-28（Spec git eaac468、Impl git 75b7113）；採 Option A logout 不重置；上游意圖確認 device-level；連帶刪除 quotaService.reset 死碼
 - **問題：** Round 1 R11 logout 時 `quotaService.reset()` 把計數歸零；攻擊者腳本反覆 logout/login 同日內無限重置 → 繞過 2000/day 軟限制
 - **影響：** 本地 quota 防護形同虛設；Firebase 真實 quota（project-level 50k reads / 20k writes）會被燒掉
 - **修法：** logout 不重置 AsyncStorage 計數，或改為 user-scoped 計數（每 uid 一份），切 user 才獨立
 - **依賴：** 無
-- **Branch：** Impl git `feat/r2-quota-no-reset-on-logout`
+- **Branch：** Spec git 與 Impl git 同 `feat/r2-quota-no-reset-on-logout`
 - **Scope：** 小（quotaService 加 1-2 caller）
 
 ---
 
-## R3：5 分鐘冷卻 Impl 落地（🔴 嚴重，Spec 有 Impl 沒做）
+## R3：5 分鐘冷卻落地（🔴 嚴重）
 
-- **問題：** `cloud_sync.md:16` Spec 寫「手動同步 5 分鐘冷卻」；`syncEngine.ts` 只有 `syncState.inProgress` 防重複，無時間戳檢查 → 手動同步可無限頻繁觸發
-- **影響：** 燒 quota / Firebase 流量
-- **修法：** syncEngine 加 `lastManualSyncAt` AsyncStorage timestamp，5 分鐘內拒絕新 manual sync
+- **狀態：** 已完成 2026-04-29（Spec git 6fb92de、Impl git 89d8660）；scope 落地時升級為 Spec + Impl，因盤點發現 Spec git batch_sync_logic.md 也未定義冷卻；冷卻起算採 sync 開始時點，跨 App 重啟與 user 切換保留
+- **問題：** Product Map cloud_sync.md L88/L128 寫「手動同步 5 分鐘冷卻」，但 Spec git batch_sync_logic.md 未定義、Impl syncEngine.ts 只有 inProgress 旗標無時間戳檢查 → sync 可無限頻繁觸發
+- **影響：** 燒 quota 與 Firebase project-wide 流量；攻擊腳本切換 background/foreground 可耗盡 reads/writes
+- **修法：** Spec git batch_sync_logic.md 補冷卻條目；Impl syncEngine 加 SYNC_COOLDOWN_MS 加 sync_last_at AsyncStorage timestamp，5 分鐘內拒絕新 sync
 - **依賴：** 無
-- **Branch：** Impl git `feat/r3-manual-sync-cooldown`
-- **Scope：** 小（syncEngine 加 1 處）
+- **Branch：** Spec git 與 Impl git 同 `feat/r3-manual-sync-cooldown`
+- **Scope：** 小（Spec batch_sync_logic 一檔加 Impl syncEngine sync 入口前置）
 
 ---
 
