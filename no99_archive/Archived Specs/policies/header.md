@@ -1,5 +1,9 @@
 # 導航列設計規範: Header Policy
 
+> 已歸檔。
+> 最新規範見 Module Spec git 的 no2_accounting_app 模組，路徑為 `no3_product_specs/no2_accounting_app/no2_screens/shared_ui_policies/header_policy.md`。
+> 新規範採全 SF Symbol icon 按鈕，廢除 Cancel、Done 文字按鈕。
+
 ---
 
 ## 佈局結構
