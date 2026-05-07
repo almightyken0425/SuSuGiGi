@@ -17,7 +17,7 @@ function ScreenFrame({ pinned, sharedFilter, setSharedFilter }) {
       case 'home':       return <HomeScreen filterState={sharedFilter}
                                   onSearch={() => push('search')} onSettings={() => push('settings')}
                                   onFilter={() => push('filter')}/>;
-      case 'filter':     return <HomeFilterScreen onBack={pop} filterState={sharedFilter} setFilterState={setSharedFilter}/>;
+      case 'filter':     return <HomeFilterScreen_V9_NegativeSpace onBack={pop} filterState={sharedFilter} setFilterState={setSharedFilter}/>;
       case 'settings':   return <SettingsScreen onBack={pop} onAccounts={() => push('accounts')} onCategories={() => push('categories')}/>;
       case 'accounts':   return <AccountsScreen onBack={pop}/>;
       case 'categories': return <CategoriesScreen onBack={pop}/>;
@@ -71,39 +71,36 @@ function App() {
         ))}
       </DCSection>
 
-      <DCSection id="filter-variants" title="Home Filter — 視覺區隔提案" subtitle="保留所有互動行為(cycle / focus toggle),只變視覺結構。">
-        <DCArtboard id="fv1" label="V1 · Section headers" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V1_SectionHeaders}/>
-          </IOSDevice>
-        </DCArtboard>
-        <DCArtboard id="fv2" label="V2 · Container wrap" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V2_ContainerWrap}/>
-          </IOSDevice>
-        </DCArtboard>
-        <DCArtboard id="fv3" label="V3 · Hairline divider" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V3_Divider}/>
-          </IOSDevice>
-        </DCArtboard>
-        <DCArtboard id="fv4" label="V4 · Inset tray" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V4_InsetTray}/>
-          </IOSDevice>
-        </DCArtboard>
-        <DCArtboard id="fv5" label="V5 · Pill summary" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V5_PillSummary}/>
-          </IOSDevice>
-        </DCArtboard>
+      <DCSection id="filter-proposals" title="Home Filter 提案" subtitle="V1–V5 第一輪視覺區隔，V6–V9 第二輪無文字 + 對稱化迭代。All Screens 採用 V9 · Negative space。">
+        {[
+          { id: 'fv1', label: 'V1 · Section headers',  V: HomeFilterScreen_V1_SectionHeaders },
+          { id: 'fv2', label: 'V2 · Container wrap',   V: HomeFilterScreen_V2_ContainerWrap },
+          { id: 'fv3', label: 'V3 · Hairline divider', V: HomeFilterScreen_V3_Divider },
+          { id: 'fv4', label: 'V4 · Inset tray',       V: HomeFilterScreen_V4_InsetTray },
+          { id: 'fv5', label: 'V5 · Pill summary',     V: HomeFilterScreen_V5_PillSummary },
+          { id: 'fv6', label: 'V6 · Short divider',    V: HomeFilterScreen_V6_ShortDivider },
+          { id: 'fv7', label: 'V7 · Dot divider',      V: HomeFilterScreen_V7_DotDivider },
+          { id: 'fv8', label: 'V8 · Symmetric trays',  V: HomeFilterScreen_V8_SymmetricTrays },
+          { id: 'fv9', label: 'V9 · Negative space ★', V: HomeFilterScreen_V9_NegativeSpace },
+        ].map(v => (
+          <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+            <IOSDevice width={W} height={H}>
+              <FilterVariantFrame Variant={v.V}/>
+            </IOSDevice>
+          </DCArtboard>
+        ))}
       </DCSection>
 
-      <DCSection id="tx-list-round1" title="Transaction List · 第一輪保留 (V1 / V2 / V7)" subtitle="一個畫面同時呈現展開 + 收合 (前兩段展開,後兩段收合)。">
+      <DCSection id="tx-list-proposals" title="Transaction List 提案" subtitle="第一輪 V1/V2/V7 結構初探 → 第二輪 R1–R5 層次感探索 → 第三輪 R6–R10 morph + 區隔修正（可點 header 收合，含 morph 動畫）。All Screens 採用 R10 · Outlined frame refined。">
         {[
           { id: 'tx1', label: 'V1 · Timeline rail',  Date: TxV1_ByDate, Cat: TxV1_ByCategory },
           { id: 'tx2', label: 'V2 · Card stack',     Date: TxV2_ByDate, Cat: TxV2_ByCategory },
           { id: 'tx7', label: 'V7 · Two-line',       Date: TxV7_ByDate, Cat: TxV7_ByCategory },
+          { id: 'r1',  label: 'R1 · Morph header',   Date: TxR1_ByDate, Cat: TxR1_ByCategory },
+          { id: 'r2',  label: 'R2 · Indent rhythm',  Date: TxR2_ByDate, Cat: TxR2_ByCategory },
+          { id: 'r3',  label: 'R3 · Tinted band',    Date: TxR3_ByDate, Cat: TxR3_ByCategory },
+          { id: 'r4',  label: 'R4 · Left bar',       Date: TxR4_ByDate, Cat: TxR4_ByCategory },
+          { id: 'r5',  label: 'R5 · Inverted band',  Date: TxR5_ByDate, Cat: TxR5_ByCategory },
         ].flatMap(v => [
           <DCArtboard key={v.id+'-d'} id={v.id+'-d'} label={v.label + ' — 依日期'} width={W} height={H}>
             <IOSDevice width={W} height={H}><TxListPreviewFrame Variant={v.Date} collapsedIds={['date_Apr 30','date_Apr 29']}/></IOSDevice>
@@ -112,31 +109,12 @@ function App() {
             <IOSDevice width={W} height={H}><TxListPreviewFrame Variant={v.Cat} collapsedIds={['cat_health','cat_ent','cat_trans']}/></IOSDevice>
           </DCArtboard>,
         ])}
-      </DCSection>
-
-      <DCSection id="tx-list-round2" title="Transaction List · 第二輪 (層次感探索)" subtitle="不靠 card / divider 拉層次。R1 morph header / R2 indent rhythm / R3 tinted band / R4 left bar / R5 inverted band。">
         {[
-          { id: 'r1', label: 'R1 · Morph header',  Date: TxR1_ByDate, Cat: TxR1_ByCategory },
-          { id: 'r2', label: 'R2 · Indent rhythm', Date: TxR2_ByDate, Cat: TxR2_ByCategory },
-          { id: 'r3', label: 'R3 · Tinted band',   Date: TxR3_ByDate, Cat: TxR3_ByCategory },
-          { id: 'r4', label: 'R4 · Left bar',      Date: TxR4_ByDate, Cat: TxR4_ByCategory },
-          { id: 'r5', label: 'R5 · Inverted band', Date: TxR5_ByDate, Cat: TxR5_ByCategory },
-        ].flatMap(v => [
-          <DCArtboard key={v.id+'-d'} id={v.id+'-d'} label={v.label + ' — 依日期'} width={W} height={H}>
-            <IOSDevice width={W} height={H}><TxListPreviewFrame Variant={v.Date} collapsedIds={['date_Apr 30','date_Apr 29']}/></IOSDevice>
-          </DCArtboard>,
-          <DCArtboard key={v.id+'-c'} id={v.id+'-c'} label={v.label + ' — 依分類'} width={W} height={H}>
-            <IOSDevice width={W} height={H}><TxListPreviewFrame Variant={v.Cat} collapsedIds={['cat_health','cat_ent','cat_trans']}/></IOSDevice>
-          </DCArtboard>,
-        ])}
-      </DCSection>
-
-      <DCSection id="tx-list-round3" title="Transaction List · 第三輪 (Morph + 區隔修正)" subtitle="點擊 section header 可即時 toggle 收合，會播 morph 動畫。R6 R5 升級 / R7 modern category tint / R8 outlined frame / R9 三層明度。">
-        {[
-          { id: 'r6', label: 'R6 · Morph + Inverted band', Date: TxR6_ByDate, Cat: TxR6_ByCategory },
-          { id: 'r7', label: 'R7 · Modern category tint',  Date: TxR7_ByDate, Cat: TxR7_ByCategory },
-          { id: 'r8', label: 'R8 · Outlined frame',        Date: TxR8_ByDate, Cat: TxR8_ByCategory },
-          { id: 'r9', label: 'R9 · Layered tone',          Date: TxR9_ByDate, Cat: TxR9_ByCategory, appBg: '#E5E5EA' },
+          { id: 'r6',  label: 'R6 · Morph + Inverted band',     Date: TxR6_ByDate,  Cat: TxR6_ByCategory },
+          { id: 'r7',  label: 'R7 · Modern category tint',      Date: TxR7_ByDate,  Cat: TxR7_ByCategory },
+          { id: 'r8',  label: 'R8 · Outlined frame',            Date: TxR8_ByDate,  Cat: TxR8_ByCategory },
+          { id: 'r9',  label: 'R9 · Layered tone',              Date: TxR9_ByDate,  Cat: TxR9_ByCategory, appBg: '#E5E5EA' },
+          { id: 'r10', label: 'R10 · Outlined frame refined ★', Date: TxR10_ByDate, Cat: TxR10_ByCategory },
         ].flatMap(v => [
           <DCArtboard key={v.id+'-d'} id={v.id+'-d'} label={v.label + ' — 依日期'} width={W} height={H}>
             <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.Date} initialCollapsed={['date_Apr 30','date_Apr 29']} appBg={v.appBg}/></IOSDevice>
@@ -145,29 +123,6 @@ function App() {
             <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.Cat} initialCollapsed={['cat_health','cat_ent','cat_trans']} appBg={v.appBg}/></IOSDevice>
           </DCArtboard>,
         ])}
-      </DCSection>
-
-      <DCSection id="filter-variants-2" title="Home Filter — 第二輪 (無文字)" subtitle="基於 V3/V4 迭代:無文字標籤,divider 縮短或不用線,tray 對稱化。">
-        <DCArtboard id="fv6" label="V6 · Short divider" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V6_ShortDivider}/>
-          </IOSDevice>
-        </DCArtboard>
-        <DCArtboard id="fv7" label="V7 · Dot divider" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V7_DotDivider}/>
-          </IOSDevice>
-        </DCArtboard>
-        <DCArtboard id="fv8" label="V8 · Symmetric trays" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V8_SymmetricTrays}/>
-          </IOSDevice>
-        </DCArtboard>
-        <DCArtboard id="fv9" label="V9 · Negative space" width={W} height={H}>
-          <IOSDevice width={W} height={H}>
-            <FilterVariantFrame Variant={HomeFilterScreen_V9_NegativeSpace}/>
-          </IOSDevice>
-        </DCArtboard>
       </DCSection>
     </DesignCanvas>
   );

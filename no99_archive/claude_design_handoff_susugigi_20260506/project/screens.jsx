@@ -104,16 +104,16 @@ function FocusCard({ kind, amount, active, onPress }) {
 function HomeScreen({ onSearch, onSettings, onFilter, filterState }) {
   const [chartMode, setChartMode] = React.useState('expense');
   const groupMode = filterState.groupBy;
-  const [collapsed, setCollapsed] = React.useState({});
+  const [collapsed, setCollapsed] = React.useState(() => new Set());
 
   const totals = periodTotals(TX);
   const pData = pieData(TX);
 
-  const sections = groupMode === 'date'
-    ? groupByDate(TX)
-    : groupByCategory(TX, chartMode);
-
-  const toggle = (id) => setCollapsed(c => ({ ...c, [id]: !c[id] }));
+  const toggle = (id) => setCollapsed(prev => {
+    const next = new Set(prev);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    return next;
+  });
 
   return (
     <>
@@ -174,88 +174,10 @@ function HomeScreen({ onSearch, onSettings, onFilter, filterState }) {
           <FocusCard kind="income"  amount={totals.income}  active={chartMode === 'income'}  onPress={() => setChartMode('income')}/>
         </div>
 
-        {/* Sections */}
-        {sections.map(sec => {
-          const isCollapsed = collapsed[sec.id] || false;
-          return (
-            <div key={sec.id}>
-              <div onClick={() => toggle(sec.id)} style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '12px 16px', background: TOKENS.bg, cursor: 'pointer',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Glyph name={isCollapsed ? 'chevron-right' : 'chevron-down'} size={12} color={TOKENS.ink2} stroke={2.5}/>
-                  {sec.iconGlyph && (
-                    <div style={{
-                      width: 32, height: 32, borderRadius: 8,
-                      background: TOKENS.p100,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <Glyph name={sec.iconGlyph} size={18} color={TOKENS.p500}/>
-                    </div>
-                  )}
-                  <span style={{ fontSize: 16, fontWeight: 600, color: TOKENS.ink }}>{sec.title}</span>
-                </div>
-                <span style={{
-                  fontSize: 16, color: TOKENS.ink2,
-                  fontFeatureSettings: '"tnum" 1',
-                  fontVariantNumeric: 'tabular-nums',
-                }}>{fmt(sec.total)}</span>
-              </div>
-              {!isCollapsed && sec.data.map((tx) => {
-                const cat = CAT_BY_ID[tx.cat];
-                if (groupMode === 'category') {
-                  return (
-                    <div key={tx.id} style={{
-                      display: 'flex', alignItems: 'center',
-                      padding: '12px 16px',
-                      borderBottom: `1px solid ${TOKENS.surface}`,
-                      background: TOKENS.bg,
-                    }}>
-                      <div style={{ minWidth: 80 }}>
-                        <span style={{
-                          fontSize: 16, fontWeight: 600, color: TOKENS.p900,
-                          fontFeatureSettings: '"tnum" 1',
-                          fontVariantNumeric: 'tabular-nums',
-                        }}>{fmt(tx.amount)}</span>
-                      </div>
-                      <div style={{ flex: 1, marginLeft: 12, marginRight: 12, minWidth: 0 }}>
-                        <span style={{
-                          fontSize: 16, color: TOKENS.ink,
-                          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                          display: 'block',
-                        }}>{tx.note}</span>
-                      </div>
-                      <span style={{ fontSize: 14, color: TOKENS.ink2 }}>{tx.date}</span>
-                    </div>
-                  );
-                }
-                // date mode
-                return (
-                  <div key={tx.id} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '12px 16px',
-                    borderBottom: `1px solid ${TOKENS.surface}`,
-                    background: TOKENS.bg,
-                  }}>
-                    <div style={{ flex: 1, marginRight: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <Glyph name={cat.glyph} size={20} color={tx.amount < 0 ? TOKENS.p500 : TOKENS.ink2}/>
-                      <div>
-                        <div style={{ fontSize: 16, color: TOKENS.ink, marginBottom: 2 }}>{cat.name}</div>
-                        {tx.note && <div style={{ fontSize: 14, color: TOKENS.ink2 }}>{tx.note}</div>}
-                      </div>
-                    </div>
-                    <span style={{
-                      fontSize: 16, fontWeight: 600, color: TOKENS.p900,
-                      fontFeatureSettings: '"tnum" 1',
-                      fontVariantNumeric: 'tabular-nums',
-                    }}>{fmt(tx.amount)}</span>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+        {/* Sections — R10 outlined frame refined */}
+        {groupMode === 'date'
+          ? <TxR10_ByDate collapsed={collapsed} onToggle={toggle}/>
+          : <TxR10_ByCategory collapsed={collapsed} onToggle={toggle} chartMode={chartMode}/>}
       </div>
     </>
   );
@@ -437,7 +359,6 @@ function HomeFilterScreen({ onBack, filterState, setFilterState }) {
               {g.accounts.map((a) => {
                 const isSelected = selectedAccountIds.includes(a.id);
                 const isLastSelected = isSelected && selectedAccountIds.length === 1;
-                const swatchBg = isSelected ? TOKENS.p50 : '#EFEFF3';
                 const swatchIconColor = isSelected ? TOKENS.p500 : TOKENS.ink3;
                 const nameColor = isSelected ? TOKENS.ink : TOKENS.ink2;
                 const currencyColor = isSelected ? TOKENS.ink2 : TOKENS.ink3;
@@ -449,16 +370,16 @@ function HomeFilterScreen({ onBack, filterState, setFilterState }) {
                       display: 'flex', alignItems: 'center', gap: 10,
                       padding: '14px 12px',
                       borderRadius: 12,
-                      border: `1.5px solid ${isSelected ? TOKENS.p500 : 'transparent'}`,
-                      background: isSelected ? TOKENS.surface : '#FAFAFA',
-                      boxShadow: isSelected ? `0 1px 2px rgba(67,35,160,0.08)` : 'none',
+                      border: isSelected ? `1.5px solid ${TOKENS.p500}` : `1px solid ${TOKENS.divider}`,
+                      background: TOKENS.surface,
                       cursor: isLastSelected ? 'not-allowed' : 'pointer',
                       fontFamily: 'inherit',
                       opacity: isLastSelected ? 0.85 : 1,
                     }}>
                     <div style={{
                       width: 32, height: 32, borderRadius: 8,
-                      background: swatchBg,
+                      background: isSelected ? TOKENS.p50 : TOKENS.surface,
+                      border: isSelected ? 'none' : `1px solid ${TOKENS.divider}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       flexShrink: 0,
                     }}>
@@ -510,7 +431,7 @@ function SearchScreen({ onBack }) {
       <div style={{ padding: 16, paddingBottom: 100, background: TOKENS.bg, minHeight: 400 }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
-          background: TOKENS.surface, border: `0.5px solid ${TOKENS.divider}`,
+          background: TOKENS.surface, border: `1px solid ${TOKENS.divider}`,
           borderRadius: 999, height: 44, padding: '0 12px',
         }}>
           <Glyph name="search" size={20} color={TOKENS.ink2} stroke={2}/>

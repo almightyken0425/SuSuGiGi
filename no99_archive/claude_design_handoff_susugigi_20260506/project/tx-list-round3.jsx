@@ -527,6 +527,165 @@ function TxR9_ByCategory({ collapsed, onToggle }) {
 
 
 // ═════════════════════════════════════════════════════════════
+// R10 · Outlined frame · refined (R8 升級版)
+//   保留 R8 「白底 + 線框」核心，消除 5 個小瑕疵：
+//     1. section gap 14（R8 是 10）：純白多 section 不再黏在一起
+//     2. 統一 horizontal padding 16（R8 header 18 / row 16）：金額垂直對齊
+//     3. 拿掉 header / row 之間的 hairline：靠字級層級區隔即可
+//     4. icon 改 outline 風格（1px 邊框 + 白底）：與 section 同語言
+//     5. 金額升級：row 16/700、header total 16/700：核心資訊被拉出
+// ═════════════════════════════════════════════════════════════
+const R10_PAD_X = 16;
+const R10_GAP = 14;
+
+function R10_Row({ left, primary, secondary, right, rightColor }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: `12px ${R10_PAD_X}px` }}>
+      {left}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 15, color: TOKENS.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{primary}</div>
+        {secondary && <div style={{ fontSize: 12, color: TOKENS.ink3, marginTop: 2 }}>{secondary}</div>}
+      </div>
+      <span style={{ fontSize: 16, fontWeight: 700, color: rightColor || TOKENS.ink, fontVariantNumeric: 'tabular-nums' }}>{right}</span>
+    </div>
+  );
+}
+
+function R10_CatIconLeft({ glyph }) {
+  return (
+    <div style={{
+      width: 32, height: 32, borderRadius: 10,
+      background: TOKENS.surface,
+      border: `1px solid ${TOKENS.divider}`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+    }}>
+      <Glyph name={glyph} size={16} color={TOKENS.ink2}/>
+    </div>
+  );
+}
+
+function R10_DateBadgeLeft({ date }) {
+  const [m, d] = date.split(' ');
+  return (
+    <div style={{
+      width: 32, height: 32, borderRadius: 10,
+      background: TOKENS.surface,
+      border: `1px solid ${TOKENS.divider}`,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+    }}>
+      <span style={{ fontSize: 12, fontWeight: 700, color: TOKENS.ink, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{d}</span>
+      <span style={{ fontSize: 7, color: TOKENS.ink3, letterSpacing: 0.4, marginTop: 1, textTransform: 'uppercase' }}>{m}</span>
+    </div>
+  );
+}
+
+function R10_Header({ c, onClick, leadingIcon, title, count, total }) {
+  return (
+    <div onClick={onClick} style={{
+      cursor: 'pointer',
+      padding: c ? `14px ${R10_PAD_X}px` : `10px ${R10_PAD_X}px`,
+      transition: R3_TRANSITION,
+      display: 'flex', alignItems: 'center', gap: 10,
+    }}>
+      <CollapseChev collapsed={c} color={TOKENS.ink2}/>
+      {leadingIcon}
+      <span style={{
+        fontSize: c ? 20 : 12,
+        fontWeight: c ? 700 : 600,
+        color: c ? TOKENS.ink : TOKENS.ink2,
+        letterSpacing: c ? -0.3 : 0.6,
+        textTransform: c ? 'none' : 'uppercase',
+        transition: R3_TRANSITION,
+      }}>{title}</span>
+      <span style={{ fontSize: c ? 13 : 11, color: TOKENS.ink3, transition: R3_TRANSITION }}>· {count}</span>
+      <span style={{ flex: 1 }}/>
+      <span style={{
+        fontSize: c ? 16 : 13,
+        fontWeight: c ? 700 : 600,
+        color: c ? TOKENS.ink : TOKENS.ink2,
+        fontVariantNumeric: 'tabular-nums',
+        transition: R3_TRANSITION,
+      }}>{total}</span>
+    </div>
+  );
+}
+
+function TxR10_ByDate({ collapsed, onToggle }) {
+  const sections = groupByDate(TX);
+  return (
+    <div>
+      {sections.map(sec => {
+        const c = isCol(collapsed, sec.id);
+        return (
+          <div key={sec.id} style={{
+            margin: `0 16px ${R10_GAP}px`,
+            background: TOKENS.surface,
+            borderRadius: 14,
+            border: `1px solid ${TOKENS.divider}`,
+            overflow: 'hidden',
+            transition: R3_TRANSITION,
+          }}>
+            <R10_Header c={c} onClick={() => onToggle && onToggle(sec.id)}
+              title={sec.title} count={`${sec.data.length} 筆`} total={fmt(sec.total)}/>
+            {!c && sec.data.map((tx, i) => {
+              const cat = CAT_BY_ID[tx.cat];
+              return (
+                <div key={tx.id} style={{ borderTop: i === 0 ? 'none' : `0.5px solid ${TOKENS.hairline}` }}>
+                  <R10_Row left={<R10_CatIconLeft glyph={cat.glyph}/>} primary={tx.note || cat.name} secondary={cat.name} right={fmt(tx.amount)} rightColor={tx.amount < 0 ? TOKENS.ink : TOKENS.success}/>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function TxR10_ByCategory({ collapsed, onToggle, chartMode = 'expense' }) {
+  const sections = groupByCategory(TX, chartMode);
+  return (
+    <div>
+      {sections.map(sec => {
+        const c = isCol(collapsed, sec.id);
+        const icon = (
+          <div style={{
+            width: c ? 24 : 18, height: c ? 24 : 18,
+            borderRadius: c ? 6 : 4,
+            background: TOKENS.surface,
+            border: `1px solid ${TOKENS.divider}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+            transition: R3_TRANSITION,
+          }}>
+            <Glyph name={sec.iconGlyph} size={c ? 13 : 10} color={TOKENS.ink2}/>
+          </div>
+        );
+        return (
+          <div key={sec.id} style={{
+            margin: `0 16px ${R10_GAP}px`,
+            background: TOKENS.surface,
+            borderRadius: 14,
+            border: `1px solid ${TOKENS.divider}`,
+            overflow: 'hidden',
+            transition: R3_TRANSITION,
+          }}>
+            <R10_Header c={c} onClick={() => onToggle && onToggle(sec.id)}
+              leadingIcon={icon} title={sec.title} count={sec.data.length} total={fmt(sec.total)}/>
+            {!c && sec.data.map((tx, i) => (
+              <div key={tx.id} style={{ borderTop: i === 0 ? 'none' : `0.5px solid ${TOKENS.hairline}` }}>
+                <R10_Row left={<R10_DateBadgeLeft date={tx.date}/>} primary={tx.note} right={fmt(tx.amount)}/>
+              </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+
+// ═════════════════════════════════════════════════════════════
 // InteractiveTxPreview
 //   與 round 1/2 用的 TxListPreviewFrame 等價，但 collapsed 狀態
 //   為內部 useState，header onToggle 會真的更新並播放 morph 動畫。
@@ -590,5 +749,6 @@ Object.assign(window, {
   TxR7_ByDate, TxR7_ByCategory,
   TxR8_ByDate, TxR8_ByCategory,
   TxR9_ByDate, TxR9_ByCategory,
+  TxR10_ByDate, TxR10_ByCategory,
   InteractiveTxPreview,
 });

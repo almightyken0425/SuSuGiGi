@@ -79,7 +79,8 @@ function GroupCard({ children, style = {} }) {
     <div style={{
       background: TOKENS.surface,
       borderRadius: 14,             // LIST_TOKENS.GROUP_CARD_RADIUS
-      marginBottom: 16,
+      border: `1px solid ${TOKENS.divider}`,
+      marginBottom: 14,
       overflow: 'hidden',
       ...style,
     }}>{children}</div>
