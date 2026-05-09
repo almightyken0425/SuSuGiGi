@@ -41,7 +41,62 @@ function ScreenFrame({ pinned, sharedFilter, setSharedFilter }) {
   );
 }
 
+// ViewTabs — 浮在 viewport 頂部的分頁切換器，用 location.hash 同步：
+// `#all`（預設）顯示 All Screens，`#proposals` 顯示兩組提案區塊。
+function ViewTabs({ view, setView }) {
+  const tabs = [
+    { id: 'all',       label: 'All Screens' },
+    { id: 'proposals', label: '提案 Proposals' },
+  ];
+  return (
+    <div style={{
+      position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)',
+      display: 'flex', gap: 4, padding: 4,
+      background: 'rgba(255,255,255,0.92)',
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)',
+      borderRadius: 999,
+      boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+      border: '1px solid rgba(0,0,0,0.06)',
+      zIndex: 100,
+      fontFamily: '-apple-system, "SF Pro", "PingFang TC", "Noto Sans TC", system-ui, sans-serif',
+    }}>
+      {tabs.map(t => {
+        const active = view === t.id;
+        return (
+          <button key={t.id} onClick={() => setView(t.id)} style={{
+            border: 'none', borderRadius: 999,
+            padding: '8px 16px', cursor: 'pointer',
+            fontSize: 14, fontWeight: 500,
+            color: active ? '#fff' : '#212121',
+            background: active ? '#4323a0' : 'transparent',
+            transition: 'background 180ms, color 180ms',
+            fontFamily: 'inherit',
+          }}>
+            {t.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function App() {
+  // hash router：#all（預設）vs #proposals
+  const [view, setView] = React.useState(() => {
+    const h = window.location.hash.replace('#', '');
+    return h === 'proposals' ? 'proposals' : 'all';
+  });
+  React.useEffect(() => {
+    const onHashChange = () => {
+      const h = window.location.hash.replace('#', '');
+      setView(h === 'proposals' ? 'proposals' : 'all');
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+  const updateView = (v) => { if (v !== view) window.location.hash = v; };
+
   // Shared filter state across the Home + Filter frames
   const [sharedFilter, setSharedFilter] = React.useState({
     timeGranularity: 'month',
@@ -60,18 +115,23 @@ function App() {
   ];
 
   return (
-    <DesignCanvas>
-      <DCSection id="all" title="SuSuGiGi — All Screens" subtitle="Pinned views; click expand to focus.">
-        {screens.map(s => (
-          <DCArtboard key={s.id} id={s.id} label={s.label} width={W} height={H}>
-            <IOSDevice width={W} height={H}>
-              <ScreenFrame pinned={s.id} sharedFilter={sharedFilter} setSharedFilter={setSharedFilter}/>
-            </IOSDevice>
-          </DCArtboard>
-        ))}
-      </DCSection>
+    <>
+      <ViewTabs view={view} setView={updateView}/>
+      <DesignCanvas>
+        {view === 'all' && (
+          <DCSection id="all" title="SuSuGiGi — All Screens" subtitle="Pinned views; click expand to focus.">
+            {screens.map(s => (
+              <DCArtboard key={s.id} id={s.id} label={s.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}>
+                  <ScreenFrame pinned={s.id} sharedFilter={sharedFilter} setSharedFilter={setSharedFilter}/>
+                </IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+        )}
 
-      <DCSection id="filter-proposals" title="Home Filter 提案" subtitle="V1–V5 第一輪視覺區隔，V6–V9 第二輪無文字 + 對稱化迭代。All Screens 採用 V9 · Negative space。">
+        {view === 'proposals' && <>
+        <DCSection id="filter-proposals" title="Home Filter 提案" subtitle="V1–V5 第一輪視覺區隔，V6–V9 第二輪無文字 + 對稱化迭代。All Screens 採用 V9 · Negative space。">
         {[
           { id: 'fv1', label: 'V1 · Section headers',  V: HomeFilterScreen_V1_SectionHeaders },
           { id: 'fv2', label: 'V2 · Container wrap',   V: HomeFilterScreen_V2_ContainerWrap },
@@ -124,11 +184,13 @@ function App() {
           </DCArtboard>,
         ])}
       </DCSection>
-    </DesignCanvas>
+        </>}
+      </DesignCanvas>
+    </>
   );
 }
 
-// Each filter variant gets its own isolated state so 5 frames don't share a 
+// Each filter variant gets its own isolated state so 5 frames don't share a
 // selection — lets you compare interactions independently.
 function FilterVariantFrame({ Variant }) {
   const [filterState, setFilterState] = React.useState({
