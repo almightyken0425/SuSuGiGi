@@ -178,7 +178,7 @@ function TxListPreviewFrame({ Variant, collapsedIds = [] }) {
           <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, paddingTop:8, paddingBottom:4 }}>
             <Glyph name="chevron-left" size={14} color={TOKENS.ink3} stroke={2.5}/>
             <Glyph name="calendar" size={13} color={TOKENS.ink2} stroke={2}/>
-            <span style={{ fontSize:18, fontWeight:600, color:TOKENS.ink, marginLeft:2 }}>May 26</span>
+            <span style={{ fontSize:18, fontWeight:500, color:TOKENS.ink, marginLeft:2 }}>May 26</span>
             <Glyph name="chevron-right" size={14} color={TOKENS.ink3} stroke={2.5}/>
           </div>
           {/* Smaller donut so list gets more room */}
@@ -186,7 +186,7 @@ function TxListPreviewFrame({ Variant, collapsedIds = [] }) {
             <DonutChart data={pData.map(d => ({ key: d.id, value: d.value, color: d.color }))} size={140} thickness={20}>
               <div style={{ textAlign:'center', width:80 }}>
                 <div style={{ fontSize:11, color:TOKENS.ink2 }}>結餘</div>
-                <div style={{ fontSize:15, fontWeight:700, color:TOKENS.ink, fontVariantNumeric:'tabular-nums' }}>{fmt(totals.balance)}</div>
+                <div style={{ fontSize:15, fontWeight:500, color:TOKENS.ink, fontVariantNumeric:'tabular-nums' }}>{fmt(totals.balance)}</div>
               </div>
             </DonutChart>
           </div>

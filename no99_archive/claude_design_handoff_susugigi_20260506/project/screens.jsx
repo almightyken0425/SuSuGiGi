@@ -91,7 +91,7 @@ function FocusCard({ kind, amount, active, onPress }) {
       </div>
       <span style={{
         flex: 1, textAlign: 'right',
-        fontSize: 16, fontWeight: 600,
+        fontSize: 16, fontWeight: 500,
         color: active ? TOKENS.ink : TOKENS.ink2,
         fontFeatureSettings: '"tnum" 1',
         fontVariantNumeric: 'tabular-nums',
@@ -146,7 +146,7 @@ function HomeScreen({ onSearch, onSettings, onFilter, filterState }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <Glyph name="calendar" size={13} color={TOKENS.ink2} stroke={2}/>
             <span style={{
-              fontSize: 18, fontWeight: 600, color: TOKENS.ink, marginLeft: 2,
+              fontSize: 18, fontWeight: 500, color: TOKENS.ink, marginLeft: 2,
             }}>May 26</span>
           </div>
           <div style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -160,7 +160,7 @@ function HomeScreen({ onSearch, onSettings, onFilter, filterState }) {
             <div style={{ textAlign: 'center', width: 100 }}>
               <div style={{ fontSize: 14, color: TOKENS.ink2, marginBottom: 4 }}>結餘</div>
               <div style={{
-                fontSize: 20, fontWeight: 700, color: TOKENS.ink,
+                fontSize: 24, fontWeight: 500, color: TOKENS.ink,
                 fontFeatureSettings: '"tnum" 1',
                 fontVariantNumeric: 'tabular-nums',
               }}>{fmt(totals.balance)}</div>

@@ -543,10 +543,10 @@ function R10_Row({ left, primary, secondary, right, rightColor }) {
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: `12px ${R10_PAD_X}px` }}>
       {left}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 15, color: TOKENS.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{primary}</div>
+        <div style={{ fontSize: 15, fontWeight: 300, color: TOKENS.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{primary}</div>
         {secondary && <div style={{ fontSize: 12, color: TOKENS.ink3, marginTop: 2 }}>{secondary}</div>}
       </div>
-      <span style={{ fontSize: 16, fontWeight: 700, color: rightColor || TOKENS.ink, fontVariantNumeric: 'tabular-nums' }}>{right}</span>
+      <span style={{ fontSize: 16, fontWeight: 500, color: rightColor || TOKENS.ink, fontVariantNumeric: 'tabular-nums' }}>{right}</span>
     </div>
   );
 }
@@ -573,7 +573,7 @@ function R10_DateBadgeLeft({ date }) {
       border: `1px solid ${TOKENS.divider}`,
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
     }}>
-      <span style={{ fontSize: 12, fontWeight: 700, color: TOKENS.ink, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{d}</span>
+      <span style={{ fontSize: 12, fontWeight: 500, color: TOKENS.ink, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{d}</span>
       <span style={{ fontSize: 7, color: TOKENS.ink3, letterSpacing: 0.4, marginTop: 1, textTransform: 'uppercase' }}>{m}</span>
     </div>
   );
@@ -590,19 +590,17 @@ function R10_Header({ c, onClick, leadingIcon, title, count, total }) {
       <CollapseChev collapsed={c} color={TOKENS.ink2}/>
       {leadingIcon}
       <span style={{
-        fontSize: c ? 20 : 12,
-        fontWeight: c ? 700 : 600,
-        color: c ? TOKENS.ink : TOKENS.ink2,
-        letterSpacing: c ? -0.3 : 0.6,
-        textTransform: c ? 'none' : 'uppercase',
+        fontSize: c ? 17 : 14,
+        fontWeight: 500,
+        color: TOKENS.ink,
         transition: R3_TRANSITION,
       }}>{title}</span>
       <span style={{ fontSize: c ? 13 : 11, color: TOKENS.ink3, transition: R3_TRANSITION }}>· {count}</span>
       <span style={{ flex: 1 }}/>
       <span style={{
-        fontSize: c ? 16 : 13,
-        fontWeight: c ? 700 : 600,
-        color: c ? TOKENS.ink : TOKENS.ink2,
+        fontSize: c ? 15 : 13,
+        fontWeight: 500,
+        color: TOKENS.ink,
         fontVariantNumeric: 'tabular-nums',
         transition: R3_TRANSITION,
       }}>{total}</span>
@@ -721,14 +719,14 @@ function InteractiveTxPreview({ Variant, initialCollapsed = [], appBg }) {
           <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, paddingTop:8, paddingBottom:4 }}>
             <Glyph name="chevron-left" size={14} color={TOKENS.ink3} stroke={2.5}/>
             <Glyph name="calendar" size={13} color={TOKENS.ink2} stroke={2}/>
-            <span style={{ fontSize:18, fontWeight:600, color:TOKENS.ink, marginLeft:2 }}>May 26</span>
+            <span style={{ fontSize:18, fontWeight:500, color:TOKENS.ink, marginLeft:2 }}>May 26</span>
             <Glyph name="chevron-right" size={14} color={TOKENS.ink3} stroke={2.5}/>
           </div>
           <div style={{ display:'flex', justifyContent:'center', margin:'4px 0 8px' }}>
             <DonutChart data={pData.map(d => ({ key: d.id, value: d.value, color: d.color }))} size={140} thickness={20}>
               <div style={{ textAlign:'center', width:80 }}>
                 <div style={{ fontSize:11, color:TOKENS.ink2 }}>結餘</div>
-                <div style={{ fontSize:15, fontWeight:700, color:TOKENS.ink, fontVariantNumeric:'tabular-nums' }}>{fmt(totals.balance)}</div>
+                <div style={{ fontSize:15, fontWeight:500, color:TOKENS.ink, fontVariantNumeric:'tabular-nums' }}>{fmt(totals.balance)}</div>
               </div>
             </DonutChart>
           </div>
