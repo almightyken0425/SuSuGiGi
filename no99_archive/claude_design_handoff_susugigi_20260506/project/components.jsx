@@ -80,7 +80,7 @@ function GroupCard({ children, style = {} }) {
       background: TOKENS.surface,
       borderRadius: 14,             // LIST_TOKENS.GROUP_CARD_RADIUS
       border: `1px solid ${TOKENS.divider}`,
-      marginBottom: 14,
+      marginBottom: 35,             // LIST_TOKENS.GROUP_CARD_MARGIN_BOTTOM
       overflow: 'hidden',
       ...style,
     }}>{children}</div>

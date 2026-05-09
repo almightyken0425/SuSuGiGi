@@ -41,13 +41,12 @@ function _Tile({ icon, label, onClick, big = false }) {
       boxShadow: '0 1px 2px rgba(0,0,0,0.04)', cursor: 'pointer', fontFamily: 'inherit',
     }}>
       <Glyph name={icon} size={16} color={TOKENS.ink2} stroke={2}/>
-      <span style={{ fontSize: big ? 17 : 15, fontWeight: 600, letterSpacing: -0.2, color: TOKENS.ink }}>{label}</span>
+      <span style={{ fontSize: big ? 17 : 15, fontWeight: 500, letterSpacing: -0.2, color: TOKENS.ink }}>{label}</span>
     </button>
   );
 }
 
 function _AccountCard({ account, isSelected, isLastSelected, onClick, width }) {
-  const swatchBg = isSelected ? TOKENS.p50 : '#EFEFF3';
   const swatchIconColor = isSelected ? TOKENS.p500 : TOKENS.ink3;
   const nameColor = isSelected ? TOKENS.ink : TOKENS.ink2;
   const currencyColor = isSelected ? TOKENS.ink2 : TOKENS.ink3;
@@ -56,14 +55,18 @@ function _AccountCard({ account, isSelected, isLastSelected, onClick, width }) {
       style={{
         width, display: 'flex', alignItems: 'center', gap: 10,
         padding: '14px 12px', borderRadius: 12,
-        border: `1.5px solid ${isSelected ? TOKENS.p500 : 'transparent'}`,
-        background: isSelected ? TOKENS.surface : '#FAFAFA',
+        border: isSelected
+          ? `1.5px solid ${TOKENS.p500}`
+          : `1px solid ${TOKENS.divider}`,
+        background: TOKENS.surface,
         boxShadow: isSelected ? '0 1px 2px rgba(67,35,160,0.08)' : 'none',
         cursor: isLastSelected ? 'not-allowed' : 'pointer',
         fontFamily: 'inherit', opacity: isLastSelected ? 0.85 : 1,
       }}>
       <div style={{
-        width: 32, height: 32, borderRadius: 8, background: swatchBg,
+        width: 32, height: 32, borderRadius: 8,
+        background: isSelected ? TOKENS.p50 : TOKENS.surface,
+        border: isSelected ? 'none' : `1px solid ${TOKENS.divider}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
       }}>
         <Glyph name={account.icon} size={17} color={swatchIconColor} stroke={1.6}/>
@@ -72,7 +75,7 @@ function _AccountCard({ account, isSelected, isLastSelected, onClick, width }) {
         flex: 1, fontSize: 13.5, fontWeight: 500, color: nameColor,
         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'left',
       }}>{account.name}</span>
-      <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: 0.4, color: currencyColor }}>
+      <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: 0.4, color: currencyColor }}>
         {account.currency}
       </span>
     </button>

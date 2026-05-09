@@ -100,6 +100,162 @@ function FocusCard({ kind, amount, active, onPress }) {
   );
 }
 
+// ─────────────────────────────────────────────────────────────
+// HomeScreen-only tx list（與提案層 R10 解耦）
+// 對齐實作 src/screens/Home/PeriodPage.tsx：
+//   - row left slot：40x32 透明容器（無 outline）
+//   - section icon：32x32 透明容器（無 outline，固定不 morph）
+//   - date badge：單行 m/d 文字（依 locale 可能 d/m）
+//   - typography 走 3-weight light system（最高 medium 500）
+// ─────────────────────────────────────────────────────────────
+const _HS_TRANSITION = 'all 280ms cubic-bezier(0.4, 0, 0.2, 1)';
+const _HS_PAD_X = 16;
+const _HS_GAP = 14;
+const _HS_MONTH_TO_NUM = {
+  Jan:'1', Feb:'2', Mar:'3', Apr:'4', May:'5', Jun:'6',
+  Jul:'7', Aug:'8', Sep:'9', Oct:'10', Nov:'11', Dec:'12',
+};
+
+function HS_RowLeftSlot({ children }) {
+  return (
+    <div style={{
+      width: 40, height: 32,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+    }}>{children}</div>
+  );
+}
+
+function HS_DateBadgeText({ date }) {
+  const [mStr, d] = date.split(' ');
+  const m = _HS_MONTH_TO_NUM[mStr] || mStr;
+  return (
+    <span style={{
+      fontSize: 12, fontWeight: 500, color: TOKENS.ink2,
+      fontVariantNumeric: 'tabular-nums',
+    }}>{m}/{d}</span>
+  );
+}
+
+function HS_Row({ left, primary, secondary, right }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: `12px ${_HS_PAD_X}px` }}>
+      {left}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{
+          fontSize: 15, fontWeight: 300, color: TOKENS.ink,
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+        }}>{primary}</div>
+        {secondary && <div style={{ fontSize: 12, color: TOKENS.ink3, marginTop: 2 }}>{secondary}</div>}
+      </div>
+      <span style={{
+        fontSize: 16, fontWeight: 500, color: TOKENS.ink,
+        fontVariantNumeric: 'tabular-nums',
+      }}>{right}</span>
+    </div>
+  );
+}
+
+function HS_Header({ c, onClick, leadingIcon, title, count, total }) {
+  return (
+    <div onClick={onClick} style={{
+      cursor: 'pointer',
+      padding: c ? `14px ${_HS_PAD_X}px` : `10px ${_HS_PAD_X}px`,
+      transition: _HS_TRANSITION,
+      display: 'flex', alignItems: 'center', gap: 10,
+    }}>
+      <CollapseChev collapsed={c} color={TOKENS.ink2}/>
+      {leadingIcon}
+      <span style={{
+        fontSize: c ? 17 : 14,
+        fontWeight: 500, color: TOKENS.ink,
+        transition: _HS_TRANSITION,
+      }}>{title}</span>
+      <span style={{ fontSize: c ? 13 : 11, color: TOKENS.ink3, transition: _HS_TRANSITION }}>· {count}</span>
+      <span style={{ flex: 1 }}/>
+      <span style={{
+        fontSize: c ? 15 : 13,
+        fontWeight: 500, color: TOKENS.ink,
+        fontVariantNumeric: 'tabular-nums',
+        transition: _HS_TRANSITION,
+      }}>{total}</span>
+    </div>
+  );
+}
+
+function HSTxByDate({ collapsed, onToggle }) {
+  const sections = groupByDate(TX);
+  return (
+    <div>
+      {sections.map(sec => {
+        const c = collapsed && collapsed.has(sec.id);
+        return (
+          <div key={sec.id} style={{
+            margin: `0 16px ${_HS_GAP}px`,
+            background: TOKENS.surface,
+            borderRadius: 14,
+            border: `1px solid ${TOKENS.divider}`,
+            overflow: 'hidden',
+            transition: _HS_TRANSITION,
+          }}>
+            <HS_Header c={c} onClick={() => onToggle && onToggle(sec.id)}
+              title={sec.title} count={`${sec.data.length} 筆`} total={fmt(sec.total)}/>
+            {!c && sec.data.map((tx, i) => {
+              const cat = CAT_BY_ID[tx.cat];
+              return (
+                <div key={tx.id} style={{ borderTop: i === 0 ? 'none' : `0.5px solid ${TOKENS.hairline}` }}>
+                  <HS_Row
+                    left={<HS_RowLeftSlot><Glyph name={cat.glyph} size={20} color={TOKENS.ink}/></HS_RowLeftSlot>}
+                    primary={tx.note || cat.name} secondary={cat.name}
+                    right={fmt(tx.amount)}/>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function HSTxByCategory({ collapsed, onToggle, chartMode = 'expense' }) {
+  const sections = groupByCategory(TX, chartMode);
+  return (
+    <div>
+      {sections.map(sec => {
+        const c = collapsed && collapsed.has(sec.id);
+        const icon = (
+          <div style={{
+            width: 32, height: 32,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          }}>
+            <Glyph name={sec.iconGlyph} size={18} color={TOKENS.p500}/>
+          </div>
+        );
+        return (
+          <div key={sec.id} style={{
+            margin: `0 16px ${_HS_GAP}px`,
+            background: TOKENS.surface,
+            borderRadius: 14,
+            border: `1px solid ${TOKENS.divider}`,
+            overflow: 'hidden',
+            transition: _HS_TRANSITION,
+          }}>
+            <HS_Header c={c} onClick={() => onToggle && onToggle(sec.id)}
+              leadingIcon={icon} title={sec.title} count={sec.data.length} total={fmt(sec.total)}/>
+            {!c && sec.data.map((tx, i) => (
+              <div key={tx.id} style={{ borderTop: i === 0 ? 'none' : `0.5px solid ${TOKENS.hairline}` }}>
+                <HS_Row
+                  left={<HS_RowLeftSlot><HS_DateBadgeText date={tx.date}/></HS_RowLeftSlot>}
+                  primary={tx.note} right={fmt(tx.amount)}/>
+              </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // Home / PeriodPage — faithful replica
 function HomeScreen({ onSearch, onSettings, onFilter, filterState }) {
   const [chartMode, setChartMode] = React.useState('expense');
@@ -174,10 +330,10 @@ function HomeScreen({ onSearch, onSettings, onFilter, filterState }) {
           <FocusCard kind="income"  amount={totals.income}  active={chartMode === 'income'}  onPress={() => setChartMode('income')}/>
         </div>
 
-        {/* Sections — R10 outlined frame refined */}
+        {/* Sections — HomeScreen-only (與 R10 提案解耦，對齐實作) */}
         {groupMode === 'date'
-          ? <TxR10_ByDate collapsed={collapsed} onToggle={toggle}/>
-          : <TxR10_ByCategory collapsed={collapsed} onToggle={toggle} chartMode={chartMode}/>}
+          ? <HSTxByDate collapsed={collapsed} onToggle={toggle}/>
+          : <HSTxByCategory collapsed={collapsed} onToggle={toggle} chartMode={chartMode}/>}
       </div>
     </>
   );
@@ -257,7 +413,7 @@ function CategoriesScreen({ onBack }) {
     <>
       <NavHeader title="分類" leadingText="設定" leadingAction={onBack}/>
       <div style={{ padding: 16, paddingBottom: 100, background: TOKENS.bg }}>
-        <div style={{ fontSize: 13, color: TOKENS.ink2, padding: '12px 20px 6px', fontWeight: 400, letterSpacing: 0.5 }}>支出</div>
+        <div style={{ fontSize: 13, color: TOKENS.ink2, padding: '12px 16px 6px', fontWeight: 400, letterSpacing: 0.5 }}>支出</div>
         <GroupCard>
           {expenseCats.map((c, i) => (
             <ListItem key={c.id}
@@ -266,7 +422,12 @@ function CategoriesScreen({ onBack }) {
               isLast={i === expenseCats.length - 1}/>
           ))}
         </GroupCard>
-        <div style={{ fontSize: 13, color: TOKENS.ink2, padding: '12px 20px 6px', fontWeight: 400, letterSpacing: 0.5 }}>收入</div>
+        <GroupCard>
+          <ListItem
+            leftIcon={<Glyph name="plus" size={20} color={TOKENS.p500} stroke={2}/>}
+            title="新增支出分類" titleColor={TOKENS.p500} isLast/>
+        </GroupCard>
+        <div style={{ fontSize: 13, color: TOKENS.ink2, padding: '12px 16px 6px', fontWeight: 400, letterSpacing: 0.5 }}>收入</div>
         <GroupCard>
           {incomeCats.map((c, i) => (
             <ListItem key={c.id}
@@ -278,7 +439,7 @@ function CategoriesScreen({ onBack }) {
         <GroupCard>
           <ListItem
             leftIcon={<Glyph name="plus" size={20} color={TOKENS.p500} stroke={2}/>}
-            title="新增分類" titleColor={TOKENS.p500} isLast/>
+            title="新增收入分類" titleColor={TOKENS.p500} isLast/>
         </GroupCard>
       </div>
     </>
