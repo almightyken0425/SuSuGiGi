@@ -590,19 +590,15 @@ function R10_Header({ c, onClick, leadingIcon, title, count, total }) {
       <CollapseChev collapsed={c} color={TOKENS.ink2}/>
       {leadingIcon}
       <span style={{
-        fontSize: c ? 20 : 12,
-        fontWeight: c ? 700 : 600,
-        color: c ? TOKENS.ink : TOKENS.ink2,
-        letterSpacing: c ? -0.3 : 0.6,
-        textTransform: c ? 'none' : 'uppercase',
+        fontSize: c ? 17 : 14,
+        fontWeight: 500, color: TOKENS.ink,
         transition: R3_TRANSITION,
       }}>{title}</span>
       <span style={{ fontSize: c ? 13 : 11, color: TOKENS.ink3, transition: R3_TRANSITION }}>· {count}</span>
       <span style={{ flex: 1 }}/>
       <span style={{
-        fontSize: c ? 16 : 13,
-        fontWeight: c ? 700 : 600,
-        color: c ? TOKENS.ink : TOKENS.ink2,
+        fontSize: c ? 15 : 13,
+        fontWeight: 500, color: TOKENS.ink,
         fontVariantNumeric: 'tabular-nums',
         transition: R3_TRANSITION,
       }}>{total}</span>

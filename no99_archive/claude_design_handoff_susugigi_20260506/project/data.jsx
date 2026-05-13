@@ -54,33 +54,40 @@ const CATEGORIES = [
 const CAT_BY_ID = Object.fromEntries(CATEGORIES.map(c => [c.id, c]));
 
 const ACCOUNTS = [
-  { id: 'cash',    name: '現金',          balance: 3240,    icon: 'cash',  currency: 'TWD' },
-  { id: 'bank',    name: '玉山活儲',       balance: 128450,  icon: 'bank',  currency: 'TWD' },
-  { id: 'credit',  name: '國泰世華 信用卡', balance: -8420,   icon: 'card',  currency: 'TWD' },
-  { id: 'invest',  name: '富邦證券',       balance: 462100,  icon: 'chart', currency: 'TWD' },
+  { id: 'cash',     name: '現金',          balance: 3240,    icon: 'cash',  currency: 'TWD' },
+  { id: 'bank',     name: '玉山活儲',       balance: 128450,  icon: 'bank',  currency: 'TWD' },
+  { id: 'credit',   name: '國泰世華 信用卡', balance: -8420,   icon: 'card',  currency: 'TWD' },
+  { id: 'invest',   name: '富邦證券',       balance: 462100,  icon: 'chart', currency: 'TWD' },
+  { id: 'usd_cash', name: 'USD 旅費',       balance: 320,     icon: 'cash',  currency: 'USD' },
 ];
 const ACC_BY_ID = Object.fromEntries(ACCOUNTS.map(a => [a.id, a]));
 
 // Mock period — May 2026
+// `recurring: true` 標記由定期排程產生的實例（對應落地的 scheduleId != null）
+// `currency` 與 `convertedAmount` 標記多幣別紀錄（base = TWD）
 const TX = [
-  { id: 1,  date: 'May 2',  cat: 'food',   acc: 'credit', amount: -185,  note: '路易莎咖啡' },
-  { id: 2,  date: 'May 2',  cat: 'food',   acc: 'cash',   amount: -120,  note: '便當' },
-  { id: 3,  date: 'May 2',  cat: 'trans',  acc: 'credit', amount: -32,   note: '捷運' },
-  { id: 4,  date: 'May 1',  cat: 'ent',    acc: 'credit', amount: -480,  note: '電影 — 沙丘' },
-  { id: 5,  date: 'May 1',  cat: 'food',   acc: 'credit', amount: -780,  note: '居酒屋' },
-  { id: 6,  date: 'May 1',  cat: 'shop',   acc: 'credit', amount: -1290, note: 'Uniqlo T-shirt × 2' },
-  { id: 7,  date: 'Apr 30', cat: 'salary', acc: 'bank',   amount: 68000, note: '4 月薪資' },
-  { id: 8,  date: 'Apr 30', cat: 'trans',  acc: 'credit', amount: -28,   note: '公車' },
-  { id: 9,  date: 'Apr 29', cat: 'food',   acc: 'cash',   amount: -340,  note: '晚餐 — 牛肉麵' },
-  { id: 10, date: 'Apr 29', cat: 'health', acc: 'credit', amount: -650,  note: '牙科檢查' },
-  { id: 11, date: 'Apr 29', cat: 'home',   acc: 'credit', amount: -1480, note: '電費' },
+  { id: 1,  date: 'May 2',  cat: 'food',   acc: 'credit',   amount: -185,  note: '路易莎咖啡' },
+  { id: 2,  date: 'May 2',  cat: 'food',   acc: 'cash',     amount: -120,  note: '便當' },
+  { id: 3,  date: 'May 2',  cat: 'trans',  acc: 'credit',   amount: -32,   note: '捷運月票',     recurring: true },
+  { id: 4,  date: 'May 1',  cat: 'ent',    acc: 'usd_cash', amount: -15,   currency: 'USD', convertedAmount: -480, note: 'Netflix 訂閱',  recurring: true },
+  { id: 5,  date: 'May 1',  cat: 'food',   acc: 'credit',   amount: -780,  note: '居酒屋' },
+  { id: 6,  date: 'May 1',  cat: 'shop',   acc: 'usd_cash', amount: -40,   currency: 'USD', convertedAmount: -1290, note: 'Uniqlo T-shirt × 2' },
+  { id: 7,  date: 'Apr 30', cat: 'salary', acc: 'bank',     amount: 68000, note: '4 月薪資',      recurring: true },
+  { id: 8,  date: 'Apr 30', cat: 'trans',  acc: 'credit',   amount: -28,   note: '公車' },
+  { id: 9,  date: 'Apr 29', cat: 'food',   acc: 'cash',     amount: -340,  note: '晚餐 — 牛肉麵' },
+  { id: 10, date: 'Apr 29', cat: 'health', acc: 'credit',   amount: -650,  note: '牙科檢查' },
+  { id: 11, date: 'Apr 29', cat: 'home',   acc: 'credit',   amount: -1480, note: '電費',          recurring: true },
 ];
+
+// Base 幣別 = TWD。多幣別紀錄用 convertedAmount 做加總，避免幣別混算。
+const baseAmount = (t) => t.convertedAmount ?? t.amount;
 
 function periodTotals(items) {
   let income = 0, expense = 0;
   for (const t of items) {
-    if (t.amount > 0) income += t.amount;
-    else expense += -t.amount;
+    const a = baseAmount(t);
+    if (a > 0) income += a;
+    else expense += -a;
   }
   return { income, expense, balance: income - expense };
 }
@@ -96,12 +103,12 @@ function groupByDate(items) {
     id: 'date_' + title,
     title,
     data,
-    total: data.reduce((s, t) => s + t.amount, 0),
+    total: data.reduce((s, t) => s + baseAmount(t), 0),
   }));
 }
 // Group by category (Category mode), expense only by chartMode
 function groupByCategory(items, chartMode = 'expense') {
-  const filtered = items.filter(t => chartMode === 'expense' ? t.amount < 0 : t.amount > 0);
+  const filtered = items.filter(t => chartMode === 'expense' ? baseAmount(t) < 0 : baseAmount(t) > 0);
   const m = new Map();
   for (const t of filtered) {
     if (!m.has(t.cat)) m.set(t.cat, []);
@@ -113,7 +120,7 @@ function groupByCategory(items, chartMode = 'expense') {
     title: CAT_BY_ID[cat].name,
     iconGlyph: CAT_BY_ID[cat].glyph,
     data,
-    total: data.reduce((s, t) => s + t.amount, 0),
+    total: data.reduce((s, t) => s + baseAmount(t), 0),
   })).sort((a, b) => Math.abs(b.total) - Math.abs(a.total));
 }
 
@@ -121,8 +128,9 @@ function groupByCategory(items, chartMode = 'expense') {
 function pieData(items) {
   const m = new Map();
   for (const t of items) {
-    if (t.amount >= 0) continue;
-    m.set(t.cat, (m.get(t.cat) || 0) + (-t.amount));
+    const a = baseAmount(t);
+    if (a >= 0) continue;
+    m.set(t.cat, (m.get(t.cat) || 0) + (-a));
   }
   const arr = Array.from(m.entries()).sort((a, b) => b[1] - a[1]);
   return arr.map(([id, value], i) => ({
@@ -135,11 +143,11 @@ function pieData(items) {
 function fmt(n, code = 'TWD') {
   const sign = n < 0 ? '-' : '';
   const abs = Math.abs(n);
-  const symbol = code === 'TWD' ? 'NT$' : code;
+  const symbol = code === 'TWD' ? 'NT$' : code === 'USD' ? 'US$' : code === 'JPY' ? '¥' : code;
   return sign + symbol + abs.toLocaleString('en-US');
 }
 
 Object.assign(window, {
   TOKENS, CHART_COLORS, CATEGORIES, CAT_BY_ID, ACCOUNTS, ACC_BY_ID, TX,
-  periodTotals, groupByDate, groupByCategory, pieData, fmt,
+  baseAmount, periodTotals, groupByDate, groupByCategory, pieData, fmt,
 });

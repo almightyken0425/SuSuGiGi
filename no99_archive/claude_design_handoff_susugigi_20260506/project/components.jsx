@@ -69,6 +69,14 @@ function Glyph({ name, size = 16, color = '#fff', stroke = 2 }) {
       return (<svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M3 5h10M3 8h10M3 11h10" stroke={c} strokeWidth={sw} strokeLinecap="round"/></svg>);
     case 'filter':
       return (<svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4.5 8h7M7 12h3" stroke={c} strokeWidth={sw} strokeLinecap="round"/></svg>);
+    case 'repeat':
+      return (<svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M11 1.5L13.5 4L11 6.5M2.5 8V6a2 2 0 012-2H13M5 14.5L2.5 12L5 9.5M13.5 8v2a2 2 0 01-2 2H3" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"/></svg>);
+    case 'sync':
+      return (<svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M3 8a5 5 0 018.5-3.5M13 8a5 5 0 01-8.5 3.5M11.5 2v3h-3M4.5 14v-3h3" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"/></svg>);
+    case 'refresh':
+      return (<svg width={s} height={s} viewBox="0 0 16 16" fill="none"><path d="M13.5 8a5.5 5.5 0 11-1.4-3.7M13.5 2v3h-3" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"/></svg>);
+    case 'clock':
+      return (<svg width={s} height={s} viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke={c} strokeWidth={sw}/><path d="M8 4.5V8l2.5 1.5" stroke={c} strokeWidth={sw} strokeLinecap="round"/></svg>);
     default: return null;
   }
 }

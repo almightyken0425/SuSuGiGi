@@ -41,13 +41,18 @@ function ScreenFrame({ pinned, sharedFilter, setSharedFilter }) {
   );
 }
 
-// ViewTabs — 浮在 viewport 頂部的分頁切換器，用 location.hash 同步：
-// `#all`（預設）顯示 All Screens，`#proposals` 顯示兩組提案區塊。
+// ViewTabs — 浮在 viewport 頂部的分頁切換器，用 location.hash 同步。
+// 4 個主題：#all / #filter / #tx-list / #recurring
+const VIEW_TABS = [
+  { id: 'all',        label: 'All Screens' },
+  { id: 'filter',     label: 'Filter' },
+  { id: 'tx-list',    label: 'Tx List' },
+  { id: 'recurring',  label: 'Recurring' },
+  { id: 'row-height', label: 'Row Height' },
+];
+const VALID_VIEWS = VIEW_TABS.map(t => t.id);
+
 function ViewTabs({ view, setView }) {
-  const tabs = [
-    { id: 'all',       label: 'All Screens' },
-    { id: 'proposals', label: '提案 Proposals' },
-  ];
   return (
     <div style={{
       position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)',
@@ -61,7 +66,7 @@ function ViewTabs({ view, setView }) {
       zIndex: 100,
       fontFamily: '-apple-system, "SF Pro", "PingFang TC", "Noto Sans TC", system-ui, sans-serif',
     }}>
-      {tabs.map(t => {
+      {VIEW_TABS.map(t => {
         const active = view === t.id;
         return (
           <button key={t.id} onClick={() => setView(t.id)} style={{
@@ -81,21 +86,64 @@ function ViewTabs({ view, setView }) {
   );
 }
 
+// Recurring Marker tab 內的 sub-nav，切換 round
+function RecurringRoundNav({ round, setRound }) {
+  const rounds = [
+    { id: 'round1', label: 'Round 1 · 標記方式' },
+    { id: 'round2', label: 'Round 2 · icon 細節' },
+    { id: 'round3', label: 'Round 3 · wrap 細節' },
+  ];
+  return (
+    <div style={{
+      position: 'fixed', top: 72, left: '50%', transform: 'translateX(-50%)',
+      display: 'flex', gap: 4, padding: 3,
+      background: 'rgba(255,255,255,0.92)',
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)',
+      borderRadius: 999,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+      border: '1px solid rgba(0,0,0,0.06)',
+      zIndex: 99,
+      fontFamily: '-apple-system, "SF Pro", "PingFang TC", "Noto Sans TC", system-ui, sans-serif',
+    }}>
+      {rounds.map(r => {
+        const active = round === r.id;
+        return (
+          <button key={r.id} onClick={() => setRound(r.id)} style={{
+            border: 'none', borderRadius: 999,
+            padding: '6px 12px', cursor: 'pointer',
+            fontSize: 12, fontWeight: 500,
+            color: active ? '#fff' : '#212121',
+            background: active ? '#4323a0' : 'transparent',
+            transition: 'background 180ms, color 180ms',
+            fontFamily: 'inherit',
+          }}>
+            {r.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 function App() {
-  // hash router：#all（預設）vs #proposals
+  // hash router：#all / #filter / #tx-list / #recurring
   const [view, setView] = React.useState(() => {
     const h = window.location.hash.replace('#', '');
-    return h === 'proposals' ? 'proposals' : 'all';
+    return VALID_VIEWS.includes(h) ? h : 'all';
   });
   React.useEffect(() => {
     const onHashChange = () => {
       const h = window.location.hash.replace('#', '');
-      setView(h === 'proposals' ? 'proposals' : 'all');
+      setView(VALID_VIEWS.includes(h) ? h : 'all');
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
   const updateView = (v) => { if (v !== view) window.location.hash = v; };
+
+  // Recurring Marker tab 內的 round sub-nav state
+  const [recurRound, setRecurRound] = React.useState('round1');
 
   // Shared filter state across the Home + Filter frames
   const [sharedFilter, setSharedFilter] = React.useState({
@@ -117,6 +165,7 @@ function App() {
   return (
     <>
       <ViewTabs view={view} setView={updateView}/>
+      {view === 'recurring' && <RecurringRoundNav round={recurRound} setRound={setRecurRound}/>}
       <DesignCanvas>
         {view === 'all' && (
           <DCSection id="all" title="SuSuGiGi — All Screens" subtitle="Pinned views; click expand to focus.">
@@ -130,8 +179,8 @@ function App() {
           </DCSection>
         )}
 
-        {view === 'proposals' && <>
-        <DCSection id="filter-proposals" title="Home Filter 提案" subtitle="V1–V5 第一輪視覺區隔，V6–V9 第二輪無文字 + 對稱化迭代。All Screens 採用 V9 · Negative space。">
+        {view === 'filter' && (
+          <DCSection id="filter-proposals" title="Home Filter 提案" subtitle="V1–V5 第一輪視覺區隔，V6–V9 第二輪無文字 + 對稱化迭代。All Screens 採用 V9 · Negative space。">
         {[
           { id: 'fv1', label: 'V1 · Section headers',  V: HomeFilterScreen_V1_SectionHeaders },
           { id: 'fv2', label: 'V2 · Container wrap',   V: HomeFilterScreen_V2_ContainerWrap },
@@ -150,8 +199,10 @@ function App() {
           </DCArtboard>
         ))}
       </DCSection>
+        )}
 
-      <DCSection id="tx-list-proposals" title="Transaction List 提案" subtitle="第一輪 V1/V2/V7 結構初探 → 第二輪 R1–R5 層次感探索 → 第三輪 R6–R10 morph + 區隔修正（可點 header 收合，含 morph 動畫）。All Screens 採用 R10 · Outlined frame refined。">
+        {view === 'tx-list' && (
+          <DCSection id="tx-list-proposals" title="Transaction List 提案" subtitle="第一輪 V1/V2/V7 結構初探 → 第二輪 R1–R5 層次感探索 → 第三輪 R6–R10 morph + 區隔修正（可點 header 收合，含 morph 動畫）。All Screens 採用 R10 · Outlined frame refined。">
         {[
           { id: 'tx1', label: 'V1 · Timeline rail',  Date: TxV1_ByDate, Cat: TxV1_ByCategory },
           { id: 'tx2', label: 'V2 · Card stack',     Date: TxV2_ByDate, Cat: TxV2_ByCategory },
@@ -184,6 +235,129 @@ function App() {
           </DCArtboard>,
         ])}
       </DCSection>
+        )}
+
+        {view === 'row-height' && <>
+          <DCSection id="tx-list-row-height-data" title="Data Row Height 提案 (H 系列)" subtitle="現行實作 transactionRow 約 64–66px / Prototype R10 baseline 約 60px。H0 為 R10 對照組（敲定）；H1–H5 依不同策略往下減高（padding diet / 合併單行 / 縮字級 / 右靠 metadata / 極簡）。每個 artboard 標題後標 row 預估高度。">
+            {[
+              { id: 'rh-h0', label: 'H0 · Current ★（R10 baseline，~60px，已敲定）', V: TxRH_H0_Current },
+              { id: 'rh-h1', label: 'H1 · Padding diet（padding 12→8，~52px）',      V: TxRH_H1_PadDiet },
+              { id: 'rh-h2', label: 'H2 · Single line（note · account 合併，~44px）', V: TxRH_H2_SingleLine },
+              { id: 'rh-h3', label: 'H3 · Compact type（字級縮一號，~46px）',         V: TxRH_H3_CompactType },
+              { id: 'rh-h4', label: 'H4 · Right meta（account 移到金額下方，~50px）', V: TxRH_H4_RightMeta },
+              { id: 'rh-h5', label: 'H5 · Minimal（極瘦，~38px）',                   V: TxRH_H5_Minimal },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+
+          <DCSection id="tx-list-row-height-collapsed" title="Collapsed Section Header Height 提案 (CH 系列)" subtitle="實作 collapsed section header 約 60px（pad 14 / icon 32 / title 17 / total 15）。每個 artboard 預設把 6 個分類全部收合，看一個畫面塞幾個 header；by-category 模式為主，因為 header 數量最多。CH0 為對照；CH1–CH5 依不同策略往下減高。">
+            {[
+              { id: 'rh-ch0', label: 'CH0 · Current（pad 14 / icon 32 / title 17，~60px）',    V: TxCH_CH0_Current },
+              { id: 'rh-ch1', label: 'CH1 · Padding diet（pad 14→10，~52px）',                  V: TxCH_CH1_PadDiet },
+              { id: 'rh-ch2', label: 'CH2 · Icon shrink（icon 32→28，~56px）',                  V: TxCH_CH2_IconShrink },
+              { id: 'rh-ch3', label: 'CH3 · Match data row（pad 14→12，~56px，跟 H0 對齊）',     V: TxCH_CH3_MatchRow },
+              { id: 'rh-ch4', label: 'CH4 · Compact（pad 10 / icon 24 / title 15，~44px）',      V: TxCH_CH4_Compact },
+              { id: 'rh-ch5', label: 'CH5 · Tight（pad 8 / icon 22 / title 14，~38px）',         V: TxCH_CH5_Tight },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={CH_INITIAL_COLLAPSED}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+        </>}
+
+        {view === 'recurring' && <>
+        {recurRound === 'round1' && (
+          <DCSection id="tx-list-recurring-round1" title="Recurring Marker · Round 1（標記方式，已收斂）" subtitle="比較標記方式。R11 徽章太小、R13 底色不直觀皆已否決；R12（文字前）與 R14（金額左）為 inline tag 對照。收斂結論：採 R14 — icon 並列「主金額 + 換算金額」整包左側、垂直置中。Mock 中 5/2 捷運月票、4/30 4 月薪資、4/29 電費、5/1 Netflix 為 recurring。">
+            {[
+              { id: 'r14-d', label: 'R14 · Inline · before amount ★（金額前，主推）', V: TxR14_ByDate },
+              { id: 'r12-d', label: 'R12 · Inline · before primary（文字前，對照）',  V: TxR12_ByDate },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+        )}
+
+        {recurRound === 'round2' && (
+          <DCSection id="tx-list-recurring-round2-final" title="Recurring Marker · Round 2（icon 細節，已收斂）" subtitle="size / color / shape / background / gap 5 維度個別比較後敲定。Baseline = size 14 / secondary / repeat / none / gap 4；Final ★ = size 16 / sync / ink3 / gray fill / gap 14。觀察 5/1 Netflix（多幣別 + recurring）一行。">
+            {[
+              { id: 'r5-baseline', label: 'Baseline（size 14 / secondary / repeat / none / gap 4）',  V: TxR5_Size14 },
+              { id: 'r5-final',    label: 'Final ★（size 16 / sync / ink3 / gray fill / gap 14）',    V: TxR5_Combined_Gap14 },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+        )}
+
+        {recurRound === 'round3' && <>
+          <DCSection id="tx-list-recurring-round3-playground" title="Recurring Marker · Round 3 · 🎛 Playground（自己調參數）" subtitle="改 tx-list-round5.jsx 頂端的 R5_PLAYGROUND 物件，存檔後 reload 瀏覽器看結果。每個 key 都有註解說明可選值與影響。下面 4 個 section 是固定變體，這個是即時可調的。">
+            {[
+              { id: 'r5-playground', label: '🎛 Playground（看 R5_PLAYGROUND）', V: TxR5_Playground },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+
+          <DCSection id="tx-list-recurring-round3-wrap-shape" title="Recurring Marker · Round 3 · Wrap Shape" subtitle="在 Round 2 敲定組合上比較 wrap 形狀。Circle ★ 為現行；rounded square 兩種半徑 + 直角方形作對照。觀察 5/1 Netflix 那筆 wrap 的外形語意。">
+            {[
+              { id: 'r5-ws-c',  label: 'Circle ★（現行）',     V: TxR5_Wrap_ShapeCircle },
+              { id: 'r5-ws-r6', label: 'Rounded 6px',         V: TxR5_Wrap_ShapeRounded6 },
+              { id: 'r5-ws-r4', label: 'Rounded 4px',         V: TxR5_Wrap_ShapeRounded4 },
+              { id: 'r5-ws-sq', label: 'Square sharp',        V: TxR5_Wrap_ShapeSquare },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+
+          <DCSection id="tx-list-recurring-round3-wrap-padding" title="Recurring Marker · Round 3 · Wrap Padding" subtitle="glyph 跟 wrap 邊的單側 padding。3px ★ 為現行（總 wrap 直徑 = 16 + 6 = 22px）。padding 越大 wrap 越鬆、像徽章；越小越緊湊。">
+            {[
+              { id: 'r5-wp-2', label: 'Padding 2px（緊）',          V: TxR5_Wrap_Padding2 },
+              { id: 'r5-wp-3', label: 'Padding 3px ★（現行）',      V: TxR5_Wrap_Padding3 },
+              { id: 'r5-wp-4', label: 'Padding 4px',               V: TxR5_Wrap_Padding4 },
+              { id: 'r5-wp-5', label: 'Padding 5px（鬆）',          V: TxR5_Wrap_Padding5 },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+
+          <DCSection id="tx-list-recurring-round3-wrap-bg" title="Recurring Marker · Round 3 · Wrap Background Color" subtitle="比較 wrap 填色。Gray bg ★ 為現行（TOKENS.bg = #F2F2F7）。Surface2 更淡、p50 帶主色紫淡、ink3-alpha 用 ink3 加透明度。">
+            {[
+              { id: 'r5-wb-g',  label: 'Gray bg ★（現行，#F2F2F7）',          V: TxR5_Wrap_BgGray },
+              { id: 'r5-wb-s2', label: 'Surface2（#F5F5F5，更淡）',           V: TxR5_Wrap_BgSurface2 },
+              { id: 'r5-wb-p',  label: 'P50（主色淡紫 #f0ecfa）',              V: TxR5_Wrap_BgP50 },
+              { id: 'r5-wb-a',  label: 'Ink3 alpha（rgba(189,189,189,0.3)）', V: TxR5_Wrap_BgInk3Alpha },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+
+          <DCSection id="tx-list-recurring-round3-wrap-border" title="Recurring Marker · Round 3 · Wrap Border" subtitle="在 gray fill 之上疊邊框。None ★ 為現行（只填色）。Hairline divider 是淡邊、Hairline ink3 是中灰邊，會把 wrap 跟周圍視覺切得更清楚。">
+            {[
+              { id: 'r5-wbr-n', label: 'None ★（現行）',           V: TxR5_Wrap_BorderNone },
+              { id: 'r5-wbr-d', label: 'Hairline divider（淡邊）',  V: TxR5_Wrap_BorderDivider },
+              { id: 'r5-wbr-i', label: 'Hairline ink3（中灰邊）',   V: TxR5_Wrap_BorderInk3 },
+            ].map(v => (
+              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
+                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
+              </DCArtboard>
+            ))}
+          </DCSection>
+        </>}
         </>}
       </DesignCanvas>
     </>

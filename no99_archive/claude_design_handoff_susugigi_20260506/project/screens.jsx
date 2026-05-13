@@ -116,6 +116,41 @@ const _HS_MONTH_TO_NUM = {
   Jul:'7', Aug:'8', Sep:'9', Oct:'10', Nov:'11', Dec:'12',
 };
 
+// HS 版「主金額 + 換算金額」包，左側可選 recurring icon。
+// 對應 Round 5 R15 · Center align：icon 並列於整包左側，垂直置中。
+// 兩種分組模式共用，多幣別自動顯示 ≈ subtext。
+function HS_WrappedAmount({ recurring, amount, currency, convertedAmount, color }) {
+  const hasConverted = convertedAmount !== undefined && convertedAmount !== null;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+      {recurring && (
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 14, height: 14, flexShrink: 0,
+        }}>
+          <Glyph name="repeat" size={12} color={TOKENS.ink3} stroke={2}/>
+        </span>
+      )}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+        <span style={{
+          fontSize: 16, fontWeight: 500, color: color || TOKENS.ink,
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          {fmt(amount, currency)}
+        </span>
+        {hasConverted && (
+          <span style={{
+            fontSize: 12, color: TOKENS.ink3,
+            fontVariantNumeric: 'tabular-nums', marginTop: 2,
+          }}>
+            ≈ {fmt(convertedAmount, 'TWD')}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function HS_RowLeftSlot({ children }) {
   return (
     <div style={{
@@ -147,10 +182,7 @@ function HS_Row({ left, primary, secondary, right }) {
         }}>{primary}</div>
         {secondary && <div style={{ fontSize: 12, color: TOKENS.ink3, marginTop: 2 }}>{secondary}</div>}
       </div>
-      <span style={{
-        fontSize: 16, fontWeight: 500, color: TOKENS.ink,
-        fontVariantNumeric: 'tabular-nums',
-      }}>{right}</span>
+      {right}
     </div>
   );
 }
@@ -206,7 +238,7 @@ function HSTxByDate({ collapsed, onToggle }) {
                   <HS_Row
                     left={<HS_RowLeftSlot><Glyph name={cat.glyph} size={20} color={TOKENS.ink}/></HS_RowLeftSlot>}
                     primary={tx.note || cat.name} secondary={cat.name}
-                    right={fmt(tx.amount)}/>
+                    right={<HS_WrappedAmount recurring={tx.recurring} amount={tx.amount} currency={tx.currency} convertedAmount={tx.convertedAmount}/>}/>
                 </div>
               );
             })}
@@ -246,7 +278,8 @@ function HSTxByCategory({ collapsed, onToggle, chartMode = 'expense' }) {
               <div key={tx.id} style={{ borderTop: i === 0 ? 'none' : `0.5px solid ${TOKENS.hairline}` }}>
                 <HS_Row
                   left={<HS_RowLeftSlot><HS_DateBadgeText date={tx.date}/></HS_RowLeftSlot>}
-                  primary={tx.note} right={fmt(tx.amount)}/>
+                  primary={tx.note}
+                  right={<HS_WrappedAmount recurring={tx.recurring} amount={tx.amount} currency={tx.currency} convertedAmount={tx.convertedAmount}/>}/>
               </div>
             ))}
           </div>
