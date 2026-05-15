@@ -1,5 +1,6 @@
-# Module Spec git 與 Module Impl git 各自獨立版本控制
+# Module Design git、Module Spec git 與 Module Impl git 各自獨立版本控制
 # 頂層 Product git 不追蹤這些子目錄，靠 decision_framework_router skill 的
 # products_registry.md 維護跨層配對關係
-/no3_product_specs/
-/no5_product_development/
+/no3_product_designs/no2_accounting_app/
+/no4_product_specs/
+/no6_product_development/
