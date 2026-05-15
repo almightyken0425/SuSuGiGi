@@ -1,30 +1,425 @@
-// App shell — design canvas with all screens laid out side-by-side
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "_": null
-}/*EDITMODE-END*/;
+// ─────────────────────────────────────────────────────────────
+// App shell · 設計工作台 router
+//
+// 頂部 5 個 tab：
+//   #intro / #foundations / #components / #screens / #explorations
+//
+// SCREEN_META 中央定義每個 screen 的：
+//   - title           NavBar 標題
+//   - present         'push' | 'modal' | 'none'  → 對應 impl 的 navigation presentation
+//   - headerLeftText  push 模式回上頁的文字（例如 '設定'）
+//   - headerRight     header 右側元素（merge / search / settings 等）
+//   - hasFAB          是否顯示 FloatingActionBar
+//   - render          (ctx) => screen body JSX，ctx 提供 push / pop / sharedFilter 等
+//
+// SCREEN_LIST 是 Screens tab 要顯示的 pinned id 順序。
+// 想要鳥瞰全貌：用畫布的縮放（trackpad 二指捏合 / Ctrl+滾輪）拉遠即可。
+// ─────────────────────────────────────────────────────────────
 
-// Each screen runs its own internal navigation (push/pop) within its frame
-// — but shows the screen named by `pinned`. Filter state can be shared so
-// changes in one Filter frame propagate to the Home frame.
+function PushHeader({ title, leadingText, leadingAction, trailing }) {
+  return <NavHeader title={title} leadingText={leadingText} leadingAction={leadingAction} trailing={trailing}/>;
+}
+
+const SCREEN_META = {
+  // ─── Home ─── default / 邊界狀態
+  home: {
+    title: 'SuSuGiGi', present: 'push', hasFAB: true,
+    render: (ctx) => <HomeScreen filterState={ctx.sharedFilter}/>,
+    headerLeft: (ctx) => <HeaderIconButton symbol="line.3.horizontal.decrease" onPress={() => ctx.push('filter')}/>,
+    headerRight: (ctx) => (
+      <div style={{ display: 'flex', flexDirection: 'row', gap: 4 }}>
+        <HeaderIconButton symbol="magnifyingglass" onPress={() => ctx.push('search')}/>
+        <HeaderIconButton symbol="gearshape" onPress={() => ctx.push('settings')}/>
+      </div>
+    ),
+  },
+  'home-empty': {
+    title: 'SuSuGiGi', present: 'push', hasFAB: true,
+    render: (ctx) => <HomeScreen filterState={ctx.sharedFilter} variant="empty"/>,
+    headerLeft: (ctx) => <HeaderIconButton symbol="line.3.horizontal.decrease" onPress={() => ctx.push('filter')}/>,
+    headerRight: (ctx) => (
+      <div style={{ display: 'flex', flexDirection: 'row', gap: 4 }}>
+        <HeaderIconButton symbol="magnifyingglass" onPress={() => ctx.push('search')}/>
+        <HeaderIconButton symbol="gearshape" onPress={() => ctx.push('settings')}/>
+      </div>
+    ),
+  },
+  // ─── Filter ─── default / no-accounts
+  filter: {
+    title: '顯示設定', present: 'modal',
+    render: (ctx) => <HomeFilterScreen filterState={ctx.sharedFilter} setFilterState={ctx.setSharedFilter}/>,
+  },
+  'filter-no-accounts': {
+    title: '顯示設定', present: 'modal',
+    render: (ctx) => <HomeFilterScreen filterState={ctx.sharedFilter} setFilterState={ctx.setSharedFilter} variant="no-accounts"/>,
+  },
+  // ─── Search ─── default(initial) / with-results / no-results / loading
+  search: {
+    title: '搜尋', present: 'modal',
+    render: () => <SearchScreen/>,
+  },
+  'search-with-results': {
+    title: '搜尋', present: 'modal',
+    render: () => <SearchScreen variant="with-results"/>,
+  },
+  'search-no-results': {
+    title: '搜尋', present: 'modal',
+    render: () => <SearchScreen variant="no-results"/>,
+  },
+  'search-loading': {
+    title: '搜尋', present: 'modal',
+    render: () => <SearchScreen variant="loading"/>,
+  },
+  // ─── Transaction Editor ─── default / income / error
+  'tx-editor': {
+    title: '新增支出', present: 'modal', save: true,
+    render: () => <TransactionEditorScreen type="expense"/>,
+  },
+  'tx-editor-income': {
+    title: '新增收入', present: 'modal', save: true,
+    render: () => <TransactionEditorScreen type="income"/>,
+  },
+  'tx-editor-error': {
+    title: '新增支出', present: 'modal', save: true,
+    render: () => <TransactionEditorScreen type="expense" variant="error"/>,
+  },
+  transfer: {
+    title: '新增轉帳', present: 'modal', save: true,
+    render: () => <TransferEditorScreen/>,
+  },
+  // ─── Login ─── default / loading
+  login: {
+    title: '', present: 'none',
+    render: () => <LoginScreen/>,
+  },
+  'login-loading': {
+    title: '', present: 'none',
+    render: () => <LoginScreen variant="loading"/>,
+  },
+  settings: {
+    title: '設定', present: 'push', headerLeftText: '',
+    render: (ctx) => <SettingsScreen
+      onAccounts={() => ctx.push('accounts')}
+      onCategories={() => ctx.push('categories')}
+      onPreference={() => ctx.push('preference')}
+      onPaywall={() => ctx.push('paywall')}
+      onData={() => ctx.push('data-mgmt')}
+      onDebug={() => ctx.push('debug')}
+    />,
+  },
+  preference: {
+    title: '偏好設定', present: 'push', headerLeftText: '',
+    render: (ctx) => <PreferenceScreen
+      onTheme={() => ctx.push('theme')}
+      onLaunch={() => ctx.push('launchmode')}
+      onCurrency={() => ctx.push('currency')}
+      onCurrencyList={() => ctx.push('currlist')}
+      onRateList={() => ctx.push('ratelist')}
+      onLanguage={() => ctx.push('language')}
+      onTimezone={() => ctx.push('timezone')}
+    />,
+  },
+  // ─── Paywall ─── default / loading
+  paywall: {
+    title: '解鎖 Premium', present: 'modal',
+    render: () => <PaywallScreen/>,
+  },
+  'paywall-loading': {
+    title: '解鎖 Premium', present: 'modal',
+    render: () => <PaywallScreen variant="loading"/>,
+  },
+  // ─── Accounts ─── default / empty
+  accounts: {
+    title: '帳戶', present: 'push', headerLeftText: '',
+    render: (ctx) => <AccountListScreen onAdd={() => ctx.push('acc-editor')}/>,
+    headerRight: () => <HeaderIconButton symbol="arrow.triangle.merge" color={TOKENS.p500} onPress={() => {}}/>,
+  },
+  'accounts-empty': {
+    title: '帳戶', present: 'push', headerLeftText: '',
+    render: (ctx) => <AccountListScreen onAdd={() => ctx.push('acc-editor')} variant="empty"/>,
+    headerRight: () => <HeaderIconButton symbol="arrow.triangle.merge" color={TOKENS.p500} onPress={() => {}}/>,
+  },
+  'acc-editor': {
+    title: '新增帳戶', present: 'modal', save: true,
+    render: () => <AccountEditorScreen isNew/>,
+  },
+  'acc-editor-edit': {
+    title: '編輯帳戶', present: 'modal', save: true,
+    render: () => <AccountEditorScreen isNew={false}/>,
+  },
+  categories: {
+    title: '類別', present: 'push', headerLeftText: '',
+    render: (ctx) => <CategoryListScreen
+      onAddExpense={() => ctx.push('cat-editor')}
+      onAddIncome={() => ctx.push('cat-editor')}/>,
+    headerRight: () => <HeaderIconButton symbol="arrow.triangle.merge" color={TOKENS.p500} onPress={() => {}}/>,
+  },
+  'cat-editor': {
+    title: '新增類別', present: 'modal', save: true,
+    render: () => <CategoryEditorScreen isNew type="expense"/>,
+  },
+  'cat-editor-edit': {
+    title: '編輯類別', present: 'modal', save: true,
+    render: () => <CategoryEditorScreen isNew={false} type="expense"/>,
+  },
+  theme: {
+    title: '主題', present: 'modal', save: true,
+    render: () => <ThemeSettingsScreen/>,
+  },
+  language: {
+    title: '語言', present: 'modal', save: true,
+    render: () => <LanguageSettingScreen/>,
+  },
+  timezone: {
+    title: '時區', present: 'modal', save: true,
+    render: () => <TimeZoneSettingScreen/>,
+  },
+  launchmode: {
+    title: '啟動設定', present: 'modal', save: true,
+    render: () => <LaunchModeSettingScreen/>,
+  },
+  currency: {
+    title: '基準貨幣', present: 'modal', save: true,
+    render: () => <BaseCurrencySettingScreen/>,
+  },
+  currlist: {
+    title: '貨幣設定', present: 'push', headerLeftText: '',
+    render: () => <CurrencyListScreen/>,
+  },
+  ratelist: {
+    title: '匯率管理', present: 'push', headerLeftText: '',
+    render: () => <CurrencyRateListScreen/>,
+  },
+  'ratelist-empty': {
+    title: '匯率管理', present: 'push', headerLeftText: '',
+    render: () => <CurrencyRateListScreen variant="empty"/>,
+  },
+  'data-mgmt': {
+    title: '資料管理', present: 'push', headerLeftText: '',
+    render: () => <DataManagementScreen/>,
+  },
+  debug: {
+    title: 'Debug Info', present: 'push', headerLeftText: '',
+    render: () => <DebugInfoScreen/>,
+  },
+};
+
+// SCREEN_GROUPS — Screens tab 顯示結構
+// 一種 screen = 一個 group = 一個 DCSection（水平列）；
+// 同一 group 內排 default + 各種邊界狀態（空 / 載入 / 錯誤 / 模式變體）；
+// 不同 screen 之間是垂直堆疊的 sections。
+//
+// 新增/移除 screen 時更新此陣列；要新邊界狀態同步加 SCREEN_META + 在對應 group.screens 加一筆。
+const SCREEN_GROUPS = [
+  {
+    id: 'home',
+    title: 'Home · 記帳',
+    subtitle: '主畫面 PeriodPage（src/screens/Home/）。預設 + 空狀態（無交易紀錄時 donut 中央改顯示「尚無交易紀錄」）。',
+    screens: [
+      { id: 'home',       label: 'Default · 有交易' },
+      { id: 'home-empty', label: 'Empty · 尚無交易紀錄' },
+    ],
+  },
+  {
+    id: 'home-filter',
+    title: '顯示設定 · Home Filter',
+    subtitle: 'Home 的篩選 modal（src/screens/Home/HomeFilterScreen.tsx）。',
+    screens: [
+      { id: 'filter',             label: 'Default · 有帳戶' },
+      { id: 'filter-no-accounts', label: 'No accounts · 無可用帳戶' },
+    ],
+  },
+  {
+    id: 'search',
+    title: 'Search · 搜尋',
+    subtitle: '4 種狀態：初始提示輸入 / 載入中 / 有結果 / 找不到結果（src/screens/Search/SearchScreen.tsx）。',
+    screens: [
+      { id: 'search',              label: 'Initial · 提示輸入' },
+      { id: 'search-loading',      label: 'Loading · 搜尋中' },
+      { id: 'search-with-results', label: 'With results · 有結果' },
+      { id: 'search-no-results',   label: 'No results · 找不到結果' },
+    ],
+  },
+  {
+    id: 'tx-editor',
+    title: 'Transaction Editor · 記一筆交易',
+    subtitle: '記一筆支出 / 收入 modal（src/screens/Transactions/TransactionEditorScreen.tsx）。驗證錯誤對應 impl Alert（畫成 inline banner）。',
+    screens: [
+      { id: 'tx-editor',        label: 'Default · 新增支出' },
+      { id: 'tx-editor-income', label: '新增收入' },
+      { id: 'tx-editor-error',  label: 'Error · 驗證錯誤' },
+    ],
+  },
+  {
+    id: 'transfer-editor',
+    title: 'Transfer Editor · 轉帳',
+    subtitle: '跨帳戶 / 跨幣別轉帳 modal（src/screens/Transactions/TransferEditorScreen.tsx）。',
+    screens: [
+      { id: 'transfer', label: 'Default · 跨幣別' },
+    ],
+  },
+  {
+    id: 'login',
+    title: 'Login · 登入',
+    subtitle: 'Google 登入畫面（src/screens/Auth/LoginScreen.tsx）。',
+    screens: [
+      { id: 'login',         label: 'Default' },
+      { id: 'login-loading', label: 'Loading · 登入中' },
+    ],
+  },
+  {
+    id: 'settings',
+    title: 'Settings · 設定',
+    subtitle: '設定總頁（src/screens/Settings/SettingsScreen.tsx）。',
+    screens: [
+      { id: 'settings', label: 'Default' },
+    ],
+  },
+  {
+    id: 'preference',
+    title: 'Preference · 偏好設定',
+    subtitle: '偏好設定總頁（src/screens/Settings/PreferenceScreen.tsx）。',
+    screens: [
+      { id: 'preference', label: 'Default' },
+    ],
+  },
+  {
+    id: 'paywall',
+    title: 'Paywall · 解鎖 Premium',
+    subtitle: 'IAP 訂閱頁（src/screens/Paywall/PaywallScreen.tsx）。',
+    screens: [
+      { id: 'paywall',         label: 'Default · 顯示產品' },
+      { id: 'paywall-loading', label: 'Loading · 載入產品中' },
+    ],
+  },
+  {
+    id: 'accounts',
+    title: 'Accounts · 帳戶',
+    subtitle: '帳戶列表（src/screens/Accounts/AccountListScreen.tsx）。empty 狀態：只顯示新增帳戶按鈕。',
+    screens: [
+      { id: 'accounts',       label: 'Default · 有帳戶' },
+      { id: 'accounts-empty', label: 'Empty · 無帳戶' },
+    ],
+  },
+  {
+    id: 'account-editor',
+    title: 'Account Editor · 編輯帳戶',
+    subtitle: '帳戶編輯器（src/screens/Accounts/AccountEditorScreen.tsx）。新增模式無刪除按鈕；編輯模式有啟用開關 + 刪除。',
+    screens: [
+      { id: 'acc-editor',      label: '新增模式' },
+      { id: 'acc-editor-edit', label: '編輯模式' },
+    ],
+  },
+  {
+    id: 'categories',
+    title: 'Categories · 類別',
+    subtitle: '類別列表（src/screens/Categories/CategoryListScreen.tsx）。支出 / 收入兩個區段。',
+    screens: [
+      { id: 'categories', label: 'Default' },
+    ],
+  },
+  {
+    id: 'category-editor',
+    title: 'Category Editor · 編輯類別',
+    subtitle: '類別編輯器（src/screens/Categories/CategoryEditorScreen.tsx）。',
+    screens: [
+      { id: 'cat-editor',      label: '新增模式' },
+      { id: 'cat-editor-edit', label: '編輯模式' },
+    ],
+  },
+  {
+    id: 'theme',
+    title: 'Theme Settings · 主題',
+    subtitle: '雙主題切換（src/screens/Settings/ThemeSettingsScreen.tsx）。SelectionGridItem 卡片 + 顏色 preview。',
+    screens: [
+      { id: 'theme', label: 'Default' },
+    ],
+  },
+  {
+    id: 'language',
+    title: 'Language Setting · 語言',
+    subtitle: 'src/screens/Settings/LanguageSettingScreen.tsx',
+    screens: [
+      { id: 'language', label: 'Default' },
+    ],
+  },
+  {
+    id: 'timezone',
+    title: 'TimeZone Setting · 時區',
+    subtitle: '帶 BottomSearchBar（src/screens/Settings/TimeZoneSettingScreen.tsx）。',
+    screens: [
+      { id: 'timezone', label: 'Default' },
+    ],
+  },
+  {
+    id: 'launchmode',
+    title: 'Launch Mode · 啟動設定',
+    subtitle: 'src/screens/Settings/LaunchModeSettingScreen.tsx',
+    screens: [
+      { id: 'launchmode', label: 'Default' },
+    ],
+  },
+  {
+    id: 'base-currency',
+    title: 'Base Currency · 基準貨幣',
+    subtitle: '帶 BottomSearchBar（src/screens/Settings/BaseCurrencySettingScreen.tsx）。',
+    screens: [
+      { id: 'currency', label: 'Default' },
+    ],
+  },
+  {
+    id: 'currency-list',
+    title: 'Currency List · 貨幣設定',
+    subtitle: 'src/screens/Settings/CurrencyListScreen.tsx',
+    screens: [
+      { id: 'currlist', label: 'Default' },
+    ],
+  },
+  {
+    id: 'rate-list',
+    title: 'Currency Rate List · 匯率管理',
+    subtitle: '跨幣別匯率（src/screens/Settings/CurrencyRateListScreen.tsx）。empty 用 currency_rate.empty_state 字串。',
+    screens: [
+      { id: 'ratelist',       label: 'Default · 有匯率' },
+      { id: 'ratelist-empty', label: 'Empty · 尚無匯率' },
+    ],
+  },
+  {
+    id: 'data-mgmt',
+    title: 'Data Management · 資料管理',
+    subtitle: '備份 / 匯入 / 匯出 / 清空（src/screens/Settings/DataManagementScreen.tsx）。',
+    screens: [
+      { id: 'data-mgmt', label: 'Default' },
+    ],
+  },
+  {
+    id: 'debug',
+    title: 'Debug Info',
+    subtitle: '帳戶活動統計（src/screens/Settings/DebugInfoScreen.tsx）。',
+    screens: [
+      { id: 'debug', label: 'Default' },
+    ],
+  },
+];
+
+const PINNED_WITH_FAB = new Set(['home']);
+
+// ScreenFrame — device 內導覽容器
 function ScreenFrame({ pinned, sharedFilter, setSharedFilter }) {
   const [stack, setStack] = React.useState([pinned]);
+  React.useEffect(() => { setStack([pinned]); }, [pinned]);
   const top = stack[stack.length - 1];
   const push = (s) => setStack(st => [...st, s]);
   const pop = () => setStack(st => st.length > 1 ? st.slice(0, -1) : [pinned]);
+  const meta = SCREEN_META[top];
+  if (!meta) return null;
 
-  const screen = (() => {
-    switch (top) {
-      case 'home':       return <HomeScreen filterState={sharedFilter}
-                                  onSearch={() => push('search')} onSettings={() => push('settings')}
-                                  onFilter={() => push('filter')}/>;
-      case 'filter':     return <HomeFilterScreen_V9_NegativeSpace onBack={pop} filterState={sharedFilter} setFilterState={setSharedFilter}/>;
-      case 'settings':   return <SettingsScreen onBack={pop} onAccounts={() => push('accounts')} onCategories={() => push('categories')}/>;
-      case 'accounts':   return <AccountsScreen onBack={pop}/>;
-      case 'categories': return <CategoriesScreen onBack={pop}/>;
-      case 'search':     return <SearchScreen onBack={pop}/>;
-      default:           return null;
-    }
-  })();
+  const ctx = { push, pop, sharedFilter, setSharedFilter };
+  const body = meta.render(ctx);
+  const isModal = meta.present === 'modal';
+  const isPush = meta.present === 'push';
+  const headerRight = meta.headerRight ? meta.headerRight(ctx) : null;
+  const leadingText = isPush ? (meta.headerLeftText ?? '') : undefined;
 
   return (
     <div style={{
@@ -34,23 +429,40 @@ function ScreenFrame({ pinned, sharedFilter, setSharedFilter }) {
       overflow: 'hidden',
     }} data-screen-label={pinned}>
       <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', overflowX: 'hidden' }}>
-        {screen}
+        {isModal && <ModalHeader title={meta.title} onClose={pop} onSave={meta.save ? pop : undefined}/>}
+        {isPush && <PushHeader title={meta.title} leadingText={leadingText} leadingAction={stack.length > 1 ? pop : undefined} trailing={headerRight}/>}
+        {body}
       </div>
-      {top === 'home' && <FloatingActionBar onExpense={()=>{}} onTransfer={()=>{}} onIncome={()=>{}}/>}
+      {(PINNED_WITH_FAB.has(top) || meta.hasFAB) && (
+        <FloatingActionBar mode="actions"
+          onExpensePress={() => push('tx-editor')}
+          onTransferPress={() => push('transfer')}
+          onIncomePress={() => push('tx-editor-income')}/>
+      )}
     </div>
   );
 }
 
-// ViewTabs — 浮在 viewport 頂部的分頁切換器，用 location.hash 同步。
-// 4 個主題：#all / #filter / #tx-list / #recurring
+// ─── Top view tabs ───────────────────────────────────────────
 const VIEW_TABS = [
-  { id: 'all',        label: 'All Screens' },
-  { id: 'filter',     label: 'Filter' },
-  { id: 'tx-list',    label: 'Tx List' },
-  { id: 'recurring',  label: 'Recurring' },
-  { id: 'row-height', label: 'Row Height' },
+  { id: 'intro',        label: 'Intro' },
+  { id: 'foundations',  label: 'Foundations' },
+  { id: 'components',   label: 'Components' },
+  { id: 'screens',      label: 'Screens' },
+  { id: 'explorations', label: 'Explorations' },
 ];
 const VALID_VIEWS = VIEW_TABS.map(t => t.id);
+
+// 舊 hash 別名（向後相容）
+const LEGACY_HASH_ALIASES = {
+  'overview':   { view: 'screens' },   // Overview tab 已併入 Screens
+  'flows':      { view: 'screens' },   // Flows tab 已移除
+  'all':        { view: 'screens' },
+  'filter':     { view: 'screens' },
+  'tx-list':    { view: 'screens' },
+  'recurring':  { view: 'screens' },
+  'row-height': { view: 'screens' },
+};
 
 function ViewTabs({ view, setView }) {
   return (
@@ -58,8 +470,7 @@ function ViewTabs({ view, setView }) {
       position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)',
       display: 'flex', gap: 4, padding: 4,
       background: 'rgba(255,255,255,0.92)',
-      backdropFilter: 'blur(8px)',
-      WebkitBackdropFilter: 'blur(8px)',
+      backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
       borderRadius: 999,
       boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
       border: '1px solid rgba(0,0,0,0.06)',
@@ -71,10 +482,10 @@ function ViewTabs({ view, setView }) {
         return (
           <button key={t.id} onClick={() => setView(t.id)} style={{
             border: 'none', borderRadius: 999,
-            padding: '8px 16px', cursor: 'pointer',
-            fontSize: 14, fontWeight: 500,
+            padding: '8px 14px', cursor: 'pointer',
+            fontSize: 13.5, fontWeight: 500,
             color: active ? '#fff' : '#212121',
-            background: active ? '#4323a0' : 'transparent',
+            background: active ? TOKENS.p500 : 'transparent',
             transition: 'background 180ms, color 180ms',
             fontFamily: 'inherit',
           }}>
@@ -86,66 +497,21 @@ function ViewTabs({ view, setView }) {
   );
 }
 
-// Recurring Marker tab 內的 sub-nav，切換 round
-function RecurringRoundNav({ round, setRound }) {
-  const rounds = [
-    { id: 'round1', label: 'Round 1 · 標記方式' },
-    { id: 'round2', label: 'Round 2 · icon 細節' },
-    { id: 'round3', label: 'Round 3 · wrap 細節' },
-  ];
-  return (
-    <div style={{
-      position: 'fixed', top: 72, left: '50%', transform: 'translateX(-50%)',
-      display: 'flex', gap: 4, padding: 3,
-      background: 'rgba(255,255,255,0.92)',
-      backdropFilter: 'blur(8px)',
-      WebkitBackdropFilter: 'blur(8px)',
-      borderRadius: 999,
-      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-      border: '1px solid rgba(0,0,0,0.06)',
-      zIndex: 99,
-      fontFamily: '-apple-system, "SF Pro", "PingFang TC", "Noto Sans TC", system-ui, sans-serif',
-    }}>
-      {rounds.map(r => {
-        const active = round === r.id;
-        return (
-          <button key={r.id} onClick={() => setRound(r.id)} style={{
-            border: 'none', borderRadius: 999,
-            padding: '6px 12px', cursor: 'pointer',
-            fontSize: 12, fontWeight: 500,
-            color: active ? '#fff' : '#212121',
-            background: active ? '#4323a0' : 'transparent',
-            transition: 'background 180ms, color 180ms',
-            fontFamily: 'inherit',
-          }}>
-            {r.label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 function App() {
-  // hash router：#all / #filter / #tx-list / #recurring
-  const [view, setView] = React.useState(() => {
+  const parseHash = () => {
     const h = window.location.hash.replace('#', '');
-    return VALID_VIEWS.includes(h) ? h : 'all';
-  });
+    if (LEGACY_HASH_ALIASES[h]) return LEGACY_HASH_ALIASES[h];
+    if (VALID_VIEWS.includes(h)) return { view: h };
+    return { view: 'intro' };
+  };
+  const [view, setView] = React.useState(() => parseHash().view);
   React.useEffect(() => {
-    const onHashChange = () => {
-      const h = window.location.hash.replace('#', '');
-      setView(VALID_VIEWS.includes(h) ? h : 'all');
-    };
+    const onHashChange = () => setView(parseHash().view);
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
   const updateView = (v) => { if (v !== view) window.location.hash = v; };
 
-  // Recurring Marker tab 內的 round sub-nav state
-  const [recurRound, setRecurRound] = React.useState('round1');
-
-  // Shared filter state across the Home + Filter frames
   const [sharedFilter, setSharedFilter] = React.useState({
     timeGranularity: 'month',
     groupBy: 'date',
@@ -153,23 +519,17 @@ function App() {
   });
 
   const W = 402, H = 874;
-  const screens = [
-    { id: 'home',       label: 'Home — 記帳' },
-    { id: 'filter',     label: 'Home Filter — 篩選' },
-    { id: 'search',     label: 'Search — 搜尋' },
-    { id: 'settings',   label: 'Settings — 設定' },
-    { id: 'accounts',   label: 'Accounts — 帳戶' },
-    { id: 'categories', label: 'Categories — 分類' },
-  ];
 
   return (
     <>
       <ViewTabs view={view} setView={updateView}/>
-      {view === 'recurring' && <RecurringRoundNav round={recurRound} setRound={setRecurRound}/>}
       <DesignCanvas>
-        {view === 'all' && (
-          <DCSection id="all" title="SuSuGiGi — All Screens" subtitle="Pinned views; click expand to focus.">
-            {screens.map(s => (
+        {view === 'intro'        && <IntroSection/>}
+        {view === 'foundations'  && <FoundationsSection/>}
+        {view === 'components'   && <ComponentsShowcaseSection/>}
+        {view === 'screens' && SCREEN_GROUPS.map(group => (
+          <DCSection key={group.id} id={`screens-${group.id}`} title={group.title} subtitle={group.subtitle}>
+            {group.screens.map(s => (
               <DCArtboard key={s.id} id={s.id} label={s.label} width={W} height={H}>
                 <IOSDevice width={W} height={H}>
                   <ScreenFrame pinned={s.id} sharedFilter={sharedFilter} setSharedFilter={setSharedFilter}/>
@@ -177,266 +537,13 @@ function App() {
               </DCArtboard>
             ))}
           </DCSection>
-        )}
-
-        {view === 'filter' && (
-          <DCSection id="filter-proposals" title="Home Filter 提案" subtitle="V1–V5 第一輪視覺區隔，V6–V9 第二輪無文字 + 對稱化迭代。All Screens 採用 V9 · Negative space。">
-        {[
-          { id: 'fv1', label: 'V1 · Section headers',  V: HomeFilterScreen_V1_SectionHeaders },
-          { id: 'fv2', label: 'V2 · Container wrap',   V: HomeFilterScreen_V2_ContainerWrap },
-          { id: 'fv3', label: 'V3 · Hairline divider', V: HomeFilterScreen_V3_Divider },
-          { id: 'fv4', label: 'V4 · Inset tray',       V: HomeFilterScreen_V4_InsetTray },
-          { id: 'fv5', label: 'V5 · Pill summary',     V: HomeFilterScreen_V5_PillSummary },
-          { id: 'fv6', label: 'V6 · Short divider',    V: HomeFilterScreen_V6_ShortDivider },
-          { id: 'fv7', label: 'V7 · Dot divider',      V: HomeFilterScreen_V7_DotDivider },
-          { id: 'fv8', label: 'V8 · Symmetric trays',  V: HomeFilterScreen_V8_SymmetricTrays },
-          { id: 'fv9', label: 'V9 · Negative space ★', V: HomeFilterScreen_V9_NegativeSpace },
-        ].map(v => (
-          <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-            <IOSDevice width={W} height={H}>
-              <FilterVariantFrame Variant={v.V}/>
-            </IOSDevice>
-          </DCArtboard>
         ))}
-      </DCSection>
-        )}
-
-        {view === 'tx-list' && (
-          <DCSection id="tx-list-proposals" title="Transaction List 提案" subtitle="第一輪 V1/V2/V7 結構初探 → 第二輪 R1–R5 層次感探索 → 第三輪 R6–R10 morph + 區隔修正（可點 header 收合，含 morph 動畫）。All Screens 採用 R10 · Outlined frame refined。">
-        {[
-          { id: 'tx1', label: 'V1 · Timeline rail',  Date: TxV1_ByDate, Cat: TxV1_ByCategory },
-          { id: 'tx2', label: 'V2 · Card stack',     Date: TxV2_ByDate, Cat: TxV2_ByCategory },
-          { id: 'tx7', label: 'V7 · Two-line',       Date: TxV7_ByDate, Cat: TxV7_ByCategory },
-          { id: 'r1',  label: 'R1 · Morph header',   Date: TxR1_ByDate, Cat: TxR1_ByCategory },
-          { id: 'r2',  label: 'R2 · Indent rhythm',  Date: TxR2_ByDate, Cat: TxR2_ByCategory },
-          { id: 'r3',  label: 'R3 · Tinted band',    Date: TxR3_ByDate, Cat: TxR3_ByCategory },
-          { id: 'r4',  label: 'R4 · Left bar',       Date: TxR4_ByDate, Cat: TxR4_ByCategory },
-          { id: 'r5',  label: 'R5 · Inverted band',  Date: TxR5_ByDate, Cat: TxR5_ByCategory },
-        ].flatMap(v => [
-          <DCArtboard key={v.id+'-d'} id={v.id+'-d'} label={v.label + ' — 依日期'} width={W} height={H}>
-            <IOSDevice width={W} height={H}><TxListPreviewFrame Variant={v.Date} collapsedIds={['date_Apr 30','date_Apr 29']}/></IOSDevice>
-          </DCArtboard>,
-          <DCArtboard key={v.id+'-c'} id={v.id+'-c'} label={v.label + ' — 依分類'} width={W} height={H}>
-            <IOSDevice width={W} height={H}><TxListPreviewFrame Variant={v.Cat} collapsedIds={['cat_health','cat_ent','cat_trans']}/></IOSDevice>
-          </DCArtboard>,
-        ])}
-        {[
-          { id: 'r6',  label: 'R6 · Morph + Inverted band',     Date: TxR6_ByDate,  Cat: TxR6_ByCategory },
-          { id: 'r7',  label: 'R7 · Modern category tint',      Date: TxR7_ByDate,  Cat: TxR7_ByCategory },
-          { id: 'r8',  label: 'R8 · Outlined frame',            Date: TxR8_ByDate,  Cat: TxR8_ByCategory },
-          { id: 'r9',  label: 'R9 · Layered tone',              Date: TxR9_ByDate,  Cat: TxR9_ByCategory, appBg: '#E5E5EA' },
-          { id: 'r10', label: 'R10 · Outlined frame refined ★', Date: TxR10_ByDate, Cat: TxR10_ByCategory },
-        ].flatMap(v => [
-          <DCArtboard key={v.id+'-d'} id={v.id+'-d'} label={v.label + ' — 依日期'} width={W} height={H}>
-            <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.Date} initialCollapsed={['date_Apr 30','date_Apr 29']} appBg={v.appBg}/></IOSDevice>
-          </DCArtboard>,
-          <DCArtboard key={v.id+'-c'} id={v.id+'-c'} label={v.label + ' — 依分類'} width={W} height={H}>
-            <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.Cat} initialCollapsed={['cat_health','cat_ent','cat_trans']} appBg={v.appBg}/></IOSDevice>
-          </DCArtboard>,
-        ])}
-      </DCSection>
-        )}
-
-        {view === 'row-height' && <>
-          <DCSection id="tx-list-row-height-data" title="Data Row Height 提案 (H 系列)" subtitle="現行實作 transactionRow 約 64–66px / Prototype R10 baseline 約 60px。H0 為 R10 對照組（敲定）；H1–H5 依不同策略往下減高（padding diet / 合併單行 / 縮字級 / 右靠 metadata / 極簡）。每個 artboard 標題後標 row 預估高度。">
-            {[
-              { id: 'rh-h0', label: 'H0 · Current ★（R10 baseline，~60px，已敲定）', V: TxRH_H0_Current },
-              { id: 'rh-h1', label: 'H1 · Padding diet（padding 12→8，~52px）',      V: TxRH_H1_PadDiet },
-              { id: 'rh-h2', label: 'H2 · Single line（note · account 合併，~44px）', V: TxRH_H2_SingleLine },
-              { id: 'rh-h3', label: 'H3 · Compact type（字級縮一號，~46px）',         V: TxRH_H3_CompactType },
-              { id: 'rh-h4', label: 'H4 · Right meta（account 移到金額下方，~50px）', V: TxRH_H4_RightMeta },
-              { id: 'rh-h5', label: 'H5 · Minimal（極瘦，~38px）',                   V: TxRH_H5_Minimal },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-
-          <DCSection id="tx-list-row-height-collapsed" title="Collapsed Section Header Height 提案 (CH 系列)" subtitle="實作 collapsed section header 約 60px（pad 14 / icon 32 / title 17 / total 15）。每個 artboard 預設把 6 個分類全部收合，看一個畫面塞幾個 header；by-category 模式為主，因為 header 數量最多。CH0 為對照；CH1–CH5 依不同策略往下減高。">
-            {[
-              { id: 'rh-ch0', label: 'CH0 · Current（pad 14 / icon 32 / title 17，~60px）',    V: TxCH_CH0_Current },
-              { id: 'rh-ch1', label: 'CH1 · Padding diet（pad 14→10，~52px）',                  V: TxCH_CH1_PadDiet },
-              { id: 'rh-ch2', label: 'CH2 · Icon shrink（icon 32→28，~56px）',                  V: TxCH_CH2_IconShrink },
-              { id: 'rh-ch3', label: 'CH3 · Match data row（pad 14→12，~56px，跟 H0 對齊）',     V: TxCH_CH3_MatchRow },
-              { id: 'rh-ch4', label: 'CH4 · Compact（pad 10 / icon 24 / title 15，~44px）',      V: TxCH_CH4_Compact },
-              { id: 'rh-ch5', label: 'CH5 · Tight（pad 8 / icon 22 / title 14，~38px）',         V: TxCH_CH5_Tight },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={CH_INITIAL_COLLAPSED}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-        </>}
-
-        {view === 'recurring' && <>
-        {recurRound === 'round1' && (
-          <DCSection id="tx-list-recurring-round1" title="Recurring Marker · Round 1（標記方式，已收斂）" subtitle="比較標記方式。R11 徽章太小、R13 底色不直觀皆已否決；R12（文字前）與 R14（金額左）為 inline tag 對照。收斂結論：採 R14 — icon 並列「主金額 + 換算金額」整包左側、垂直置中。Mock 中 5/2 捷運月票、4/30 4 月薪資、4/29 電費、5/1 Netflix 為 recurring。">
-            {[
-              { id: 'r14-d', label: 'R14 · Inline · before amount ★（金額前，主推）', V: TxR14_ByDate },
-              { id: 'r12-d', label: 'R12 · Inline · before primary（文字前，對照）',  V: TxR12_ByDate },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-        )}
-
-        {recurRound === 'round2' && (
-          <DCSection id="tx-list-recurring-round2-final" title="Recurring Marker · Round 2（icon 細節，已收斂）" subtitle="size / color / shape / background / gap 5 維度個別比較後敲定。Baseline = size 14 / secondary / repeat / none / gap 4；Final ★ = size 16 / sync / ink3 / gray fill / gap 14。觀察 5/1 Netflix（多幣別 + recurring）一行。">
-            {[
-              { id: 'r5-baseline', label: 'Baseline（size 14 / secondary / repeat / none / gap 4）',  V: TxR5_Size14 },
-              { id: 'r5-final',    label: 'Final ★（size 16 / sync / ink3 / gray fill / gap 14）',    V: TxR5_Combined_Gap14 },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-        )}
-
-        {recurRound === 'round3' && <>
-          <DCSection id="tx-list-recurring-round3-playground" title="Recurring Marker · Round 3 · 🎛 Playground（自己調參數）" subtitle="改 tx-list-round5.jsx 頂端的 R5_PLAYGROUND 物件，存檔後 reload 瀏覽器看結果。每個 key 都有註解說明可選值與影響。下面 4 個 section 是固定變體，這個是即時可調的。">
-            {[
-              { id: 'r5-playground', label: '🎛 Playground（看 R5_PLAYGROUND）', V: TxR5_Playground },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-
-          <DCSection id="tx-list-recurring-round3-wrap-shape" title="Recurring Marker · Round 3 · Wrap Shape" subtitle="在 Round 2 敲定組合上比較 wrap 形狀。Circle ★ 為現行；rounded square 兩種半徑 + 直角方形作對照。觀察 5/1 Netflix 那筆 wrap 的外形語意。">
-            {[
-              { id: 'r5-ws-c',  label: 'Circle ★（現行）',     V: TxR5_Wrap_ShapeCircle },
-              { id: 'r5-ws-r6', label: 'Rounded 6px',         V: TxR5_Wrap_ShapeRounded6 },
-              { id: 'r5-ws-r4', label: 'Rounded 4px',         V: TxR5_Wrap_ShapeRounded4 },
-              { id: 'r5-ws-sq', label: 'Square sharp',        V: TxR5_Wrap_ShapeSquare },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-
-          <DCSection id="tx-list-recurring-round3-wrap-padding" title="Recurring Marker · Round 3 · Wrap Padding" subtitle="glyph 跟 wrap 邊的單側 padding。3px ★ 為現行（總 wrap 直徑 = 16 + 6 = 22px）。padding 越大 wrap 越鬆、像徽章；越小越緊湊。">
-            {[
-              { id: 'r5-wp-2', label: 'Padding 2px（緊）',          V: TxR5_Wrap_Padding2 },
-              { id: 'r5-wp-3', label: 'Padding 3px ★（現行）',      V: TxR5_Wrap_Padding3 },
-              { id: 'r5-wp-4', label: 'Padding 4px',               V: TxR5_Wrap_Padding4 },
-              { id: 'r5-wp-5', label: 'Padding 5px（鬆）',          V: TxR5_Wrap_Padding5 },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-
-          <DCSection id="tx-list-recurring-round3-wrap-bg" title="Recurring Marker · Round 3 · Wrap Background Color" subtitle="比較 wrap 填色。Gray bg ★ 為現行（TOKENS.bg = #F2F2F7）。Surface2 更淡、p50 帶主色紫淡、ink3-alpha 用 ink3 加透明度。">
-            {[
-              { id: 'r5-wb-g',  label: 'Gray bg ★（現行，#F2F2F7）',          V: TxR5_Wrap_BgGray },
-              { id: 'r5-wb-s2', label: 'Surface2（#F5F5F5，更淡）',           V: TxR5_Wrap_BgSurface2 },
-              { id: 'r5-wb-p',  label: 'P50（主色淡紫 #f0ecfa）',              V: TxR5_Wrap_BgP50 },
-              { id: 'r5-wb-a',  label: 'Ink3 alpha（rgba(189,189,189,0.3)）', V: TxR5_Wrap_BgInk3Alpha },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-
-          <DCSection id="tx-list-recurring-round3-wrap-border" title="Recurring Marker · Round 3 · Wrap Border" subtitle="在 gray fill 之上疊邊框。None ★ 為現行（只填色）。Hairline divider 是淡邊、Hairline ink3 是中灰邊，會把 wrap 跟周圍視覺切得更清楚。">
-            {[
-              { id: 'r5-wbr-n', label: 'None ★（現行）',           V: TxR5_Wrap_BorderNone },
-              { id: 'r5-wbr-d', label: 'Hairline divider（淡邊）',  V: TxR5_Wrap_BorderDivider },
-              { id: 'r5-wbr-i', label: 'Hairline ink3（中灰邊）',   V: TxR5_Wrap_BorderInk3 },
-            ].map(v => (
-              <DCArtboard key={v.id} id={v.id} label={v.label} width={W} height={H}>
-                <IOSDevice width={W} height={H}><InteractiveTxPreview Variant={v.V} initialCollapsed={[]}/></IOSDevice>
-              </DCArtboard>
-            ))}
-          </DCSection>
-        </>}
-        </>}
+        {view === 'explorations' && <ExplorationsScaffoldSection/>}
       </DesignCanvas>
     </>
   );
 }
 
-// Each filter variant gets its own isolated state so 5 frames don't share a
-// selection — lets you compare interactions independently.
-function FilterVariantFrame({ Variant }) {
-  const [filterState, setFilterState] = React.useState({
-    timeGranularity: 'month',
-    groupBy: 'date',
-    selectedAccountIds: ACCOUNTS.map(a => a.id),
-  });
-  return (
-    <div style={{
-      width: '100%', height: '100%', position: 'relative',
-      background: TOKENS.bg,
-      fontFamily: '-apple-system, "SF Pro", "PingFang TC", "Noto Sans TC", system-ui, sans-serif',
-      overflow: 'hidden',
-    }}>
-      <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', overflowX: 'hidden' }}>
-        <Variant onBack={()=>{}} filterState={filterState} setFilterState={setFilterState}/>
-      </div>
-    </div>
-  );
-}
-
-// TxListPreviewFrame — gives each tx-list variant the SAME context as the
-// real Home screen (header + period switcher + small donut + focus row),
-// then renders the variant body below. Keeps the comparison apples-to-apples.
-function TxListPreviewFrame({ Variant, collapsedIds = [] }) {
-  const [chartMode, setChartMode] = React.useState('expense');
-  const collapsed = React.useMemo(() => new Set(collapsedIds), [collapsedIds.join(',')]);
-  const totals = periodTotals(TX);
-  const pData = pieData(TX);
-  return (
-    <div style={{
-      width: '100%', height: '100%', position: 'relative',
-      background: TOKENS.bg,
-      fontFamily: '-apple-system, "SF Pro", "PingFang TC", "Noto Sans TC", system-ui, sans-serif',
-      overflow: 'hidden',
-    }}>
-      <div style={{ position: 'absolute', inset: 0, overflowY: 'auto', overflowX: 'hidden' }}>
-        <NavHeader title="記帳" trailing={
-          <div style={{ display: 'flex' }}>
-            <button style={{ width:36, height:36, border:'none', background:'transparent', display:'flex', alignItems:'center', justifyContent:'center' }}><Glyph name="filter" size={20} color={TOKENS.p500} stroke={2}/></button>
-            <button style={{ width:36, height:36, border:'none', background:'transparent', display:'flex', alignItems:'center', justifyContent:'center' }}><Glyph name="search" size={20} color={TOKENS.p500} stroke={2}/></button>
-            <button style={{ width:36, height:36, border:'none', background:'transparent', display:'flex', alignItems:'center', justifyContent:'center' }}><Glyph name="gear" size={20} color={TOKENS.p500} stroke={2}/></button>
-          </div>
-        }/>
-        <div style={{ paddingBottom: 140 }}>
-          {/* Period switcher */}
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8, paddingTop:8, paddingBottom:4 }}>
-            <Glyph name="chevron-left" size={14} color={TOKENS.ink3} stroke={2.5}/>
-            <Glyph name="calendar" size={13} color={TOKENS.ink2} stroke={2}/>
-            <span style={{ fontSize:18, fontWeight:500, color:TOKENS.ink, marginLeft:2 }}>May 26</span>
-            <Glyph name="chevron-right" size={14} color={TOKENS.ink3} stroke={2.5}/>
-          </div>
-          {/* Smaller donut so list gets more room */}
-          <div style={{ display:'flex', justifyContent:'center', margin:'4px 0 8px' }}>
-            <DonutChart data={pData.map(d => ({ key: d.id, value: d.value, color: d.color }))} size={140} thickness={20}>
-              <div style={{ textAlign:'center', width:80 }}>
-                <div style={{ fontSize:11, color:TOKENS.ink2 }}>結餘</div>
-                <div style={{ fontSize:15, fontWeight:500, color:TOKENS.ink, fontVariantNumeric:'tabular-nums' }}>{fmt(totals.balance)}</div>
-              </div>
-            </DonutChart>
-          </div>
-          <div style={{ display:'flex', gap:12, padding:'0 16px 12px' }}>
-            <FocusCard kind="expense" amount={totals.expense} active={chartMode==='expense'} onPress={()=>setChartMode('expense')}/>
-            <FocusCard kind="income"  amount={totals.income}  active={chartMode==='income'}  onPress={()=>setChartMode('income')}/>
-          </div>
-          {/* Variant body */}
-          <Variant chartMode={chartMode} collapsed={collapsed}/>
-        </div>
-      </div>
-      <FloatingActionBar/>
-    </div>
-  );
-}
+Object.assign(window, { SCREEN_META, SCREEN_GROUPS, ScreenFrame });
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
