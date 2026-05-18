@@ -1,5 +1,3 @@
-## home screen 動畫
-
 ## home screen donut chart 無資料的顏色
 
 ## 單筆 transaction or transfer 高度
