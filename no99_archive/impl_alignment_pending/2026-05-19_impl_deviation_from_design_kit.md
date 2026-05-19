@@ -34,6 +34,36 @@ Design git 為設計標準的仲裁端，token 決議寫在 `no3_product_designs
 
 ---
 
+## ~~Spacing 偏離~~（2026-05-19 已對齊，branch `feat/align-design-kit-type` 一併處理）
+
+Design SPACING 階梯重訂為語意命名（Tailwind 風）：`2xs=2, xs=4, sm=8, md=12, lg=16, xl=24, 2xl=32, 3xl=40, 4xl=48, 5xl=64`，新增 `2xs=2` 階供主標題下副標題行內補位。處理完成項：
+
+- Design `data.jsx` SPACING 改新階梯 + 語意命名；TX_LIST_TOKENS / LIST_TOKENS 內 `+2` magic 改 `+ SPACING['2xs']`；components / screens / BRAND 跨檔 209 處 SPACING[數字] 換 key
+- `foundations.jsx` SpacingSection subtitle 補 `2xs` 政策說明，SpacingCard key 欄寬擴大
+- Impl `theme.ts` SPACING 改新階梯 + 語意命名；LIST_TOKENS / TX_LIST_TOKENS / SEARCH_BAR_TOKENS 內所有引用換 key
+- `LIST_TOKENS.GROUP_CARD_MARGIN_BOTTOM` 35 → `SPACING['2xl']` (32)
+- `TX_LIST_TOKENS.SECTION_CARD_MARGIN_BOTTOM` 14 → `SPACING.md + SPACING['2xs']` (14，對齊 Design 公式)
+- `TX_LIST_TOKENS.SECTION_HEADER_PADDING_V_COLLAPSED` 12 → `SPACING.md` (引用化)
+- `TX_LIST_TOKENS.SECTION_HEADER_PADDING_V_EXPANDED` 10 → `SPACING.sm + SPACING['2xs']` (10，對齊 Design 公式)
+- `LIST_TOKENS.SECTION_TITLE_PADDING_BOTTOM` `SPACING[1]+2` → `SPACING.xs + SPACING['2xs']` (公式化引用)
+- `HeaderIconButton` / `HeaderCheckmarkButton` / `ModalCloseButton` padding 10 → `SPACING.md` (12)
+- `TransferEditorScreen` arrow paddingTop 20 → `SPACING.xl` (24)，中間箭頭 inline marginTop:30 改進 `pickerSpacer` styles 用 `SPACING['2xl']` (32)
+- `HomeFilterScreen` currencyGroups.gap 14 → `SPACING.lg` (16)、accountCard.paddingVertical 14 → `SPACING.md` (12)、accountCard.gap `SPACING[2]+2` → `SPACING.md` (12)、tileRow.marginBottom 40 → `SPACING['3xl']` (40)
+- 9 處子元件 `marginTop: 2` → `SPACING['2xs']`（ListItem / DataListItem / SelectionListItem / ReorderableListItem / AccountSelector / CategorySelector / PaywallScreen / ImportScreen）
+- 額外項：`PeriodPage.tsx` marginRight:2 / marginBottom:2 → `SPACING['2xs']`；`ListItem.tsx` chevronWithValue.marginLeft 6 → `SPACING.xs + SPACING['2xs']`（公式維持 6）；ImportScreen.tsx requiredMark.marginLeft 4 → `SPACING.xs`
+- Impl src/ 全域 309 處 `SPACING[數字]` → 語意 key
+- Impl 跑 tsc 通過；spacing 觸及檔案 lint 0 errors
+
+**方向校正：** 盤點時假設 14、10 屬「不在階梯」要改 16、8；但 Design 端 `data.jsx` 既有公式 `SPACING.md+2` / `SPACING.sm+2` 表達 14、10，視為認可值。Impl 改為對齊 Design 公式（`+ SPACING['2xs']`），保留原視覺。
+
+**不在本輪範圍 / 已知 open item：**
+
+- `paddingBottom: 80/100`（CategoryListScreen / PeriodPage / AccountListScreen 共 4 處）— 屬 BottomSearchBar 高度的計算值，不視為設計 spacing 偏離；impl CLAUDE.md UI Coding Guideline 規定的 `BOTTOM_SEARCH_BAR_TOTAL_HEIGHT + insets.bottom` 寫法另案處理
+- `UndoDebugConsole.tsx` 多處 `marginBottom: 2/6` — debug-only UI，整檔豁免
+- `BottomSearchBar.test.tsx bottom: 34` — test mock，豁免
+
+---
+
 ## 字重註解偏離
 
 新 Design 標準明說 TYPOGRAPHY.weight 涵蓋 HIG 9 階（ultraLight 100 → black 900），目前啟用 light/regular/medium 三檔，其餘 6 檔**保留**（不是廢除）。
