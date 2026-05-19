@@ -1,10 +1,8 @@
 ## home screen donut chart 無資料的顏色
 
-## 單筆 transaction or transfer 高度
-
 ## 整體主題配色
 
-## 拔掉全轉移功能
+## 全轉移功能
 
 ## review 匯入匯出 UI 設計
 
