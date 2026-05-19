@@ -101,6 +101,55 @@ Design SPACING 階梯重訂為語意命名（Tailwind 風）：`2xs=2, xs=4, sm=
 
 ---
 
+## Brand 偏離
+
+**注意：本段方向與檔頭預設方向不同。** 檔頭預設「impl 對齊 design」；本段項 1 為**反方向偏離（design 對齊 impl）**，項 3 為「design 端清理冗餘 entry」，皆需在 Design git 動工，非 Impl git。
+
+盤點來源：Foundations 的 Brand sub-section（`no3_product_designs/no2_accounting_app/project/10_foundations/foundations.jsx` 的 `FoundationsBrandSection`）的四個 artboard 對齊狀態。
+
+### Brand 項 1 · ICON_LIBRARY（account + category）— **改 Design**
+
+Design `data.jsx` 的 `ICON_LIBRARY` 列 43 個 mci/ant icon；Impl `assets/definitions/IconDefinition.json` 是 97 個 phosphor svg。連帶 `CATEGORIES` / `ACCOUNTS` mock data 引用的 iconId 對應錯（mock 的 iconId 13 是 `mci-bank` 屬 account；impl 的 id 13 是 `ph-coffee` 屬 category）。
+
+**仲裁端：Impl**（Phosphor svg 是已決定的視覺風格，且實作端已有穩定 `PHOSPHOR_SVG_MAP` 渲染管線）。
+
+工作項（Design git，branch `feat/<r-id>-align-icon-library-to-phosphor`）：
+1. `data.jsx` 的 `ICON_LIBRARY` 從 impl `IconDefinition.json` 重生（97 條）
+2. `data.jsx` 的 `CATEGORIES` / `ACCOUNTS` mock data 的 iconId 重新挑選符合新 library 的 id
+3. `foundations.jsx` 的 `IconWallCard` 渲染管線改為能載入 phosphor svg
+4. **方案 b**：design canvas 新建 `project/assets/icons/phosphor/`，從 impl `assets/icons/phosphor/` 複製 97 個 svg 過去（design git 自包，不跨 git 引用實作端資產）
+5. 連帶可能要動 `project/30_screens/*.jsx` 等其他引用 iconId 的處（執行時 grep 確認）
+
+### Brand 項 2 · UIGlyphWallCard — **建立核可清單，兩端配對**
+
+Design `foundations.jsx` `UIGlyphWallCard` 寫死 35 個 UI glyph（SF 7 / FA 5 / MCI 23）。Impl 各 screen 自由 `import` MCI/FA 使用，無核可清單管控，兩端各做各的。
+
+**治理決策：建立核可清單**。Impl 端新建 `src/constants/uiGlyphs.ts` 列出可用 glyph，各 screen 改為從常數引用；Design 端 UIGlyphWallCard 清單從 impl 同步重生。
+
+工作項（Impl git + Design git 配對，branch `feat/<r-id>-introduce-ui-glyph-registry`）：
+1. Impl 先 grep 實際使用清單：`MaterialCommunityIcons name="..."`、`Icon name="..."`（MCI alias）、`FontAwesome name="..."`
+2. Impl 新建 `src/constants/uiGlyphs.ts`，列出核可清單與來源 library
+3. Impl 改寫各 screen 改為從此檔引用常數（非字串 literal）
+4. Design `foundations.jsx` `UIGlyphWallCard` 清單從 impl `uiGlyphs.ts` 重生
+5. 兩 git branch 名稱、commit subject/body 一致
+6. SF Symbol 已透過 `HeaderIconButton symbol="..."` 集中管控（現存 5 個：line.3.horizontal.decrease / magnifyingglass / gearshape / arrow.triangle.merge / xmark / checkmark），本項治理範圍主要為 MCI + FA
+
+### Brand 項 3 · ACTION_ICON_MAP.add — **改 Design 刪除 entry**
+
+Design `data.jsx` `ACTION_ICON_MAP.add` 標 `{source: 'sf', symbol: 'plus'}`；但 impl 端 add 動作不在 header，而在 FAB（`FloatingActionBar.tsx:104` 用 FontAwesome plus）與列項 leftIcon（`AccountListScreen.tsx:153`、`CategoryListScreen.tsx:148` 用 MCI plus）。`ACTION_ICON_MAP` 的角色是「header 動作」對應，add 不屬此範疇。
+
+**仲裁端：Design**（清理冗餘）。
+
+工作項（Design git，branch `feat/<r-id>-remove-action-add`）：
+1. `data.jsx` 的 `ACTION_ICON_MAP` 刪除 `add` 那一行
+2. 檢查 `foundations.jsx` 的 `ActionIconMapCard` 渲染是否預期固定 8 條，如有硬編需同步調整
+
+### Brand 項 4 · 品牌 logo / wordmark — **本輪不處理**
+
+Design `assets/logo.svg`、`assets/wordmark.svg` 存在但 `FoundationsBrandSection` 未展示；Impl `assets/images/` 只有 launcher / splash 用 PNG。兩端無交集面。獨立工作項另案處理（design 端先決定要不要把品牌標識正式放進 Foundations）。
+
+---
+
 ## 領用流程
 
 下一輪 impl 對齊 session：
