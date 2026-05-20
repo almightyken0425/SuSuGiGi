@@ -6,7 +6,7 @@
 
 ## 當前 module
 
-- `no2_accounting_app/` — Accounting App design canvas（React HTML workbench；intro / foundations / components / screens / explorations 五個 tab）
+- `no2_accounting_app/` — Accounting App design canvas（React HTML workbench；Intro / Foundations / Screens / Explorations 四個頂層 tab，Foundations 內含 Type / Colors / Tokens / Components / Brand 五個 sub-item）
 
 ## 新增 module 設計工件
 
