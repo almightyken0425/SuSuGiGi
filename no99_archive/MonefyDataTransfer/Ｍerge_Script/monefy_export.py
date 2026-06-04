@@ -60,6 +60,62 @@ def cents_to_decimal(cents: int, currency_code: str = None, is_schedule: bool = 
     return cents / 1000.0
 
 
+def normalize_date(date_str: str) -> str:
+    """標準化日期為 YYYY-MM-DD（吃 'YYYY-MM-DD HH:MM:SS' 或 'M/D/YYYY'）"""
+    if not date_str:
+        return ""
+    try:
+        if '-' in date_str:
+            return date_str.split()[0]
+        if '/' in date_str:
+            return datetime.strptime(date_str, '%m/%d/%Y').strftime('%Y-%m-%d')
+    except ValueError:
+        pass
+    return date_str
+
+
+def build_raw_transfer_pool(raw_csv_path: Path) -> list:
+    """從 raw CSV 載入 ExpenseTransfer / IncomeTransfer 兩腳的『實際金額庫』供 Smart Match。"""
+    pool = []
+    with open(raw_csv_path, 'r', encoding='utf-8-sig') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            cat = row.get('category', '')
+            if cat in ('ExpenseTransfer', 'IncomeTransfer'):
+                try:
+                    amount = float(row['amount'].replace(',', ''))
+                except (ValueError, KeyError):
+                    amount = 0.0
+                pool.append({
+                    'date': normalize_date(row.get('date', '')),
+                    'account': row.get('account', ''),
+                    'category': cat,
+                    'amount': amount,
+                    'used': False,
+                })
+    return pool
+
+
+def match_actual_amount(pool: list, date: str, account: str, category: str, approx_amount: float):
+    """在 pool 中找 (date, account, category) 吻合且未用過、金額最接近 approx 的一筆，回傳其實際金額。
+
+    用 DB 估算值當搜尋鍵：估算與實際只差匯率捨入，當天同帳戶的候選中取最接近的即為正解。
+    沿用 merge_for_reconciliation.py 驗證過、可達 zero-discrepancy 的配對策略。
+    """
+    target_date = normalize_date(date)
+    best_idx, min_diff = -1, float('inf')
+    for i, r in enumerate(pool):
+        if (not r['used'] and r['date'] == target_date
+                and r['account'] == account and r['category'] == category):
+            diff = abs(r['amount'] - approx_amount)
+            if diff < min_diff:
+                min_diff, best_idx = diff, i
+    if best_idx != -1:
+        pool[best_idx]['used'] = True
+        return pool[best_idx]['amount']
+    return None
+
+
 def get_exchange_rate(cursor, from_currency_id: int, to_currency_id: int, 
                       transfer_ticks: int) -> tuple[float, bool, str]:
     """查詢最接近轉帳日期的匯率"""
@@ -228,9 +284,13 @@ def export_transactions_from_csv(csv_path: Path, output_path: Path) -> int:
     return len(transactions)
 
 
-def export_transfers(cursor, output_path: Path) -> int:
+def export_transfers(cursor, output_path: Path, raw_csv_path: Path) -> int:
     """
-    匯出轉帳記錄到 transfers.csv (from DB)
+    匯出轉帳記錄到 transfers.csv（pairing 來自 DB；金額用 raw CSV 實際值經 Smart Match 修正）
+
+    DB 的 Transfer 表只存 AmountCents（轉出側），轉入金額過去用匯率估算、與 Monefy 實際值有捨入差。
+    改成用 DB 估算值當搜尋鍵，去 raw CSV 的 ExpenseTransfer / IncomeTransfer 撈實際金額，
+    讓 transfers.csv（匯入來源）與 Monefy 完全一致。
     """
     query = '''
         SELECT 
@@ -256,7 +316,11 @@ def export_transfers(cursor, output_path: Path) -> int:
     
     cursor.execute(query)
     rows = cursor.fetchall()
-    
+
+    # raw CSV 兩腳實際金額庫（供 Smart Match）。期望大小 = 2 × 轉帳數。
+    pool = build_raw_transfer_pool(raw_csv_path)
+    matched_legs = 0
+
     count = 0
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
@@ -264,31 +328,39 @@ def export_transfers(cursor, output_path: Path) -> int:
             'transfer_datetime', 'from_account', 'from_currency', 'from_amount',
             'to_account', 'to_currency', 'to_amount', 'exchange_rate', 'rate_type', 'note'
         ])
-        
+
         for row in rows:
             (created_on, from_account, from_currency_code, from_currency_id,
              to_account, to_currency_code, to_currency_id, amount_cents, note) = row
-            
+
             # 轉換時間
             dt = ticks_to_datetime(created_on)
             if dt is None:
                 continue
             datetime_str = dt.strftime('%Y-%m-%d %H:%M:%S')
-            
-            # 轉換金額 (Transfer 也視為真實交易)
-            from_amount = cents_to_decimal(amount_cents, from_currency_code, is_schedule=False)
-            
-            # 計算轉入金額 (Monefy Transfer 表只有一個 AmountCents，假設它是轉出金額)
-            rate_type = 'SameCurrency'
+
+            # DB 估算值：from = AmountCents；to = from × 匯率（僅作為 Smart Match 的搜尋鍵）
+            from_est = cents_to_decimal(amount_cents, from_currency_code, is_schedule=False)
             if from_currency_id == to_currency_id:
-                exchange_rate = 1.0
-                to_amount = from_amount
+                rate_type = 'SameCurrency'
+                to_est = from_est
             else:
-                exchange_rate, _, rate_type = get_exchange_rate(
+                _rate, _, rate_type = get_exchange_rate(
                     cursor, from_currency_id, to_currency_id, created_on
                 )
-                to_amount = from_amount * exchange_rate if exchange_rate else 0.0
-            
+                to_est = from_est * _rate if _rate else 0.0
+
+            # Smart Match：用估算值撈 raw CSV 的實際金額，DB 只負責配對(誰轉誰)
+            m_from = match_actual_amount(pool, datetime_str, from_account, 'ExpenseTransfer', -abs(from_est))
+            m_to = match_actual_amount(pool, datetime_str, to_account, 'IncomeTransfer', abs(to_est))
+            from_amount = abs(m_from) if m_from is not None else from_est
+            to_amount = abs(m_to) if m_to is not None else to_est
+            matched_legs += (m_from is not None) + (m_to is not None)
+            source = 'RawCSV' if (m_from is not None or m_to is not None) else rate_type
+
+            # exchange_rate 欄改記實際 to/from（資訊用；匯入忽略此欄）
+            exchange_rate = (to_amount / from_amount) if from_amount else 0.0
+
             writer.writerow([
                 datetime_str,
                 from_account or '',
@@ -298,11 +370,12 @@ def export_transfers(cursor, output_path: Path) -> int:
                 to_currency_code or '',
                 f'{to_amount:.2f}',
                 f'{exchange_rate:.5f}',
-                rate_type,
+                source,
                 note or ''
             ])
             count += 1
-    
+
+    print(f"   Smart Match：{matched_legs}/{count * 2} 腳用 raw CSV 實際金額；pool 剩 {sum(1 for r in pool if not r['used'])} 筆未用")
     return count
 
 
@@ -335,7 +408,7 @@ def main(db_path: Path = None):
         # 2. 匯出 Transfers (From DB)
         transfers_path = SCRIPT_DIR / "../Export_Data/transfers.csv"
         print(f"\n[2/2] 匯出轉帳記錄 (來源: DB)...")
-        tr_count = export_transfers(cursor, transfers_path)
+        tr_count = export_transfers(cursor, transfers_path, RAW_CSV_PATH)
         print(f"✓ 已匯出 {tr_count} 筆轉帳到 {transfers_path.name}")
         
         print("\n" + "=" * 60)

@@ -13977,7 +13977,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2024-10-01 00:00:00,溜扣,婚禮,-23786.00,TWD,環球影城票,False,False
 2024-10-01 00:00:00,補給,婚禮,29527.00,TWD,From Kryptonite TPE to LAX 機票,False,False
 2024-10-01 00:00:00,溜扣,婚禮,-11674.00,TWD,迪士尼門票,False,False
-2024-10-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2024-10-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2024-10-02 00:00:00,一起,One,-162.00,TWD,Tap 交通卡,False,False
 2024-10-02 00:00:00,遮羞,One,-5197.00,TWD,雷朋,False,False
 2024-10-02 00:00:00,溜扣,美幣,-10.00,USD,旅館小費,False,False
@@ -14230,7 +14230,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2024-11-01 00:00:00,一起,One,-25.00,TWD,,False,False
 2024-11-01 00:00:00,增肥,One,-75.00,TWD,50嵐,False,False
 2024-11-01 00:00:00,增肥,Two,-1007.00,TWD,雞湯大叔,False,False
-2024-11-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2024-11-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2024-11-02 00:00:00,增肥,One,-20.00,TWD,IKEA,False,False
 2024-11-02 00:00:00,遮羞,One,-1453.00,TWD, Uniqlo,False,False
 2024-11-02 00:00:00,增肥,One,-211.00,TWD,麥噹噹,False,False
@@ -14369,7 +14369,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2024-12-01 00:00:00,增肥,Two,-2090.00,TWD,Bellyflopp Cafe,False,False
 2024-12-01 00:00:00,增肥,Two,-105.00,TWD,一沐日,False,False
 2024-12-01 00:00:00,補給,Two,105.00,TWD,From Kryptonite,False,False
-2024-12-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2024-12-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2024-12-02 00:00:00,增肥,One,-150.00,TWD,麥登登,False,False
 2024-12-02 00:00:00,增肥,One,-120.00,TWD,711,False,False
 2024-12-03 00:00:00,增肥,One,-165.00,TWD,麥登登,False,False
@@ -14582,7 +14582,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-01-01 00:00:00,一起,日円,-530.00,JPY,,False,False
 2025-01-01 00:00:00,溜扣,日円,-3200.00,JPY,御守,False,False
 2025-01-01 00:00:00,一起,日円,-530.00,JPY,,False,False
-2025-01-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-01-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-01-02 00:00:00,增肥,One,-482.00,TWD,KFC,False,False
 2025-01-03 00:00:00,增肥,One,-139.00,TWD,711,False,False
 2025-01-03 00:00:00,增肥,One,-206.00,TWD,すき家,False,False
@@ -14725,7 +14725,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-02-01 00:00:00,增肥,Two,-25.00,TWD,711,False,False
 2025-02-01 00:00:00,增肥,Two,-120.00,TWD,年糕,False,False
 2025-02-01 00:00:00,補給,Two,120.00,TWD,From Kryptonite,False,False
-2025-02-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-02-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-02-02 00:00:00,該死,Two,-2800.00,TWD,按摩,False,False
 2025-02-02 00:00:00,增肥,Two,-150.00,TWD,早餐,False,False
 2025-02-03 00:00:00,增肥,One,-179.00,TWD,711,False,False
@@ -14860,7 +14860,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-03-01 00:00:00,一起,日円,-190.00,JPY,,False,False
 2025-03-01 00:00:00,一起,日円,-190.00,JPY,,False,False
 2025-03-01 00:00:00,薪資,日円,14852.00,JPY,餐費補助,False,False
-2025-03-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-03-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-03-02 00:00:00,增肥,One,-375.00,TWD,中餐,False,False
 2025-03-02 00:00:00,寶包,One,-331.00,TWD,糖果,False,False
 2025-03-02 00:00:00,寶包,One,-77.00,TWD,糖果,False,False
@@ -15006,7 +15006,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-04-01 00:00:00,增肥,One,-95.00,TWD,大正元,False,False
 2025-04-01 00:00:00,增肥,Two,-397.00,TWD,麥噹噹,False,False
 2025-04-01 00:00:00,增肥,Two,-284.00,TWD,全聯,False,False
-2025-04-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-04-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-04-02 00:00:00,增肥,One,-125.00,TWD,麥登登,False,False
 2025-04-02 00:00:00,增肥,One,-70.00,TWD,迷客夏,False,False
 2025-04-02 00:00:00,熊仔,One,-4640.00,TWD,泡溫泉,False,False
@@ -15144,7 +15144,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-05-01 00:00:00,增肥,Two,-112.00,TWD,711,False,False
 2025-05-01 00:00:00,增肥,Two,-385.00,TWD,Subway,False,False
 2025-05-01 00:00:00,增肥,Two,-90.00,TWD,臭豆腐,False,False
-2025-05-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-05-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-05-02 00:00:00,增肥,Two,-520.00,TWD,,False,False
 2025-05-02 00:00:00,補給,Two,180.00,TWD,From Kryptonite,False,False
 2025-05-03 00:00:00,增肥,Two,-387.00,TWD,麥噹噹,False,False
@@ -15258,7 +15258,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-06-01 00:00:00,增肥,Two,-115.00,TWD,711,False,False
 2025-06-01 00:00:00,增肥,Two,-150.00,TWD,冰淇淋,False,False
 2025-06-01 00:00:00,增肥,Two,-80.00,TWD,麻古茶坊 ,False,False
-2025-06-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-06-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-06-02 00:00:00,講話,One,-499.00,TWD,,False,False
 2025-06-02 00:00:00,機暖,One,-235.00,TWD,,False,False
 2025-06-02 00:00:00,汽啪,Two,-57.00,TWD,,False,False
@@ -15390,7 +15390,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-06-30 00:00:00,賭博,台股,185.00,TWD,,False,False
 2025-06-30 00:00:00,帳單,借錢,-4568.50,TWD,利息,False,False
 2025-06-30 00:00:00,賭博,美股,3270.00,USD,,False,False
-2025-07-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-07-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-07-02 00:00:00,寶包,One,-285.00,TWD,手機殼,False,False
 2025-07-02 00:00:00,汽暖,Two,-658.00,TWD,,False,False
 2025-07-02 00:00:00,增肥,Two,-200.00,TWD,路易莎,False,False
@@ -15510,7 +15510,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-07-31 00:00:00,賭博,美股,3270.00,USD,,False,False
 2025-08-01 00:00:00,增肥,Two,-511.00,TWD,鹹酥雞,False,False
 2025-08-01 00:00:00,增肥,Two,-202.00,TWD,711,False,False
-2025-08-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-08-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-08-02 00:00:00,增肥,One,-189.00,TWD,早餐,False,False
 2025-08-02 00:00:00,增肥,Two,-133.00,TWD,711,False,False
 2025-08-02 00:00:00,增肥,Two,-190.00,TWD,豆花,False,False
@@ -15665,7 +15665,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-09-01 00:00:00,該死,One,-490.00,TWD,原神,False,False
 2025-09-01 00:00:00,增肥,Two,-55.00,TWD,711,False,False
 2025-09-01 00:00:00,五金,Two,-16229.00,TWD,電視櫃,False,False
-2025-09-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-09-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-09-02 00:00:00,增肥,One,-235.00,TWD,Good呷,False,False
 2025-09-02 00:00:00,五金,One,-129.00,TWD,711,False,False
 2025-09-02 00:00:00,增肥,One,-87.00,TWD,711,False,False
@@ -15873,7 +15873,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-10-01 00:00:00,增肥,One,-109.00,TWD,大茗,False,False
 2025-10-01 00:00:00,汽啪,Two,-160.00,TWD,,False,False
 2025-10-01 00:00:00,增肥,Two,-414.00,TWD,甘泉魚麵,False,False
-2025-10-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-10-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-10-02 00:00:00,增肥,One,-710.00,TWD,咖啡膠囊,False,False
 2025-10-02 00:00:00,增肥,One,-30.00,TWD,711,False,False
 2025-10-02 00:00:00,該死,One,-170.00,TWD,絕區零,False,False
@@ -16033,7 +16033,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-11-01 00:00:00,五金,Two,-10337.00,TWD,掃地機器人、吸塵器,False,False
 2025-11-01 00:00:00,增肥,Two,-379.00,TWD,中餐,False,False
 2025-11-01 00:00:00,增肥,Two,-969.00,TWD,全聯,False,False
-2025-11-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-11-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-11-02 00:00:00,增肥,Two,-65.00,TWD,約翰紅茶,False,False
 2025-11-02 00:00:00,增肥,Two,-1420.00,TWD,忠南飯館,False,False
 2025-11-02 00:00:00,增肥,Two,-510.00,TWD,滇味廚房,False,False
@@ -16180,7 +16180,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2025-12-01 00:00:00,增肥,Two,-800.00,TWD,鼎泰豐,False,False
 2025-12-01 00:00:00,增肥,Two,-103.00,TWD,711,False,False
 2025-12-01 00:00:00,帳單,Two,-3414.00,TWD,管理費,False,False
-2025-12-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2025-12-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2025-12-02 00:00:00,增肥,One,-150.00,TWD,約翰紅茶,False,False
 2025-12-02 00:00:00,增肥,One,-28.00,TWD,711,False,False
 2025-12-02 00:00:00,汽啪,One,-170.00,TWD,,False,False
@@ -16367,7 +16367,7 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2026-01-01 00:00:00,該死,One,-660.00,TWD,絕區零,False,False
 2026-01-01 00:00:00,增肥,Two,-1160.00,TWD,Tamed Cafe,False,False
 2026-01-01 00:00:00,增肥,Two,-75.00,TWD,大苑子,False,False
-2026-01-01 00:00:00,五金,One,-305.00,TWD,iCloud,False,False
+2026-01-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
 2026-01-02 00:00:00,增肥,One,-203.00,TWD,,False,False
 2026-01-02 00:00:00,增肥,Two,-127.00,TWD,路易莎,False,False
 2026-01-02 00:00:00,汽啪,Two,-170.00,TWD,,False,False
@@ -16502,3 +16502,706 @@ transaction_datetime,category,account,amount,currency,note,is_virtual,is_ignored
 2026-01-23 00:00:00,增肥,Two,-130.00,TWD,約翰,False,False
 2026-01-23 00:00:00,汽啪,Two,-170.00,TWD,,False,False
 2026-01-23 00:00:00,增肥,Two,-110.00,TWD,鹹酥雞,False,False
+2026-01-24 00:00:00,增肥,One,-549.00,TWD,中醫,False,False
+2026-01-24 00:00:00,增肥,Two,-25.00,TWD,711,False,False
+2026-01-24 00:00:00,增肥,Two,-242.00,TWD,Uber Eats,False,False
+2026-01-24 00:00:00,增肥,Two,-550.00,TWD,Pizza,False,False
+2026-01-25 00:00:00,增肥,Two,-350.00,TWD,222space,False,False
+2026-01-25 00:00:00,汽啪,Two,-75.00,TWD,,False,False
+2026-01-25 00:00:00,補給,Two,75.00,TWD,From Kryptonite,False,False
+2026-01-25 00:00:00,汽暖,Two,-1384.00,TWD,,False,False
+2026-01-25 00:00:00,增肥,Two,-4356.00,TWD,初衷小鹿,False,False
+2026-01-26 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-01-26 00:00:00,增肥,One,-186.00,TWD,,False,False
+2026-01-26 00:00:00,熊仔,One,-1000.00,TWD,彩券,False,False
+2026-01-26 00:00:00,增肥,Two,-135.00,TWD,路易莎,False,False
+2026-01-27 00:00:00,增肥,Two,-92.00,TWD,711,False,False
+2026-01-27 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-01-27 00:00:00,增肥,Two,-89.00,TWD,711,False,False
+2026-01-27 00:00:00,五金,SuGi,-786.00,TWD,Google Developer Account,False,False
+2026-01-27 00:00:00,五金,SuGi,-3400.00,TWD,Apple Developer Program,False,False
+2026-01-28 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-01-28 00:00:00,增肥,Two,-135.00,TWD,,False,False
+2026-01-28 00:00:00,增肥,Two,-361.00,TWD,麥噹噹,False,False
+2026-01-29 00:00:00,增肥,One,-239.00,TWD,漢堡王,False,False
+2026-01-29 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-01-29 00:00:00,增肥,Two,-65.00,TWD,711,False,False
+2026-01-30 00:00:00,增肥,One,-186.00,TWD,八方雲集,False,False
+2026-01-30 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-01-30 00:00:00,該死,One,-100.00,TWD,香油錢,False,False
+2026-01-30 00:00:00,增肥,One,-25.00,TWD,711,False,False
+2026-01-30 00:00:00,薪資,One,87185.00,TWD,,False,False
+2026-01-31 00:00:00,增肥,One,-2600.00,TWD,Costco,False,False
+2026-01-31 00:00:00,苦口,One,-1868.00,TWD,魚油,False,False
+2026-01-31 00:00:00,增肥,One,-92.00,TWD,711,False,False
+2026-01-31 00:00:00,增肥,Two,-320.00,TWD,達利早餐,False,False
+2026-02-01 00:00:00,增肥,One,-100.00,TWD,威力彩,False,False
+2026-02-01 00:00:00,增肥,Two,-176.00,TWD,一之軒,False,False
+2026-02-01 00:00:00,增肥,Two,-330.00,TWD,韓式,False,False
+2026-02-01 00:00:00,補給,Two,330.00,TWD,From Kryptonite,False,False
+2026-02-01 00:00:00,增肥,Two,-70.00,TWD,UG,False,False
+2026-02-01 00:00:00,增肥,Two,-670.00,TWD,勝博殿,False,False
+2026-02-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
+2026-02-02 00:00:00,薪資,One,25000.00,TWD,尾牙獎金,False,False
+2026-02-02 00:00:00,該死,One,-3215.00,TWD,中獎請客,False,False
+2026-02-02 00:00:00,該死,One,-1000.00,TWD,抖內Gerry,False,False
+2026-02-02 00:00:00,苦口,One,-250.00,TWD,小兒科,False,False
+2026-02-02 00:00:00,增肥,Two,-135.00,TWD,路易莎,False,False
+2026-02-02 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-02 00:00:00,增肥,Two,-576.00,TWD,晚餐,False,False
+2026-02-03 00:00:00,增肥,One,-140.00,TWD,粥,False,False
+2026-02-03 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-02-03 00:00:00,增肥,One,-50.00,TWD,飲料,False,False
+2026-02-03 00:00:00,五金,Two,-3087.00,TWD,IKEA 衣櫃、玄關櫃,False,False
+2026-02-04 00:00:00,增肥,Two,-135.00,TWD,路易莎,False,False
+2026-02-04 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-04 00:00:00,增肥,Two,-335.00,TWD,雞湯牛肉麵,False,False
+2026-02-04 00:00:00,增肥,Two,-35.00,TWD,711,False,False
+2026-02-04 00:00:00,增肥,Two,-361.00,TWD,麥噹噹,False,False
+2026-02-04 00:00:00,五金,One,-650.00,TWD,Google One,False,False
+2026-02-05 00:00:00,增肥,One,-79.00,TWD,711,False,False
+2026-02-05 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-05 00:00:00,睡覺,Two,-24000.00,TWD,房租,False,False
+2026-02-05 00:00:00,汽啪,Two,-4000.00,TWD,車位,False,False
+2026-02-05 00:00:00,補給,Two,32000.00,TWD,From Kryptonite 房租 車位 便當,False,False
+2026-02-05 00:00:00,增肥,Two,-4000.00,TWD,便當,False,False
+2026-02-06 00:00:00,增肥,One,-219.00,TWD,Uber Eats,False,False
+2026-02-06 00:00:00,增肥,One,-200.00,TWD,威力彩,False,False
+2026-02-06 00:00:00,孝親,One,-5000.00,TWD,,False,False
+2026-02-06 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-06 00:00:00,汽啪,Two,-1444.00,TWD,,False,False
+2026-02-06 00:00:00,增肥,Two,-80.00,TWD,50嵐,False,False
+2026-02-06 00:00:00,增肥,Two,-1181.00,TWD,雞湯大叔,False,False
+2026-02-06 00:00:00,增肥,One,-120.00,TWD,Uber Eats 訂閱,False,False
+2026-02-07 00:00:00,五金,One,-541.00,TWD,植物燈,False,False
+2026-02-07 00:00:00,五金,One,-204.00,TWD,蝦皮,False,False
+2026-02-07 00:00:00,增肥,Two,-130.00,TWD,路易莎,False,False
+2026-02-07 00:00:00,增肥,Two,-700.00,TWD,忠南飯館,False,False
+2026-02-07 00:00:00,五金,Two,-400.00,TWD,花盆,False,False
+2026-02-07 00:00:00,該死,Two,-600.00,TWD,蘭花,False,False
+2026-02-07 00:00:00,五金,Two,-290.00,TWD,鞋帶,False,False
+2026-02-07 00:00:00,汽啪,Two,-60.00,TWD,,False,False
+2026-02-08 00:00:00,豆漿,One,-3232.00,TWD,乾隆坊,False,False
+2026-02-08 00:00:00,遮羞,One,-200.00,TWD,剪頭髮,False,False
+2026-02-08 00:00:00,增肥,Two,-45.00,TWD,711,False,False
+2026-02-08 00:00:00,五金,Two,-290.00,TWD,711,False,False
+2026-02-08 00:00:00,增肥,Two,-157.00,TWD,711,False,False
+2026-02-08 00:00:00,增肥,Two,-275.00,TWD,咖啡,False,False
+2026-02-08 00:00:00,汽啪,Two,-180.00,TWD,,False,False
+2026-02-09 00:00:00,增肥,One,-186.00,TWD,八方雲集,False,False
+2026-02-09 00:00:00,增肥,One,-60.00,TWD,迷客夏,False,False
+2026-02-09 00:00:00,該死,One,-3620.00,TWD,絕區零,False,False
+2026-02-09 00:00:00,該死,One,-3290.00,TWD,原神,False,False
+2026-02-09 00:00:00,增肥,Two,-130.00,TWD,路易莎,False,False
+2026-02-09 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-09 00:00:00,增肥,Two,-100.00,TWD,威力彩,False,False
+2026-02-09 00:00:00,增肥,Two,-305.00,TWD,小林,False,False
+2026-02-09 00:00:00,增肥,Two,-65.00,TWD,50嵐,False,False
+2026-02-09 00:00:00,增肥,Two,-100.00,TWD,臭豆腐,False,False
+2026-02-09 00:00:00,五金,Two,-300.00,TWD,水費,False,False
+2026-02-10 00:00:00,增肥,One,-65.00,TWD,珍煮丹,False,False
+2026-02-10 00:00:00,增肥,One,-224.00,TWD,麥噹噹,False,False
+2026-02-10 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-02-10 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-10 00:00:00,增肥,Two,-42.00,TWD,711,False,False
+2026-02-11 00:00:00,增肥,One,-28.00,TWD,711,False,False
+2026-02-11 00:00:00,增肥,One,-90.00,TWD,麻古茶坊,False,False
+2026-02-11 00:00:00,增肥,One,-85.00,TWD,鹹酥雞,False,False
+2026-02-11 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-11 00:00:00,保險,One,-2833.00,TWD,,False,False
+2026-02-12 00:00:00,增肥,One,-90.00,TWD,,False,False
+2026-02-12 00:00:00,增肥,Two,-130.00,TWD,,False,False
+2026-02-12 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-12 00:00:00,增肥,Two,-367.00,TWD,麥噹噹,False,False
+2026-02-13 00:00:00,增肥,One,-300.00,TWD,摩斯漢堡,False,False
+2026-02-13 00:00:00,增肥,One,-80.00,TWD,,False,False
+2026-02-13 00:00:00,增肥,Two,-550.00,TWD,Pizza,False,False
+2026-02-13 00:00:00,增肥,Two,-120.00,TWD,飲料,False,False
+2026-02-13 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-14 00:00:00,熊仔,One,-1300.00,TWD,戒指耳環,False,False
+2026-02-14 00:00:00,增肥,Two,-850.00,TWD,旧宅在,False,False
+2026-02-14 00:00:00,該死,Two,-50.00,TWD,捐款,False,False
+2026-02-14 00:00:00,增肥,Two,-42.00,TWD,,False,False
+2026-02-14 00:00:00,汽啪,Two,-45.00,TWD,,False,False
+2026-02-14 00:00:00,增肥,Two,-798.00,TWD,拉麵,False,False
+2026-02-14 00:00:00,汽車,Two,-11619.00,TWD,車貸,False,False
+2026-02-15 00:00:00,五金,Two,-145.00,TWD,洗車,False,False
+2026-02-16 00:00:00,豆漿,One,-6000.00,TWD,紅包,False,False
+2026-02-16 00:00:00,增肥,Two,-105.00,TWD,711,False,False
+2026-02-16 00:00:00,汽暖,Two,-1391.00,TWD,,False,False
+2026-02-16 00:00:00,增肥,Two,-98.00,TWD,無印,False,False
+2026-02-16 00:00:00,增肥,Two,-720.00,TWD,春水堂,False,False
+2026-02-16 00:00:00,增肥,Two,-80.00,TWD,冰淇淋,False,False
+2026-02-16 00:00:00,增肥,Two,-80.00,TWD,飲料,False,False
+2026-02-16 00:00:00,汽啪,Two,-50.00,TWD,,False,False
+2026-02-16 00:00:00,該死,Two,-500.00,TWD,刮刮樂,False,False
+2026-02-16 00:00:00,汽啪,Two,-60.00,TWD,,False,False
+2026-02-17 00:00:00,該死,Two,-300.00,TWD,Line 紅包,False,False
+2026-02-17 00:00:00,汽啪,Two,-500.00,TWD,,False,False
+2026-02-17 00:00:00,該死,Two,-300.00,TWD,彩券,False,False
+2026-02-17 00:00:00,增肥,Two,-240.00,TWD,供品,False,False
+2026-02-17 00:00:00,增肥,Two,-395.00,TWD,晚餐,False,False
+2026-02-17 00:00:00,增肥,Two,-119.00,TWD,711,False,False
+2026-02-18 00:00:00,增肥,Two,-92.00,TWD,711,False,False
+2026-02-18 00:00:00,增肥,Two,-138.00,TWD,85度C,False,False
+2026-02-18 00:00:00,汽啪,Two,-150.00,TWD,,False,False
+2026-02-19 00:00:00,該死,One,-33.00,TWD,原神,False,False
+2026-02-19 00:00:00,增肥,Two,-559.00,TWD,Uber Eats,False,False
+2026-02-19 00:00:00,增肥,Two,-206.00,TWD,50嵐,False,False
+2026-02-19 00:00:00,該死,Two,-1000.00,TWD,麻將,False,False
+2026-02-19 00:00:00,增肥,Two,-144.00,TWD,711,False,False
+2026-02-20 00:00:00,汽啪,Two,-1296.00,TWD,,False,False
+2026-02-20 00:00:00,該死,Two,-200.00,TWD,煙火,False,False
+2026-02-20 00:00:00,增肥,Two,-1000.00,TWD,中餐,False,False
+2026-02-20 00:00:00,汽啪,Two,-30.00,TWD,,False,False
+2026-02-21 00:00:00,汽啪,Two,-50.00,TWD,,False,False
+2026-02-21 00:00:00,增肥,Two,-1300.00,TWD,來來牛排,False,False
+2026-02-21 00:00:00,增肥,Two,-518.00,TWD,環球,False,False
+2026-02-21 00:00:00,增肥,Two,-75.00,TWD,泡芙,False,False
+2026-02-21 00:00:00,增肥,Two,-211.00,TWD,鹹酥雞,False,False
+2026-02-21 00:00:00,該死,Two,-1500.00,TWD,麻將 射龍門,False,False
+2026-02-22 00:00:00,增肥,One,-75.00,TWD,50嵐,False,False
+2026-02-22 00:00:00,該死,One,-3290.00,TWD,原神,False,False
+2026-02-22 00:00:00,熊仔,One,-6000.00,TWD,紅包,False,False
+2026-02-22 00:00:00,增肥,Two,-1582.00,TWD,MOMO,False,False
+2026-02-23 00:00:00,增肥,One,-160.00,TWD,河粉,False,False
+2026-02-23 00:00:00,增肥,Two,-88.00,TWD,飲料,False,False
+2026-02-23 00:00:00,該死,Two,-1396.00,TWD,宜蘭行,False,False
+2026-02-23 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-23 00:00:00,增肥,Two,-375.00,TWD,夏威夷鹹水雞,False,False
+2026-02-23 00:00:00,五金,Two,-300.00,TWD,衣架,False,False
+2026-02-24 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-02-24 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-24 00:00:00,增肥,Two,-478.00,TWD,韓式,False,False
+2026-02-25 00:00:00,增肥,One,-236.00,TWD,KFC,False,False
+2026-02-25 00:00:00,增肥,One,-60.00,TWD,迷客夏,False,False
+2026-02-25 00:00:00,該死,One,-500.00,TWD,原神,False,False
+2026-02-25 00:00:00,增肥,Two,-361.00,TWD,麥噹噹,False,False
+2026-02-25 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-02-25 00:00:00,該死,Two,-599.00,TWD,愛爾達,False,False
+2026-02-25 00:00:00,五金,One,-626.00,TWD,Claude,False,False
+2026-02-26 00:00:00,增肥,One,-185.00,TWD,喬記,False,False
+2026-02-26 00:00:00,增肥,One,-65.00,TWD,約翰紅茶,False,False
+2026-02-26 00:00:00,汽啪,One,-180.00,TWD,,False,False
+2026-02-26 00:00:00,薪資,One,93719.00,TWD,,False,False
+2026-02-26 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-02-26 00:00:00,增肥,Two,-10.00,TWD,711,False,False
+2026-02-27 00:00:00,增肥,Two,-740.00,TWD,中餐,False,False
+2026-02-27 00:00:00,汽啪,Two,-30.00,TWD,,False,False
+2026-02-27 00:00:00,增肥,Two,-315.00,TWD,黃記,False,False
+2026-02-27 00:00:00,增肥,Two,-90.00,TWD,豆乾,False,False
+2026-02-27 00:00:00,增肥,Two,-116.00,TWD,一沐日,False,False
+2026-02-28 00:00:00,該死,Two,-350.00,TWD,麻將,False,False
+2026-02-28 00:00:00,增肥,Two,-1300.00,TWD,羊肉爐,False,False
+2026-03-01 00:00:00,增肥,Two,-1152.00,TWD,全聯,False,False
+2026-03-01 00:00:00,增肥,Two,-3250.00,TWD,金豬,False,False
+2026-03-01 00:00:00,增肥,Two,-79.00,TWD,抿茶,False,False
+2026-03-01 00:00:00,汽暖,Two,-1262.00,TWD,,False,False
+2026-03-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
+2026-03-02 00:00:00,增肥,One,-80.00,TWD,路易莎,False,False
+2026-03-02 00:00:00,增肥,One,-80.00,TWD,Come buy,False,False
+2026-03-02 00:00:00,增肥,Two,-493.00,TWD,Uber Eats,False,False
+2026-03-02 00:00:00,汽啪,Two,-180.00,TWD,,False,False
+2026-03-03 00:00:00,增肥,One,-59.00,TWD,711,False,False
+2026-03-03 00:00:00,增肥,One,-75.00,TWD,迷客夏,False,False
+2026-03-03 00:00:00,增肥,One,-240.00,TWD,中餐,False,False
+2026-03-03 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-03-03 00:00:00,汽啪,Two,-180.00,TWD,,False,False
+2026-03-03 00:00:00,增肥,Two,-80.00,TWD,雞排,False,False
+2026-03-03 00:00:00,五金,Two,-3087.00,TWD,IKEA 衣櫃、玄關櫃,False,False
+2026-03-04 00:00:00,增肥,One,-144.00,TWD,中餐,False,False
+2026-03-04 00:00:00,增肥,Two,-88.00,TWD,飲料,False,False
+2026-03-04 00:00:00,增肥,Two,-99.00,TWD,711,False,False
+2026-03-04 00:00:00,汽啪,Two,-180.00,TWD,,False,False
+2026-03-04 00:00:00,增肥,Two,-342.00,TWD,麥噹噹,False,False
+2026-03-04 00:00:00,五金,One,-650.00,TWD,Google One,False,False
+2026-03-05 00:00:00,增肥,Two,-325.00,TWD,雞湯牛肉麵,False,False
+2026-03-05 00:00:00,睡覺,Two,-24000.00,TWD,房租,False,False
+2026-03-05 00:00:00,汽啪,Two,-4000.00,TWD,車位,False,False
+2026-03-05 00:00:00,補給,Two,32000.00,TWD,From Kryptonite 房租 車位 便當,False,False
+2026-03-05 00:00:00,增肥,Two,-4000.00,TWD,便當,False,False
+2026-03-06 00:00:00,增肥,One,-25.00,TWD,711,False,False
+2026-03-06 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-03-06 00:00:00,增肥,One,-200.00,TWD,臭豆腐油飯,False,False
+2026-03-06 00:00:00,增肥,Two,-100.00,TWD,甜點,False,False
+2026-03-06 00:00:00,汽啪,Two,-50.00,TWD,,False,False
+2026-03-06 00:00:00,增肥,One,-120.00,TWD,Uber Eats 訂閱,False,False
+2026-03-07 00:00:00,增肥,Two,-85.00,TWD,鹽酥雞,False,False
+2026-03-08 00:00:00,增肥,Two,-110.00,TWD,路易莎,False,False
+2026-03-08 00:00:00,增肥,Two,-361.00,TWD,711,False,False
+2026-03-09 00:00:00,增肥,One,-240.00,TWD,雞肉飯,False,False
+2026-03-09 00:00:00,講話,One,-376.00,TWD,,False,False
+2026-03-09 00:00:00,汽啪,Two,-180.00,TWD,,False,False
+2026-03-10 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-03-10 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-10 00:00:00,增肥,Two,-61.00,TWD,711,False,False
+2026-03-10 00:00:00,增肥,Two,-283.00,TWD,鹹水雞,False,False
+2026-03-11 00:00:00,孝親,One,-5000.00,TWD,,False,False
+2026-03-11 00:00:00,增肥,One,-65.00,TWD,西瓜烏龍,False,False
+2026-03-11 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-03-11 00:00:00,增肥,Two,-342.00,TWD,麥噹噹,False,False
+2026-03-11 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-11 00:00:00,增肥,Two,-205.00,TWD,50嵐,False,False
+2026-03-11 00:00:00,保險,One,-2833.00,TWD,,False,False
+2026-03-12 00:00:00,增肥,One,-186.00,TWD,八方雲集,False,False
+2026-03-12 00:00:00,增肥,Two,-130.00,TWD,路易莎,False,False
+2026-03-12 00:00:00,增肥,Two,-202.00,TWD,Uber Eats,False,False
+2026-03-12 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-12 00:00:00,增肥,Two,-527.00,TWD,韓式,False,False
+2026-03-13 00:00:00,增肥,One,-1000.00,TWD,飲料儲值,False,False
+2026-03-13 00:00:00,增肥,One,-240.00,TWD,雞肉飯,False,False
+2026-03-13 00:00:00,五金,One,-159.00,TWD,Claude,False,False
+2026-03-13 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-13 00:00:00,汽暖,Two,-1491.00,TWD,,False,False
+2026-03-13 00:00:00,汽啪,Two,-60.00,TWD,,False,False
+2026-03-13 00:00:00,增肥,Two,-325.00,TWD,鹹水雞,False,False
+2026-03-13 00:00:00,該死,Two,-2180.00,TWD,按摩,False,False
+2026-03-13 00:00:00,汽啪,Two,-360.00,TWD,,False,False
+2026-03-14 00:00:00,增肥,Two,-300.00,TWD,水餃,False,False
+2026-03-14 00:00:00,五金,Two,-299.00,TWD,填縫劑,False,False
+2026-03-14 00:00:00,五金,Two,-698.00,TWD,燈,False,False
+2026-03-14 00:00:00,汽車,Two,-11619.00,TWD,車貸,False,False
+2026-03-15 00:00:00,增肥,One,-215.00,TWD,朱記,False,False
+2026-03-15 00:00:00,增肥,One,-280.00,TWD,麥噹噹,False,False
+2026-03-15 00:00:00,增肥,One,-280.00,TWD,麥噹噹,False,False
+2026-03-15 00:00:00,增肥,Two,-49.00,TWD,711,False,False
+2026-03-15 00:00:00,增肥,Two,-84.00,TWD,711,False,False
+2026-03-16 00:00:00,增肥,One,-250.00,TWD,中餐,False,False
+2026-03-16 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-17 00:00:00,增肥,One,-190.00,TWD,中餐,False,False
+2026-03-17 00:00:00,增肥,Two,-135.00,TWD,路易莎,False,False
+2026-03-17 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-18 00:00:00,增肥,Two,-110.00,TWD,路易莎,False,False
+2026-03-18 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-18 00:00:00,增肥,Two,-443.00,TWD,POKE,False,False
+2026-03-18 00:00:00,增肥,Two,-49.00,TWD,711,False,False
+2026-03-18 00:00:00,增肥,Two,-100.00,TWD,711,False,False
+2026-03-19 00:00:00,增肥,Two,-110.00,TWD,,False,False
+2026-03-19 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-20 00:00:00,增肥,One,-250.00,TWD,雞肉飯,False,False
+2026-03-20 00:00:00,增肥,One,-282.00,TWD,麥噹噹,False,False
+2026-03-20 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-21 00:00:00,增肥,One,-65.00,TWD,711,False,False
+2026-03-21 00:00:00,屋伯,One,-282.00,TWD,,False,False
+2026-03-21 00:00:00,增肥,One,-3600.00,TWD,Frank 婚禮,False,False
+2026-03-21 00:00:00,增肥,One,-848.00,TWD,續攤,False,False
+2026-03-21 00:00:00,增肥,One,-59.00,TWD,711,False,False
+2026-03-21 00:00:00,屋伯,One,-275.00,TWD,,False,False
+2026-03-21 00:00:00,增肥,Two,-135.00,TWD,路易莎,False,False
+2026-03-22 00:00:00,該死,One,-170.00,TWD,原神,False,False
+2026-03-22 00:00:00,增肥,One,-149.00,TWD,Costco,False,False
+2026-03-23 00:00:00,增肥,One,-270.00,TWD,周胖子,False,False
+2026-03-23 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-03-23 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-03-24 00:00:00,增肥,One,-210.00,TWD,中餐,False,False
+2026-03-24 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-03-24 00:00:00,增肥,One,-290.00,TWD,義大利麵,False,False
+2026-03-24 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-03-25 00:00:00,增肥,One,-120.00,TWD,路易莎,False,False
+2026-03-25 00:00:00,增肥,One,-240.00,TWD,KFC,False,False
+2026-03-25 00:00:00,增肥,One,-466.00,TWD,Uber Eats,False,False
+2026-03-25 00:00:00,寶包,One,-228.00,TWD,Uber Eats,False,False
+2026-03-25 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-25 00:00:00,五金,One,-626.00,TWD,Claude,False,False
+2026-03-26 00:00:00,增肥,One,-240.00,TWD,中餐,False,False
+2026-03-26 00:00:00,寶包,One,-150.00,TWD,麥噹噹,False,False
+2026-03-26 00:00:00,增肥,Two,-110.00,TWD,路易莎,False,False
+2026-03-26 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-26 00:00:00,汽啪,Two,-1560.00,TWD,,False,False
+2026-03-27 00:00:00,增肥,Two,-536.00,TWD,Uber手續費,False,False
+2026-03-28 00:00:00,增肥,Two,-1121.00,TWD,Costco,False,False
+2026-03-28 00:00:00,增肥,Two,-671.00,TWD,禾盛,False,False
+2026-03-28 00:00:00,增肥,Two,-330.00,TWD,可頌,False,False
+2026-03-29 00:00:00,增肥,Two,-316.00,TWD,Uber Eats,False,False
+2026-03-29 00:00:00,該死,Two,-667.00,TWD,電影,False,False
+2026-03-29 00:00:00,汽啪,Two,-76.00,TWD,,False,False
+2026-03-29 00:00:00,補給,Two,76.00,TWD,From Kryptonite,False,False
+2026-03-30 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-03-30 00:00:00,增肥,Two,-210.00,TWD,中餐,False,False
+2026-03-30 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-03-30 00:00:00,增肥,Two,-110.00,TWD,路易莎,False,False
+2026-03-31 00:00:00,增肥,One,-35.00,TWD,711,False,False
+2026-03-31 00:00:00,五金,One,-160.00,TWD,Claude,False,False
+2026-03-31 00:00:00,增肥,One,-190.00,TWD,八方雲集,False,False
+2026-03-31 00:00:00,薪資,One,93719.00,TWD,,False,False
+2026-03-31 00:00:00,增肥,Two,-255.00,TWD,Uber Eats,False,False
+2026-04-01 00:00:00,五金,One,-160.00,TWD,Claude,False,False
+2026-04-01 00:00:00,遮羞,One,-555.00,TWD,襪子,False,False
+2026-04-01 00:00:00,孝親,One,-5000.00,TWD,,False,False
+2026-04-01 00:00:00,增肥,Two,-130.00,TWD,路易莎,False,False
+2026-04-01 00:00:00,汽車,Two,-11230.00,TWD,牌照稅,False,False
+2026-04-01 00:00:00,五金,Two,-644.00,TWD,電費,False,False
+2026-04-01 00:00:00,該死,Two,-6580.00,TWD,絕區零,False,False
+2026-04-01 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-01 00:00:00,汽啪,Two,-100.00,TWD,,False,False
+2026-04-01 00:00:00,增肥,Two,-419.00,TWD,義大利麵,False,False
+2026-04-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
+2026-04-02 00:00:00,五金,One,-600.00,TWD,Whoscall,False,False
+2026-04-02 00:00:00,增肥,One,-240.00,TWD,KFC,False,False
+2026-04-02 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-04-02 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-02 00:00:00,增肥,Two,-650.00,TWD,滇味廚房,False,False
+2026-04-02 00:00:00,增肥,Two,-65.00,TWD,UG,False,False
+2026-04-03 00:00:00,遮羞,One,-10627.00,TWD,猛健樂,False,False
+2026-04-03 00:00:00,汽啪,One,-60.00,TWD,,False,False
+2026-04-03 00:00:00,五金,One,-2299.00,TWD,IKEA枕頭,False,False
+2026-04-03 00:00:00,增肥,Two,-430.00,TWD,義大利麵,False,False
+2026-04-03 00:00:00,五金,Two,-2603.00,TWD,IKEA,False,False
+2026-04-03 00:00:00,增肥,Two,-1562.00,TWD,全聯,False,False
+2026-04-03 00:00:00,五金,Two,-3087.00,TWD,IKEA 衣櫃、玄關櫃,False,False
+2026-04-04 00:00:00,增肥,Two,-60.00,TWD,一沐日,False,False
+2026-04-04 00:00:00,增肥,Two,-345.00,TWD,黃記,False,False
+2026-04-04 00:00:00,五金,Two,-1164.00,TWD,B&Q,False,False
+2026-04-04 00:00:00,增肥,Two,-49.00,TWD,711,False,False
+2026-04-04 00:00:00,五金,One,-650.00,TWD,Google One,False,False
+2026-04-05 00:00:00,遮羞,One,-1560.00,TWD, Uniqlo,False,False
+2026-04-05 00:00:00,增肥,Two,-622.00,TWD,咖啡廳,False,False
+2026-04-05 00:00:00,汽啪,Two,-200.00,TWD,,False,False
+2026-04-05 00:00:00,增肥,Two,-79.00,TWD,抿茶,False,False
+2026-04-05 00:00:00,五金,Two,-149.00,TWD,浴簾,False,False
+2026-04-05 00:00:00,五金,Two,-699.00,TWD,萬國插座,False,False
+2026-04-05 00:00:00,五金,Two,-29.00,TWD,餅乾,False,False
+2026-04-05 00:00:00,增肥,Two,-65.00,TWD,豆花,False,False
+2026-04-05 00:00:00,睡覺,Two,-24000.00,TWD,房租,False,False
+2026-04-05 00:00:00,汽啪,Two,-4000.00,TWD,車位,False,False
+2026-04-05 00:00:00,補給,Two,32000.00,TWD,From Kryptonite 房租 車位 便當,False,False
+2026-04-05 00:00:00,增肥,Two,-4000.00,TWD,便當,False,False
+2026-04-06 00:00:00,增肥,One,-120.00,TWD,Uber Eats 訂閱,False,False
+2026-04-07 00:00:00,增肥,One,-1000.00,TWD,飲料,False,False
+2026-04-07 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-07 00:00:00,增肥,One,-813.00,TWD,全聯,False,False
+2026-04-07 00:00:00,汽暖,One,-1686.00,TWD,,False,False
+2026-04-08 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-08 00:00:00,該死,One,-330.00,TWD,原神,False,False
+2026-04-08 00:00:00,寶包,One,-223.00,TWD,Uber Eats,False,False
+2026-04-09 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-09 00:00:00,增肥,One,-413.00,TWD,Burger King,False,False
+2026-04-09 00:00:00,汽啪,One,-130.00,TWD,,False,False
+2026-04-10 00:00:00,增肥,One,-90.00,TWD,黑丸嫩仙草,False,False
+2026-04-10 00:00:00,寶包,One,-205.00,TWD,Uber Eats,False,False
+2026-04-10 00:00:00,增肥,Two,-65.00,TWD,50嵐,False,False
+2026-04-10 00:00:00,增肥,Two,-1018.00,TWD,雞湯大叔,False,False
+2026-04-11 00:00:00,苦口,One,-150.00,TWD,針灸,False,False
+2026-04-11 00:00:00,增肥,Two,-180.00,TWD,早餐,False,False
+2026-04-11 00:00:00,增肥,Two,-325.00,TWD,木須麵,False,False
+2026-04-11 00:00:00,汽啪,Two,-300.00,TWD,,False,False
+2026-04-11 00:00:00,增肥,Two,-145.00,TWD,鹹酥雞,False,False
+2026-04-11 00:00:00,保險,One,-2833.00,TWD,,False,False
+2026-04-12 00:00:00,五金,Two,-202.00,TWD,集塵袋,False,False
+2026-04-12 00:00:00,增肥,Two,-407.00,TWD,甘泉魚麵,False,False
+2026-04-13 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-13 00:00:00,汽啪,One,-150.00,TWD,,False,False
+2026-04-13 00:00:00,霧狀,One,-4400.00,TWD,,False,False
+2026-04-13 00:00:00,增肥,One,-210.00,TWD,雞肉飯,False,False
+2026-04-13 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-04-13 00:00:00,增肥,Two,-240.00,TWD,鹹水雞,False,False
+2026-04-13 00:00:00,增肥,Two,-40.00,TWD,蘿蔔湯,False,False
+2026-04-14 00:00:00,增肥,One,-90.00,TWD,路易莎,False,False
+2026-04-14 00:00:00,增肥,One,-210.00,TWD,中餐,False,False
+2026-04-14 00:00:00,增肥,Two,-340.00,TWD,麥噹噹,False,False
+2026-04-14 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-14 00:00:00,汽車,Two,-11619.00,TWD,車貸,False,False
+2026-04-15 00:00:00,孝親,One,-5000.00,TWD,,False,False
+2026-04-15 00:00:00,講話,One,-188.00,TWD,,False,False
+2026-04-15 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-15 00:00:00,增肥,Two,-40.00,TWD,地瓜球,False,False
+2026-04-15 00:00:00,增肥,Two,-75.00,TWD,東區粉圓,False,False
+2026-04-15 00:00:00,增肥,Two,-65.00,TWD,UG,False,False
+2026-04-15 00:00:00,增肥,Two,-295.00,TWD,鹹水雞,False,False
+2026-04-15 00:00:00,補給,Two,295.00,TWD,From Kryptonite,False,False
+2026-04-15 00:00:00,增肥,Two,-740.00,TWD,雜貨,False,False
+2026-04-15 00:00:00,汽車,Two,-2226.00,TWD,罰單,False,False
+2026-04-16 00:00:00,增肥,One,-190.00,TWD,八方雲集,False,False
+2026-04-16 00:00:00,汽暖,Two,-1597.00,TWD,,False,False
+2026-04-16 00:00:00,增肥,Two,-49.00,TWD,711,False,False
+2026-04-16 00:00:00,五金,Two,-325.00,TWD,水費,False,False
+2026-04-16 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-04-16 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-17 00:00:00,增肥,One,-210.00,TWD,中餐,False,False
+2026-04-17 00:00:00,增肥,Two,-90.00,TWD,路易莎,False,False
+2026-04-17 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-18 00:00:00,增肥,Two,-125.00,TWD,Cama,False,False
+2026-04-18 00:00:00,增肥,Two,-257.00,TWD,Uber Eats,False,False
+2026-04-18 00:00:00,增肥,Two,-491.00,TWD,Uber Eats,False,False
+2026-04-19 00:00:00,增肥,Two,-200.00,TWD,早餐,False,False
+2026-04-20 00:00:00,五金,One,-160.00,TWD,Claude,False,False
+2026-04-20 00:00:00,五金,One,-3028.00,TWD,Claude,False,False
+2026-04-20 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-20 00:00:00,該死,One,-170.00,TWD,原神,False,False
+2026-04-20 00:00:00,增肥,Two,-35.00,TWD,711,False,False
+2026-04-21 00:00:00,增肥,One,-35.00,TWD,711,False,False
+2026-04-21 00:00:00,增肥,One,-270.00,TWD,中餐,False,False
+2026-04-21 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-21 00:00:00,增肥,Two,-124.00,TWD,711,False,False
+2026-04-22 00:00:00,增肥,One,-240.00,TWD,KFC,False,False
+2026-04-22 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-04-22 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-23 00:00:00,增肥,One,-210.00,TWD,雞肉飯,False,False
+2026-04-23 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-23 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-04-23 00:00:00,增肥,Two,-567.00,TWD,全聯,False,False
+2026-04-24 00:00:00,增肥,One,-240.00,TWD,麥噹噹,False,False
+2026-04-24 00:00:00,增肥,Two,-90.00,TWD,路易莎,False,False
+2026-04-24 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-24 00:00:00,增肥,Two,-1265.00,TWD,韓式,False,False
+2026-04-25 00:00:00,屋伯,One,-157.00,TWD,,False,False
+2026-04-25 00:00:00,增肥,Two,-125.00,TWD,Cama,False,False
+2026-04-25 00:00:00,增肥,Two,-98.00,TWD,無印,False,False
+2026-04-25 00:00:00,增肥,Two,-473.00,TWD,中餐,False,False
+2026-04-25 00:00:00,該死,Two,-5000.00,TWD,Bachlor Party,False,False
+2026-04-26 00:00:00,屋伯,One,-150.00,TWD,,False,False
+2026-04-26 00:00:00,增肥,Two,-130.00,TWD,河堤上的貓,False,False
+2026-04-26 00:00:00,增肥,Two,-390.00,TWD,全聯,False,False
+2026-04-26 00:00:00,增肥,Two,-134.00,TWD,711,False,False
+2026-04-26 00:00:00,遮羞,Two,-3450.00,TWD,染頭髮,False,False
+2026-04-26 00:00:00,增肥,Two,-92.00,TWD,711,False,False
+2026-04-26 00:00:00,汽暖,Two,-1519.00,TWD,,False,False
+2026-04-27 00:00:00,增肥,One,-230.00,TWD,雞肉飯,False,False
+2026-04-27 00:00:00,增肥,Two,-573.00,TWD,Uber Eats,False,False
+2026-04-28 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-28 00:00:00,增肥,One,-150.00,TWD,中餐,False,False
+2026-04-28 00:00:00,增肥,Two,-90.00,TWD,路易莎,False,False
+2026-04-28 00:00:00,增肥,Two,-80.00,TWD,50嵐,False,False
+2026-04-28 00:00:00,增肥,Two,-330.00,TWD,麻油雞,False,False
+2026-04-29 00:00:00,增肥,One,-1375.00,TWD,瓦城,False,False
+2026-04-29 00:00:00,增肥,Two,-90.00,TWD,路易莎,False,False
+2026-04-29 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-04-29 00:00:00,增肥,Two,-150.00,TWD,麻油雞,False,False
+2026-04-29 00:00:00,增肥,Two,-123.00,TWD,豆花,False,False
+2026-04-29 00:00:00,增肥,Two,-312.00,TWD,鹹酥雞,False,False
+2026-04-30 00:00:00,增肥,One,-100.00,TWD,八方雲集,False,False
+2026-04-30 00:00:00,薪資,One,93719.00,TWD,,False,False
+2026-04-30 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-04-30 00:00:00,寶包,One,-788.00,TWD,隱形眼鏡,False,False
+2026-04-30 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-05-01 00:00:00,寶包,One,-267.00,TWD,Uber Eats,False,False
+2026-05-01 00:00:00,增肥,One,-833.00,TWD,Gum Gum,False,False
+2026-05-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
+2026-05-02 00:00:00,寶包,One,-483.00,TWD,Uber Eats,False,False
+2026-05-02 00:00:00,增肥,Two,-1375.00,TWD,Tamed Fox,False,False
+2026-05-02 00:00:00,汽啪,Two,-120.00,TWD,,False,False
+2026-05-02 00:00:00,汽車,Two,-14694.00,TWD,汽車保養,False,False
+2026-05-02 00:00:00,增肥,Two,-793.00,TWD,全聯,False,False
+2026-05-03 00:00:00,增肥,One,-282.00,TWD,麥噹噹,False,False
+2026-05-03 00:00:00,增肥,Two,-113.00,TWD,711,False,False
+2026-05-03 00:00:00,五金,Two,-3087.00,TWD,IKEA 衣櫃、玄關櫃,False,False
+2026-05-04 00:00:00,增肥,One,-1000.00,TWD,飲料,False,False
+2026-05-04 00:00:00,遮羞,One,-2580.00,TWD,海灘褲,False,False
+2026-05-04 00:00:00,補給,One,2580.00,TWD,From Kryptonite,False,False
+2026-05-04 00:00:00,寶包,One,-497.00,TWD,Uber Eats,False,False
+2026-05-04 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-05-04 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-04 00:00:00,五金,One,-650.00,TWD,Google One,False,False
+2026-05-05 00:00:00,寶包,One,-355.00,TWD,Uber Eats,False,False
+2026-05-05 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-05 00:00:00,睡覺,Two,-24000.00,TWD,房租,False,False
+2026-05-05 00:00:00,汽啪,Two,-4000.00,TWD,車位,False,False
+2026-05-05 00:00:00,補給,Two,32000.00,TWD,From Kryptonite 房租 車位 便當,False,False
+2026-05-05 00:00:00,增肥,Two,-4000.00,TWD,便當,False,False
+2026-05-06 00:00:00,遮羞,One,-1490.00,TWD,Zara,False,False
+2026-05-06 00:00:00,增肥,Two,-1000.00,TWD,甘苦人,False,False
+2026-05-06 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-06 00:00:00,增肥,Two,-2354.00,TWD,Solo Pasta,False,False
+2026-05-06 00:00:00,增肥,One,-120.00,TWD,Uber Eats 訂閱,False,False
+2026-05-07 00:00:00,保險,One,-1829.00,TWD,旅平險,False,False
+2026-05-07 00:00:00,一起,One,-115.00,TWD,,False,False
+2026-05-07 00:00:00,五金,Two,-1300.00,TWD,瓦斯,False,False
+2026-05-07 00:00:00,五金,Two,-822.00,TWD,電費,False,False
+2026-05-07 00:00:00,五金,Two,-851.00,TWD,管理費,False,False
+2026-05-07 00:00:00,五金,Two,-10.00,TWD,繳費手續費,False,False
+2026-05-07 00:00:00,增肥,Two,-190.00,TWD,麥噹噹,False,False
+2026-05-07 00:00:00,增肥,Two,-175.00,TWD,Charlie 泰奶,False,False
+2026-05-07 00:00:00,屋伯,Two,-65.00,TWD,,False,False
+2026-05-07 00:00:00,補給,Two,3000.00,TWD,From Kryptonite,False,False
+2026-05-07 00:00:00,屋伯,泰錢,-163.00,THB,,False,False
+2026-05-07 00:00:00,增肥,泰錢,-3000.00,THB,晚餐訂金,False,False
+2026-05-07 00:00:00,增肥,泰錢,-239.00,THB,漢堡,False,False
+2026-05-07 00:00:00,增肥,泰錢,-250.00,THB,炒河粉,False,False
+2026-05-07 00:00:00,增肥,泰錢,-60.00,THB,西瓜汁,False,False
+2026-05-07 00:00:00,增肥,泰錢,-40.00,THB,香蕉餅,False,False
+2026-05-08 00:00:00,該死,One,-807.00,TWD,全身按摩,False,False
+2026-05-08 00:00:00,寶包,One,-578.00,TWD,包包,False,False
+2026-05-08 00:00:00,屋伯,Two,-137.00,TWD,,False,False
+2026-05-08 00:00:00,增肥,Two,-682.00,TWD,早午餐,False,False
+2026-05-08 00:00:00,屋伯,Two,-95.00,TWD,,False,False
+2026-05-08 00:00:00,增肥,Two,-318.00,TWD,咖啡,False,False
+2026-05-08 00:00:00,屋伯,Two,-88.00,TWD,,False,False
+2026-05-08 00:00:00,增肥,Two,-44.00,TWD,泰奶,False,False
+2026-05-08 00:00:00,屋伯,Two,-97.00,TWD,,False,False
+2026-05-08 00:00:00,屋伯,Two,-65.00,TWD,,False,False
+2026-05-08 00:00:00,增肥,Two,-2170.00,TWD,EKACHAN,False,False
+2026-05-08 00:00:00,增肥,泰錢,-360.00,THB,,False,False
+2026-05-08 00:00:00,五金,泰錢,-5.00,THB,廁所,False,False
+2026-05-08 00:00:00,增肥,泰錢,-78.00,THB,拿鐵,False,False
+2026-05-08 00:00:00,增肥,泰錢,-111.00,THB,711,False,False
+2026-05-09 00:00:00,該死,One,-3600.00,TWD,Vigor Sylvia 婚禮,False,False
+2026-05-09 00:00:00,屋伯,Two,-86.00,TWD,,False,False
+2026-05-09 00:00:00,屋伯,Two,-207.00,TWD,,False,False
+2026-05-09 00:00:00,屋伯,Two,-218.00,TWD,,False,False
+2026-05-09 00:00:00,增肥,Two,-174.00,TWD,Charlie 泰奶,False,False
+2026-05-09 00:00:00,屋伯,Two,-71.00,TWD,,False,False
+2026-05-09 00:00:00,屋伯,Two,-65.00,TWD,,False,False
+2026-05-09 00:00:00,屋伯,Two,-65.00,TWD,,False,False
+2026-05-09 00:00:00,五金,泰錢,-146.00,THB,清潔小費,False,False
+2026-05-09 00:00:00,增肥,泰錢,-295.00,THB,Barista,False,False
+2026-05-09 00:00:00,增肥,泰錢,-2900.00,THB,私廚,False,False
+2026-05-09 00:00:00,增肥,泰錢,-30.00,THB,,False,False
+2026-05-09 00:00:00,增肥,泰錢,-45.00,THB,牛肉湯米粉,False,False
+2026-05-09 00:00:00,增肥,泰錢,-20.00,THB,芒果冰沙,False,False
+2026-05-09 00:00:00,苦口,泰錢,-195.00,THB,驗孕棒,False,False
+2026-05-09 00:00:00,增肥,泰錢,-40.00,THB,山竹,False,False
+2026-05-09 00:00:00,增肥,泰錢,-200.00,THB,豬排,False,False
+2026-05-10 00:00:00,屋伯,Two,-76.00,TWD,,False,False
+2026-05-10 00:00:00,屋伯,Two,-75.00,TWD,,False,False
+2026-05-10 00:00:00,增肥,Two,-204.00,TWD,The Baristro Coffee Roaster,False,False
+2026-05-10 00:00:00,屋伯,Two,-88.00,TWD,,False,False
+2026-05-10 00:00:00,增肥,Two,-235.00,TWD,林老五,False,False
+2026-05-10 00:00:00,屋伯,Two,-71.00,TWD,,False,False
+2026-05-10 00:00:00,該死,Two,-1889.00,TWD,洗頭,False,False
+2026-05-10 00:00:00,屋伯,Two,-75.00,TWD,,False,False
+2026-05-10 00:00:00,屋伯,Two,-130.00,TWD,,False,False
+2026-05-10 00:00:00,增肥,泰錢,-60.00,THB,,False,False
+2026-05-10 00:00:00,增肥,泰錢,-75.00,THB,,False,False
+2026-05-10 00:00:00,增肥,泰錢,-78.00,THB,炸雞,False,False
+2026-05-10 00:00:00,增肥,泰錢,-50.00,THB,燒烤,False,False
+2026-05-10 00:00:00,增肥,泰錢,-35.00,THB,泰奶,False,False
+2026-05-10 00:00:00,增肥,泰錢,-110.00,THB,燒烤,False,False
+2026-05-11 00:00:00,增肥,Two,-185.00,TWD,Starbucks,False,False
+2026-05-11 00:00:00,該死,Two,-39022.00,TWD,Dusit Thani,False,False
+2026-05-11 00:00:00,屋伯,Two,-92.00,TWD,,False,False
+2026-05-11 00:00:00,屋伯,Two,-201.00,TWD,,False,False
+2026-05-11 00:00:00,五金,Two,-1570.00,TWD,牙膏,False,False
+2026-05-11 00:00:00,該死,Two,-2878.00,TWD,紀念品,False,False
+2026-05-11 00:00:00,屋伯,Two,-222.00,TWD,,False,False
+2026-05-11 00:00:00,增肥,泰錢,-250.00,THB,Pistacho,False,False
+2026-05-11 00:00:00,借過,泰錢,-150.00,THB,,False,False
+2026-05-11 00:00:00,屋伯,泰錢,-100.00,THB,,False,False
+2026-05-11 00:00:00,增肥,泰錢,-441.00,THB,牛肉,False,False
+2026-05-11 00:00:00,增肥,泰錢,-50.00,THB,可樂,False,False
+2026-05-11 00:00:00,保險,One,-2833.00,TWD,,False,False
+2026-05-12 00:00:00,寶包,One,-3719.00,TWD,POP MART,False,False
+2026-05-12 00:00:00,遮羞,One,-1937.00,TWD,外套,False,False
+2026-05-12 00:00:00,熊仔,One,-2085.00,TWD,泳衣,False,False
+2026-05-12 00:00:00,增肥,Two,-107.00,TWD,泰奶,False,False
+2026-05-12 00:00:00,增肥,Two,-386.00,TWD,麥噹噹,False,False
+2026-05-12 00:00:00,增肥,泰錢,-115.00,THB,河粉,False,False
+2026-05-12 00:00:00,一起,泰錢,-50.00,THB,,False,False
+2026-05-12 00:00:00,一起,泰錢,-50.00,THB,,False,False
+2026-05-13 00:00:00,該死,One,-636.00,TWD,E Go Kart,False,False
+2026-05-13 00:00:00,屋伯,Two,-114.00,TWD,,False,False
+2026-05-13 00:00:00,屋伯,Two,-132.00,TWD,,False,False
+2026-05-13 00:00:00,增肥,泰錢,-139.00,THB,炸雞,False,False
+2026-05-13 00:00:00,增肥,泰錢,-323.00,THB,燒肉,False,False
+2026-05-13 00:00:00,增肥,泰錢,-1100.00,THB,媽媽麵,False,False
+2026-05-13 00:00:00,增肥,泰錢,-139.00,THB,挫冰,False,False
+2026-05-14 00:00:00,屋伯,Two,-79.00,TWD,,False,False
+2026-05-14 00:00:00,寶包,Two,-1585.00,TWD,Big C,False,False
+2026-05-14 00:00:00,屋伯,Two,-91.00,TWD,,False,False
+2026-05-14 00:00:00,屋伯,Two,-616.00,TWD,,False,False
+2026-05-14 00:00:00,屋伯,Two,-692.00,TWD,,False,False
+2026-05-14 00:00:00,豆漿,Two,-591.00,TWD,磁鐵,False,False
+2026-05-14 00:00:00,增肥,Two,-648.00,TWD,Burger King,False,False
+2026-05-14 00:00:00,汽車,Two,-11619.00,TWD,車貸,False,False
+2026-05-15 00:00:00,五金,One,-58.00,TWD,鞋墊,False,False
+2026-05-15 00:00:00,增肥,Two,-45.00,TWD,711,False,False
+2026-05-15 00:00:00,增肥,Two,-1230.00,TWD,MOMO,False,False
+2026-05-15 00:00:00,增肥,Two,-115.00,TWD,一沐日,False,False
+2026-05-15 00:00:00,增肥,Two,-90.00,TWD,桂花芝麻湯圓,False,False
+2026-05-15 00:00:00,增肥,Two,-140.00,TWD,炸雞,False,False
+2026-05-16 00:00:00,增肥,Two,-310.00,TWD,早餐,False,False
+2026-05-17 00:00:00,增肥,Two,-1088.00,TWD,,False,False
+2026-05-17 00:00:00,增肥,Two,-41.00,TWD,,False,False
+2026-05-17 00:00:00,增肥,Two,-35.00,TWD,711,False,False
+2026-05-17 00:00:00,增肥,Two,-180.00,TWD,牛肉麵,False,False
+2026-05-17 00:00:00,五金,Two,-116.00,TWD,驗孕棒,False,False
+2026-05-17 00:00:00,汽暖,Two,-1435.00,TWD,,False,False
+2026-05-17 00:00:00,增肥,Two,-350.00,TWD,麻糬,False,False
+2026-05-17 00:00:00,補給,泰錢,573.00,THB,補齊金額,False,False
+2026-05-18 00:00:00,增肥,One,-240.00,TWD,雞肉飯,False,False
+2026-05-18 00:00:00,寶包,One,-151.00,TWD,Uber Eats,False,False
+2026-05-18 00:00:00,增肥,Two,-135.00,TWD,路易莎,False,False
+2026-05-18 00:00:00,增肥,Two,-170.00,TWD,,False,False
+2026-05-18 00:00:00,增肥,Two,-350.00,TWD,雞腿飯,False,False
+2026-05-18 00:00:00,寶包,Two,-100.00,TWD,711,False,False
+2026-05-18 00:00:00,該死,Two,-30.00,TWD,Assuto Racing,False,False
+2026-05-19 00:00:00,有益,One,-1000.00,TWD,台大醫院捐款,False,False
+2026-05-19 00:00:00,增肥,One,-240.00,TWD,中餐,False,False
+2026-05-19 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-05-19 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-20 00:00:00,增肥,One,-210.00,TWD,豬腳飯,False,False
+2026-05-20 00:00:00,五金,One,-3170.00,TWD,Claude,False,False
+2026-05-20 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-05-20 00:00:00,增肥,Two,-90.00,TWD,路易莎,False,False
+2026-05-21 00:00:00,增肥,One,-200.00,TWD,八方雲集,False,False
+2026-05-21 00:00:00,苦口,One,-50.00,TWD,牙醫,False,False
+2026-05-21 00:00:00,汽啪,One,-120.00,TWD,,False,False
+2026-05-21 00:00:00,增肥,One,-200.00,TWD,八方雲集,False,False
+2026-05-21 00:00:00,講話,One,-188.00,TWD,,False,False
+2026-05-21 00:00:00,增肥,One,-130.00,TWD,鹹水雞,False,False
+2026-05-21 00:00:00,增肥,Two,-92.00,TWD,711,False,False
+2026-05-21 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-22 00:00:00,增肥,One,-260.00,TWD,豬排飯,False,False
+2026-05-22 00:00:00,五金,One,-3358.00,TWD,Claude,False,False
+2026-05-22 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-05-22 00:00:00,該死,One,-330.00,TWD,絕區零,False,False
+2026-05-22 00:00:00,該死,One,-330.00,TWD,原神,False,False
+2026-05-22 00:00:00,增肥,Two,-275.00,TWD,鹹酥雞,False,False
+2026-05-23 00:00:00,增肥,Two,-28.00,TWD,711,False,False
+2026-05-23 00:00:00,增肥,Two,-4023.00,TWD,Costco,False,False
+2026-05-24 00:00:00,寶包,One,-206.00,TWD,麥噹噹,False,False
+2026-05-24 00:00:00,一起,One,-150.00,TWD,,False,False
+2026-05-24 00:00:00,一起,One,-25.00,TWD,,False,False
+2026-05-24 00:00:00,機啪,One,-80.00,TWD,,False,False
+2026-05-24 00:00:00,該死,One,-170.00,TWD,原神,False,False
+2026-05-25 00:00:00,增肥,One,-240.00,TWD,雞肉飯,False,False
+2026-05-25 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-05-25 00:00:00,增肥,Two,-377.00,TWD,麥噹噹,False,False
+2026-05-26 00:00:00,增肥,One,-120.00,TWD,八方雲集,False,False
+2026-05-26 00:00:00,增肥,Two,-120.00,TWD,路易莎,False,False
+2026-05-26 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-26 00:00:00,汽暖,Two,-1434.00,TWD,,False,False
+2026-05-27 00:00:00,寶包,One,-206.00,TWD,Uber Eats,False,False
+2026-05-27 00:00:00,增肥,One,-260.00,TWD,豬排飯,False,False
+2026-05-27 00:00:00,五金,Two,-599.00,TWD,愛爾達,False,False
+2026-05-27 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-27 00:00:00,增肥,Two,-80.00,TWD,50嵐,False,False
+2026-05-27 00:00:00,增肥,Two,-175.00,TWD,蛋,False,False
+2026-05-27 00:00:00,五金,Two,-649.00,TWD,電蚊香,False,False
+2026-05-27 00:00:00,增肥,Two,-110.00,TWD,路易莎,False,False
+2026-05-27 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-27 00:00:00,增肥,Two,-420.00,TWD,芒果,False,False
+2026-05-29 00:00:00,增肥,One,-160.00,TWD,豬腳飯,False,False
+2026-05-29 00:00:00,薪資,One,94549.00,TWD,,False,False
+2026-05-29 00:00:00,增肥,Two,-110.00,TWD,路易莎,False,False
+2026-05-29 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-05-29 00:00:00,增肥,Two,-660.00,TWD,牛肉麵,False,False
+2026-05-29 00:00:00,增肥,Two,-94.00,TWD,西瓜,False,False
+2026-05-30 00:00:00,增肥,Two,-120.00,TWD,711,False,False
+2026-05-30 00:00:00,增肥,Two,-220.00,TWD,漢堡,False,False
+2026-05-30 00:00:00,增肥,Two,-500.00,TWD,漢堡,False,False
+2026-05-30 00:00:00,增肥,Two,-300.00,TWD,入場費,False,False
+2026-05-30 00:00:00,增肥,Two,-135.00,TWD,福利麵包,False,False
+2026-05-30 00:00:00,增肥,Two,-75.00,TWD,可麗餅,False,False
+2026-05-30 00:00:00,增肥,Two,-75.00,TWD,得正,False,False
+2026-05-31 00:00:00,遮羞,One,-2448.00,TWD,涼鞋,False,False
+2026-05-31 00:00:00,增肥,Two,-630.00,TWD,下午茶,False,False
+2026-05-31 00:00:00,補給,Two,630.00,TWD,From Kryptonite,False,False
+2026-05-31 00:00:00,汽啪,Two,-80.00,TWD,,False,False
+2026-05-31 00:00:00,該死,Two,-1297.00,TWD,泳圈,False,False
+2026-05-31 00:00:00,增肥,Two,-466.00,TWD,Uber Eats,False,False
+2026-06-01 00:00:00,增肥,One,-240.00,TWD,雞肉飯,False,False
+2026-06-01 00:00:00,汽啪,One,-170.00,TWD,,False,False
+2026-06-01 00:00:00,增肥,Two,-110.00,TWD,路易莎,False,False
+2026-06-01 00:00:00,增肥,Two,-487.00,TWD,Uber Eats,False,False
+2026-06-01 00:00:00,五金,Two,-900.00,TWD,戶外沖澡器,False,False
+2026-06-01 00:00:00,五金,One,-330.00,TWD,iCloud,False,False
+2026-06-02 00:00:00,增肥,One,-197.00,TWD,Uber Eats,False,False
+2026-06-02 00:00:00,增肥,One,-1000.00,TWD,飲料,False,False
+2026-06-02 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-06-02 00:00:00,增肥,Two,-2345.00,TWD,老曹旺,False,False
+2026-06-03 00:00:00,該死,One,-1571.00,TWD,比特幣,False,False
+2026-06-03 00:00:00,增肥,One,-277.00,TWD,周胖子,False,False
+2026-06-03 00:00:00,遮羞,One,-2870.00,TWD, Uniqlo,False,False
+2026-06-03 00:00:00,汽啪,Two,-170.00,TWD,,False,False
+2026-06-03 00:00:00,苦口,Two,-490.00,TWD,葉酸,False,False
+2026-06-03 00:00:00,五金,Two,-3087.00,TWD,IKEA 衣櫃、玄關櫃,False,False

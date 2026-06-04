@@ -13,7 +13,14 @@ from collections import defaultdict
 
 # Paths
 SCRIPT_DIR = Path(__file__).parent
-RAW_CSV_PATH = SCRIPT_DIR / "../Original_DB_Data/monefy-2026-01-24_11-31-56.csv"
+DATA_DIR = SCRIPT_DIR / "../Original_DB_Data"
+# 取最新的 raw CSV（與 monefy_export.py / merge_for_reconciliation.py 一致）。
+# 不再寫死舊檔，否則會拿新資料的對照檔去比舊資料、報出整批假差異。
+_raw_csvs = list(DATA_DIR.glob("*.csv"))
+if not _raw_csvs:
+    print(f"Error: No .csv file found in {DATA_DIR}")
+    sys.exit(1)
+RAW_CSV_PATH = max(_raw_csvs, key=lambda f: f.stat().st_mtime)
 COMPARISON_CSV_PATH = SCRIPT_DIR / "../Export_Data/monefy_raw_comparison.csv"
 
 def normalize_date(date_str, has_time=False):
