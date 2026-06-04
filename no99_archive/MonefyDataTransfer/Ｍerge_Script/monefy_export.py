@@ -356,7 +356,14 @@ def export_transfers(cursor, output_path: Path, raw_csv_path: Path) -> int:
             from_amount = abs(m_from) if m_from is not None else from_est
             to_amount = abs(m_to) if m_to is not None else to_est
             matched_legs += (m_from is not None) + (m_to is not None)
-            source = 'RawCSV' if (m_from is not None or m_to is not None) else rate_type
+            if m_from is not None and m_to is not None:
+                source = 'RawCSV'
+            elif m_from is not None or m_to is not None:
+                # Cross-currency transfer matched on only one leg → the other leg's amount is a
+                # DB estimate, so don't claim full RawCSV fidelity. Mark Partial for honesty.
+                source = 'Partial'
+            else:
+                source = rate_type
 
             # exchange_rate 欄改記實際 to/from（資訊用；匯入忽略此欄）
             exchange_rate = (to_amount / from_amount) if from_amount else 0.0
