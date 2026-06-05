@@ -125,6 +125,31 @@ Paywall 上架合規 + IAP capability，impl 為主：
 
 ---
 
+## Paywall 合規決策與 URL 待辦
+
+2026-06-04 更新。承建議執行順序段的第二批 Paywall 上架合規，定案兩項決策並列 URL 待辦。
+
+賣點文案：付費牆 benefits 改為對齊 Product Map LEVEL_1 真實能力重寫，不沿用現有 design / impl 文案。
+
+- 來源：`no2_product_planning/no2_product_map/app/payment.md` 的 LEVEL_1 能力清單。
+- 落差：現有 design / impl 文案宣傳雲端同步、進階匯出、優先客服，非 LEVEL_1 承諾項。
+- 落差：現有文案漏列定期交易排程，此為真實 LEVEL_1 能力。
+- 風險：宣傳與實際解鎖功能對不上，誤導使用者且屬審核風險。
+
+法律連結：使用條款採 Apple 標準 EULA，隱私政策走線上生成 + 免費托管。
+
+URL 待辦：
+
+- 隱私政策：
+    - 線上服務生成 + 免費托管，取永久 URL。
+    - 生成時涵蓋 Firebase Auth 與 react-native-iap 購買紀錄。
+    - 候選服務 Termly、TermsFeed。
+- 使用條款：採 Apple 標準 EULA，URL `https://www.apple.com/legal/internet-services/itunes/dev/stdeula/`。
+- 管理訂閱：用 iOS 系統 deep link，無需托管。
+- 收尾：三個 URL 定案後，回填 spec / design / impl 的 paywall 法律連結區。
+
+---
+
 ## 交叉引用與 open item
 
 - `to_do_list.md` 既有空白 `## paywall` 標頭，本檔為其結構化版本。
