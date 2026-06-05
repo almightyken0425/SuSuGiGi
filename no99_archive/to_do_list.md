@@ -15,3 +15,5 @@
 ## 手動測試 plan
 
 ## paywall
+
+## https://www.privacypolicygenerator.info/
