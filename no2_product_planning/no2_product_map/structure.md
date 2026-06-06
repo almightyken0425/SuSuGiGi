@@ -29,12 +29,10 @@ Platform: App — 行動端 React Native
 │   │   └── DataOperations
 │   │       ├── DataImport
 │   │       │   ├── ImportTransactions
-│   │       │   ├── ImportTransfers
-│   │       │   └── ImportSchedules
+│   │       │   └── ImportTransfers
 │   │       ├── DataExport
 │   │       │   ├── ExportTransactions
-│   │       │   ├── ExportTransfers
-│   │       │   └── ExportSchedules
+│   │       │   └── ExportTransfers
 │   │       └── DangerousOperations
 │   │           └── ClearDatabase
 │   ├── Preference
