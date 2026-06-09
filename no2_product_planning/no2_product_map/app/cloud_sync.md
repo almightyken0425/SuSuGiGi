@@ -7,11 +7,8 @@
     - 記帳紀錄 silent backup 寫入 Firestore
     - 全 user 寫入
     - 系統端內部備份用途，不對 user 開放取回
-- **L4 FullBackupExport:**
-    - 全量檔走 OS Share Intent
-    - 全 user 享有，user 端唯一資料取回管道
 
-三條軌道的訂閱授權拆解依據 subscription gate logic 規格文件。BigQuery 鏡像與 analytics 管道依據 analytics pipeline 產品圖文件。
+兩條軌道的訂閱授權拆解依據 subscription gate logic 規格文件。BigQuery 鏡像與 analytics 管道依據 analytics pipeline 產品圖文件。
 
 跨裝置使用場景由 user 主動走匯出匯入流程銜接，無雲端即時同步機制。
 
@@ -59,7 +56,7 @@
     - flag 只影響未來啟動 BigQuery 時是否被 mirror
     - 法律基礎為 contract 履行記帳服務契約所必要
 - **排除：**
-    - user 端取回管道，user 想取回資料請走 L4 FullBackupExport
+    - user 端取回管道，user 取回走付費版 CSV 匯出
     - 多裝置即時同步機制
     - BigQuery mirror 屬 analytics pipeline 產品圖文件
 - **利弊：**
@@ -87,7 +84,7 @@
 - **利弊：**
     - 單向上傳邏輯簡單
     - user 完全無感
-    - 不提供取回功能，user 想取回資料一律走 L4 FullBackupExport
+    - 不提供取回功能，user 取回走付費版 CSV 匯出
 
 ---
 
@@ -127,38 +124,3 @@
 - **利弊：**
     - 本地計數實作簡單，但無法限制多裝置的全域總量，存在少量 Quota 漏洞，評估可接受
     - 採 UTC 基準對使用者完全透明，因 quota 屬後端資料蒐集導向的 fail-safe，使用者本身無感，無 UX 影響
-
----
-
-### L4 FullBackupExport — 全量檔走 OS Share Intent
-
-- **功能：**
-    - 全量檔 export
-    - user 主動觸發
-    - 走 OS Share Intent
-    - 讓 user 自選存放位置
-- **目的：**
-    - 讓使用者完全擁有自己資料的副本
-    - 與站方後端脫鉤
-    - 涵蓋三場景: 跨裝置遷移、誤刪保險、隱私退出
-- **做法：**
-    - 全量檔格式為 JSON ZIP
-    - 含 Settings 加所有 entity 加 referential mapping
-    - 走 OS Share Intent
-    - user 自選去處: iCloud、Drive、Dropbox、AirDrop、Email、任意位置
-    - 全 user 享有
-    - 與訂閱層級無關
-    - 與 analyticsConsent flag 完全脫鉤
-    - 即使 user 關閉分析仍可 export
-- **排除：**
-    - Google Drive API 直接整合
-    - iCloud native 整合
-    - Firebase Storage 上傳
-    - 自動定期備份
-- **利弊：**
-    - 工程簡單
-    - 零後端成本
-    - 跨平台統一，所有 OS 都有 Share Intent
-    - 手動觸發
-    - user 不主動就無備份
-    - 詳細格式設計待專屬規格落地

@@ -56,11 +56,10 @@ Platform: App — 行動端 React Native
 │       └── PlanUpgradeEntry
 ├── CloudSync / AppClient
 │   ├── PreferenceSync
-│   ├── TransactionBackup
-│   │   ├── BackupEngine
-│   │   ├── InitialBackup
-│   │   └── QuotaManagement
-│   └── FullBackupExport [deferred]
+│   └── TransactionBackup
+│       ├── BackupEngine
+│       ├── InitialBackup
+│       └── QuotaManagement
 ├── LogicEngine
 │   ├── RuleEngine
 │   │   ├── RuleCenter
@@ -133,7 +132,7 @@ ExcludedModule
 | RecordingCore         | App      | 交易、轉帳、定期交易、合併、Undo、CSV 匯入匯出 | [app/recording_core.md](app/recording_core.md)           |
 | HomeDashboard         | App      | 期間檢視、篩選、圓餅圖、交易清單、搜尋         | [app/home_dashboard.md](app/home_dashboard.md) |
 | AppSetting            | App      | 資料管理（CategoryCRUD、AccountCRUD、匯入匯出）、偏好設定（外觀、貨幣、語言時區）、方案 | [app/app_setting.md](app/app_setting.md) |
-| CloudSync / AppClient | App      | Preference 同步、交易 silent backup、全量檔匯出三軌，LEVEL_1 | [app/cloud_sync.md](app/cloud_sync.md)           |
+| CloudSync / AppClient | App      | Preference 同步、交易 silent backup 兩軌，LEVEL_1 | [app/cloud_sync.md](app/cloud_sync.md)           |
 | LogicEngine           | App      | 規則引擎與時光機，LEVEL_2，未實作               | [app/logic_engine.md](app/logic_engine.md)           |
 | Payment / AppClient   | App      | Paywall、原生 IAP 訂閱狀態         | [app/payment.md](app/payment.md)           |
 | LocalDatabase         | App      | WatermelonDB 本機資料層，Local-First 基礎設施   | [app/local_database.md](app/local_database.md) |
