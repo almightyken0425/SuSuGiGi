@@ -49,6 +49,7 @@ Platform: App — 行動端 React Native
 │   │   ├── RegionAndLanguage
 │   │   │   ├── LanguageSetting
 │   │   │   └── TimeZoneSetting
+│   │   ├── AnalyticsConsent
 │   │   └── Account
 │   │       └── LoginLogout
 │   └── Plan
