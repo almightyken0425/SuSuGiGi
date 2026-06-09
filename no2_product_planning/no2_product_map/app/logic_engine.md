@@ -1,18 +1,3 @@
-## LocalDatabase — 本機資料層
-
-- **技術：**
-    - WatermelonDB
-- **功能：**
-    - 所有 App 資料的本機持久化儲存
-    - 支援響應式查詢，資料變動自動觸發 UI 更新
-    - 提供 Sync Adapter 介面，對接 Firestore 批次同步
-- **目的：**
-    - 實現 Local-First 架構，確保 App 在離線狀態下完整運作
-- **排除：**
-    - 直接操作 SQLite；AsyncStorage
-
----
-
 ## LogicEngine — 規則引擎
 
 - **功能：**
