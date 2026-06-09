@@ -7,11 +7,11 @@
 | 文件 | 內容 |
 |------|------|
 | structure.md | 完整 tree 結構 + 模組索引，任何任務的入口 |
-| app/index.md | App 7 個 module 摘要索引，做 App 任務的入口 |
+| app/index.md | App module 摘要索引，做 App 任務的入口 |
 | app/\<module\>.md | 對應 module 的完整描述，只讀需要的 module |
 | web_console/ | Web Console modules (web_console.md, ai_advisor_web_client.md) |
 | firebase/ | Firebase modules (authentication.md, storage.md, firestore.md) |
-| cloud_service/ | Cloud Service modules (ai_advisor_backend.md, macro_data.md) |
+| cloud_service/ | Cloud Service modules (ai_advisor_backend.md, analytics_pipeline.md, macro_data.md) |
 | external_service/ | 外部服務 (llm_provider.md) |
 
 禁止一次讀入 `app/` 目錄下全部文件。
