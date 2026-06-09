@@ -278,17 +278,23 @@
     - 角度：使用者
     - user 需要拿回自己資料的副本
     - 跨裝置遷移、外部分析、誤刪保險、隱私退出皆需副本
-    - 訂閱層級不應該決定 user 能否取回自己的資料
+    - 資料取回為付費版價值，免費版專注本機記帳
 - **評估方案:**
-    - JSON ZIP 全量檔加 CSV 單表 ★ 選用
+    - CSV 單表 export ★ 選用
       - **描述:**
-        - JSON ZIP 全量檔走 OS Share Intent
-        - JSON ZIP 用途為跨裝置遷移與資料轉移
-        - CSV 單表 export 用途為將資料帶到 SuSuGiGi 以外做分析
-        - 兩者皆不分訂閱層級全 user 享有
+        - CSV 單表 export 將資料帶離 SuSuGiGi 做分析與跨裝置遷移
+        - 列為 LEVEL_1 付費功能
       - **效益:**
-        - user 完全擁有自己的資料副本
-        - 跨平台 OS Share Intent 統一
+        - user 取回自己的資料副本
+        - 跨平台格式通用
+    - JSON ZIP 全量檔 已排除
+      - **描述:**
+        - 全量檔一鍵打包所有 entity，走 OS Share Intent
+      - **排除理由:**
+        - CSV 單表 export 已覆蓋資料取回與外部分析
+        - 全量檔與 CSV 功能重疊，增量價值僅一鍵全量遷移
+        - 全量還原的版本相容與 referential mapping 重建工程成本高
+        - 投入產出不成比例
 
 ## 使用者資料蒐集的法律基礎
 

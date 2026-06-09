@@ -29,7 +29,6 @@ R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enab
 - **排除：**
     - opt-out user 的資料，filter 過濾
     - L2 Preference 資料
-    - L4 全量檔，與 BigQuery 完全脫鉤
 - **利弊：**
     - Extension 為 Google 託管
     - 零維運
