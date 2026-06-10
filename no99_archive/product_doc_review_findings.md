@@ -104,49 +104,6 @@
 
 ---
 
-## 分類 roadmap 整理
-
-- **目標:**
-    - roadmap 項目與 Product Map 節點對得上
-- **動到的檔案:**
-    - `no2_product_planning/no3_dev_roadmap/no3_dev_roadmap.md`
-    - 拆匯出節點時連動 `no2_product_planning/no2_product_map/web_console/web_console.md`
-- **重疊:**
-    - roadmap 檔的推播排除行屬變現賣點定案分類、勿在本分類動
-- **發現:**
-    - MVP 缺地基排程
-        - **嚴重度:** 高
-        - **問題:**
-            - MVP 已排登入、離線、雲端同步、解除上限
-            - 賴以成立的 Payment、Firebase、LocalDatabase 全未排程
-        - **修法:**
-            - MVP 段補基礎設施項
-            - AnalyticsPipeline 屬刻意延後、掛 Macro Data 或 AI Advisor 段
-            - 勿塞進 MVP
-    - 匯出項一拆二無對應節點
-        - **嚴重度:** 中
-        - **問題:**
-            - Web Console 段同列進階匯出與報表匯出
-            - 對應節點只有單一 ExportFunction
-        - **修法:**
-            - 合併為單一項
-            - 或回 web_console 檔拆出第二個匯出子節點
-    - 全檔無完成標記
-        - **嚴重度:** 低
-        - **問題:**
-            - 純 bullet 列項、無進度狀態
-        - **修法:**
-            - 每階段標題後補一行整體狀態
-            - 或逐項加待辦、進行中、已完成前綴
-    - MVP 混列付費解鎖項
-        - **嚴重度:** 低
-        - **問題:**
-            - 解除上限、定期交易、CSV 匯入屬 LEVEL_1 解鎖
-            - 與模組節點並列同層、分層混淆
-            - 多幣別屬 LEVEL_0 與 LEVEL_1 混合、非純付費項
-        - **修法:**
-            - 逐項標註所屬模組與 LEVEL
-            - 或區分功能建置與解鎖兩類
 
 ---
 
