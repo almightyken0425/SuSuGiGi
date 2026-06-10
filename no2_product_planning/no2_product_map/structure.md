@@ -128,7 +128,7 @@ ExcludedModule
 | Auth / AppClient      | App      | Google 登入與首次登入初始化                    | [app/auth.md](app/auth.md)           |
 | RecordingCore         | App      | 交易、轉帳、定期交易、合併、Undo | [app/recording_core.md](app/recording_core.md)           |
 | HomeDashboard         | App      | 期間檢視、篩選、圓餅圖、交易清單、搜尋         | [app/home_dashboard.md](app/home_dashboard.md) |
-| AppSetting            | App      | 資料管理（CategoryCRUD、AccountCRUD、匯入匯出）、偏好設定（外觀、貨幣、語言時區）、方案 | [app/app_setting.md](app/app_setting.md) |
+| AppSetting            | App      | 資料管理含 CategoryCRUD、AccountCRUD、匯入匯出，偏好設定含外觀、貨幣、語言時區，方案 | [app/app_setting.md](app/app_setting.md) |
 | CloudSync / AppClient | App      | Preference 同步、交易 silent backup 兩軌 | [app/cloud_sync.md](app/cloud_sync.md)           |
 | LogicEngine           | App      | 規則引擎與時光機，LEVEL_2，未實作               | [app/logic_engine.md](app/logic_engine.md)           |
 | Payment / AppClient   | App      | Paywall、原生 IAP 訂閱狀態         | [app/payment.md](app/payment.md)           |
