@@ -1,6 +1,6 @@
 # AnalyticsPipeline — 分析資料管道
 
-R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enable。完整方案空間記錄於 R1 決策矩陣文件。
+R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enable。
 
 ---
 
@@ -12,7 +12,7 @@ R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enab
 - **目的：**
     - 提供 OLAP analytics warehouse
     - 涵蓋 macro_data B2B 變現
-    - 涵蓋 E2 個人化分析
+    - 涵蓋 個人化分析
     - 涵蓋未來 LEVEL_3 AI 顧問
     - 使 App 端零改動即享有分析能力
     - App 端持續寫入 Firestore，extension 自動 stream 到 BigQuery
@@ -49,7 +49,7 @@ R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enab
     - 將分析架構與功能 ship 時程綁定
 - **做法：**
     - 觸發條件擇一發生時 enable:
-        - E2 個人化分析功能要 ship
+        - 個人化分析功能要 ship
         - macro_data B2B 變現要啟動
         - LEVEL_3 AI 顧問要 ship
     - 啟動時執行步驟:
@@ -75,13 +75,13 @@ R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enab
     - 從 BigQuery 跑 SQL
     - 回傳結果給 App 端
 - **目的：**
-    - E2 個人化財務分析涵蓋單 user 範圍的提示
+    - 個人化財務分析涵蓋單 user 範圍的提示
     - macro_data B2B 變現涵蓋跨 user 聚合
     - LEVEL_3 AI 顧問涵蓋複雜時序與 ML 預測
 - **做法：**
     - 部署於 Cloud Functions 或 Cloud Run
     - 透過 Firebase Auth 驗證 user 身分
-    - E2 場景: 限制 user 只能查自己的資料
+    - 個人化分析場景: 限制 user 只能查自己的資料
     - macro_data 場景: 走 service-account 級權限
     - 串接 Vertex AI 或 BQML
     - 給未來 AI 顧問場景使用
