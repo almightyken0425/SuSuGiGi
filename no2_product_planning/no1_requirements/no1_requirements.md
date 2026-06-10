@@ -334,7 +334,7 @@
         - flag 同步至 Firestore `users/{uid}/preferences.analyticsConsent`
         - flag false 時 firestore-bigquery-export 跳過此 user
         - 跳過後個人化分析、AI 顧問訓練、B2B 聚合三條管線皆拿不到此 user 資料
-        - L3 TransactionBackup 不受此 flag 影響
+        - TransactionBackup 不受此 flag 影響
       - **效益:**
         - 全球統一遵守歐盟 GDPR 與加州 CCPA 等規範
         - 單一 toggle 控制三種用途，UX 簡潔

@@ -1,9 +1,9 @@
 ## CloudSync — 雲端同步生態
 
-- **L2 PreferenceSync:**
+- **PreferenceSync:**
     - 全域設定同步
     - 全 user 享有
-- **L3 TransactionBackup:**
+- **TransactionBackup:**
     - 記帳紀錄 silent backup 寫入 Firestore
     - 全 user 寫入
     - 系統端內部備份用途，不對 user 開放取回
@@ -14,7 +14,7 @@
 
 ---
 
-### L2 PreferenceSync — Preference 同步
+### PreferenceSync — Preference 同步
 
 - **功能：**
     - 主貨幣
@@ -32,7 +32,7 @@
     - 與付費層級無關
     - 與 analyticsConsent flag 完全脫鉤
 - **排除：**
-    - 記帳紀錄屬 L3 TransactionBackup
+    - 記帳紀錄屬 TransactionBackup
 - **利弊：**
     - 量小，單 user 不到 1KB
     - 成本可忽略
@@ -40,7 +40,7 @@
 
 ---
 
-### L3 TransactionBackup — 記帳紀錄 Silent Backup
+### TransactionBackup — 記帳紀錄 Silent Backup
 
 - **功能：**
     - 所有 user 的記帳紀錄寫入 Firestore

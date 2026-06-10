@@ -86,9 +86,9 @@
 - **做法：**
     - 偏好狀態集中管理，持久化於本地資料庫
     - 設定變更即時反映，並由同步引擎同步至雲端供跨裝置一致
-    - 所有偏好設定皆參與 L2 PreferenceSync 雲端同步，含啟動模式
+    - 所有偏好設定皆參與 PreferenceSync 雲端同步，含啟動模式
     - 多裝置間以 Last-Write-Wins 策略決定最終狀態。
-    - analyticsConsent 預設開啟、opt-out 預設加入；寫入 `users/{uid}/preferences.analyticsConsent`，由 ConsentSync 同步。關閉後個人化分析、AI 顧問訓練、B2B 聚合三條管線跳過此 user，L3 記帳備份不受影響。
+    - analyticsConsent 預設開啟、opt-out 預設加入；寫入 `users/{uid}/preferences.analyticsConsent`，由 ConsentSync 同步。關閉後個人化分析、AI 顧問訓練、B2B 聚合三條管線跳過此 user，記帳備份不受影響。
 - **上游對應：**
     - analyticsConsent 對應需求層分析使用退出機制，與整合層 cloud 側 `cloud_service/analytics_pipeline.md` 的 ConsentSync。
 - **排除：**
@@ -112,7 +112,7 @@
 - **做法：**
     - 主題設計以全域 Token 管理
     - 確保跨頁面顏色、字體、間距一致，禁止寫死
-    - 啟動模式偏好設定參與 L2 PreferenceSync 雲端同步，採 Last-Write-Wins 衝突解決；本地快取為加速啟動讀取用，非 source of truth；App 啟動後依設定決定初始導航
+    - 啟動模式偏好設定參與 PreferenceSync 雲端同步，採 Last-Write-Wins 衝突解決；本地快取為加速啟動讀取用，非 source of truth；App 啟動後依設定決定初始導航
 - **排除：**
     - 使用者自訂調色盤
     - 依時間或情境自動切換啟動模式

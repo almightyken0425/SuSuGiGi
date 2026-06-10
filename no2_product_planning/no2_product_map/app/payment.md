@@ -121,7 +121,7 @@
 - **說明：**
     - 記帳 App 視角下各 LEVEL 可用能力的白話總覽
     - 跨 Module 的 LEVEL 商業定義請見 `no1_product_initiation/no3_business_model.md`
-    - 可被 Spec 與實作引用的動作識別碼與規則表，請見 `no3_product_specs/no2_accounting_app/no3_logics/no17_subscription_gate_logic.md`
+    - 可被 Spec 與實作引用的動作識別碼與規則表，請見 `no4_product_specs/no2_accounting_app/no3_logics/no17_subscription_gate_logic.md`
 
 - **LEVEL_0 免費:**
     - 帳戶總數上限 3 個
