@@ -48,7 +48,7 @@ Platform: App — 行動端 React Native
 │   │   │   └── TimeZoneSetting
 │   │   ├── AnalyticsConsent
 │   │   └── Account
-│   │       └── LoginLogout
+│   │       └── Logout
 │   └── Plan
 │       └── PlanUpgradeEntry
 ├── CloudSync / AppClient

@@ -31,18 +31,6 @@
 
 ---
 
-### RedeemCodeScreen — 序號兌換，ExcludedModule
-
-- **狀態：**
-    - 已排除，2026-06-06 決議不做
-- **決議理由：**
-    - 只走原生 IAP，不另闢序號兌換渠道
-    - 序號兌換雖繞過 App Store 抽成，但需額外維護序號發行流程，效益不足以支撐維護成本
-- **備註：**
-    - 原設計保留供未來參考；結構樹歸於 ExcludedModule，比照 SharedLedger
-
----
-
 ### IAPService — 原生 IAP 封裝
 
 - **功能：**
