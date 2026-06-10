@@ -31,7 +31,7 @@
 
 ---
 
-### RedeemCodeScreen — 序號兌換 [ExcludedModule]
+### RedeemCodeScreen — 序號兌換，ExcludedModule
 
 - **狀態：**
     - 已排除，2026-06-06 決議不做
