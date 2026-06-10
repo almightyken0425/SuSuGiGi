@@ -28,7 +28,7 @@ R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enab
     - 使用 fs-bq-import-collection 工具
 - **排除：**
     - opt-out user 的資料，filter 過濾
-    - L2 Preference 資料
+    - Preference 資料
 - **利弊：**
     - Extension 為 Google 託管
     - 零維運
@@ -59,7 +59,7 @@ R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enab
         - analytics API 部署
 - **排除：**
     - 提前啟用作為資料保險
-    - 既有 L3 TransactionBackup 已是雲端備份
+    - 既有 TransactionBackup 已是雲端備份
 - **利弊：**
     - 延後啟動省下啟動前的 BigQuery storage 月費
     - 月費本身極小
