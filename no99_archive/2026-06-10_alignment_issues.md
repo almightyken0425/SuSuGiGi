@@ -56,9 +56,9 @@
 | ISSUE-20 | 匯率換算邏輯對齊 | 中 | spec、impl | 待處理 |
 | ISSUE-21 | dev 工具豁免聲明 | 中 | spec、product map | 待處理 |
 | ISSUE-22 | cloud sync 細節補載 | 低 | spec | 待處理 |
-| ISSUE-23 | 匯入匯出死碼清理 | 低 | impl | 待處理 |
+| ISSUE-23 | 匯入匯出死碼清理 | 低 | impl | 已完成 |
 | ISSUE-24 | design 端變體待補 | 低 | design | 待處理 |
-| ISSUE-25 | 低嚴重度掃尾 | 低 | spec、impl | 待處理 |
+| ISSUE-25 | 低嚴重度掃尾 | 低 | spec、impl | 已完成 |
 | ISSUE-26 | 註冊表與 map 邊界整理 | 低 | product map、註冊表 | 已完成 |
 
 ---
@@ -715,7 +715,7 @@
 
 ## ISSUE-23 匯入匯出死碼清理
 
-- **狀態:** 待處理
+- **狀態:** 已完成
 - **優先序:** 低
 - **背景:**
     - data_transfer 邏輯七項行為全對齊
@@ -759,7 +759,9 @@
 
 ## ISSUE-25 低嚴重度掃尾
 
-- **狀態:** 待處理
+- **狀態:** 已完成
+    - 2026-06-11、五項一次掃完、spec 兩檔 impl 三檔
+    - launch_mode 拍板採 B、四模式對齊 design 中文 label
 - **優先序:** 低
 - **背景:**
     - 五件互不相干的小差異、一次掃完
