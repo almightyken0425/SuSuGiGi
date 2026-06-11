@@ -35,7 +35,7 @@
 | issue | 標題 | 優先序 | 牽涉層 | 狀態 |
 |---|---|---|---|---|
 | ISSUE-01 | 偏好同步 listener 違規 | 高 | spec、impl | 待處理 |
-| ISSUE-02 | 持久層服務補規格 | 高 | spec | 待處理 |
+| ISSUE-02 | 持久層服務補規格 | 高 | spec、impl | 已完成 |
 | ISSUE-03 | 首頁期間狀態補規格 | 高 | spec、impl | 已完成 |
 | ISSUE-04 | app bootstrap 規格整修 | 高 | spec | 待處理 |
 | ISSUE-05 | 付費閘 realign 回寫 | 中 | spec、impl | 已完成 |
@@ -98,7 +98,7 @@
 
 ## ISSUE-02 持久層服務補規格
 
-- **狀態:** 待處理
+- **狀態:** 已完成、spec 新增 no23 六操作、impl 補 getCategory 對稱並改 CategoryEditor 呼叫、no22 被 ISSUE-03 先佔故接 no23
 - **優先序:** 高
 - **背景:**
     - impl 的 `src/services/localDbService.ts` 是本機資料庫總入口
