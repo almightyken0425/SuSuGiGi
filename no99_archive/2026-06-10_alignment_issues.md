@@ -39,7 +39,7 @@
 | ISSUE-03 | 首頁期間狀態補規格 | 高 | spec、impl | 已完成 |
 | ISSUE-04 | app bootstrap 規格整修 | 高 | spec | 待處理 |
 | ISSUE-05 | 付費閘 realign 回寫 | 中 | spec、impl | 已完成 |
-| ISSUE-06 | currency 系列視覺回寫 | 中 | spec | 待處理 |
+| ISSUE-06 | currency 系列視覺回寫 | 中 | spec、design、impl | 已完成 |
 | ISSUE-07 | 搜尋 placeholder 文案拍板 | 中 | spec | 待處理 |
 | ISSUE-08 | 交易轉帳 editor 規格回寫 | 中 | spec | 待處理 |
 | ISSUE-09 | DualPickerBox 元件促升 | 中 | design | 待處理 |
@@ -212,7 +212,11 @@
 
 ## ISSUE-06 currency 系列視覺回寫
 
-- **狀態:** 待處理
+- **狀態:** 已完成
+    - 2026-06-11 處理完畢
+    - 完成鈕拍板採禁點、改 impl 對齊其他 editor 慣例
+    - 幣別選擇 modal 拍板併入本 issue、design 已補 RateCurrencySelectModal
+    - spec 三檔回寫、no20 與 no22 一併補空狀態與搜尋無結果
 - **優先序:** 中
 - **背景:**
     - 貨幣相關畫面 design 已定案群組卡片樣式
@@ -726,7 +730,7 @@
     - import 的 step4 缺時區說明文字與 transfer 變體
     - search 缺轉帳結果列展示
     - home 的 fixtures 無轉帳資料、轉帳列無從展示
-    - currency_rate_editor 缺幣別選擇 modal、與 ISSUE-06 連動
+    - currency_rate_editor 幣別選擇 modal 已由 ISSUE-06 補齊、本 issue 不再處理
 - **修法:**
     - design git 單一 session 批次補齊
     - 全程不動 spec 與 impl
