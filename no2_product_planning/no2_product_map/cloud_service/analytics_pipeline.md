@@ -109,9 +109,14 @@ R1 拍板的分析後端架構。當下未啟動，待觸發條件達成時 enab
     - 預設值為 true
     - opt-out 預設加入
     - BigQuery extension 讀取該 flag 作 filter
+    - analyticsConsent 走一般欄位覆寫上傳，不做 consent 特例
+    - 多裝置間 Firestore 保留最後寫入的值，接受不一致
 - **排除：**
-    - 多裝置不一致
-    - Preference 同步機制保證所有裝置一致
+    - 多裝置 analyticsConsent 一致保證
+- **合規風險留痕：**
+    - 一裝置 opt-out 可能被另一裝置 opt-in 覆寫
+    - 也可能被全量上傳無聲恢復為 opt-in
+    - GDPR 撤回可能因此被覆寫，接受此風險
 - **利弊：**
     - 單一 flag 控制 filter 行為
     - 邏輯簡單

@@ -1,10 +1,10 @@
 # Firestore — 雲端資料庫
 
 - **功能：**
-    - 存放付費用戶的跨裝置同步資料，為 App / CloudSync / AppClient 的後端
+    - 接收 App 單向上傳的資料，作為系統端備份儲存，為 App / CloudSync / AppClient 的後端
     - Firestore Security Rules 存取控制
 - **目的：**
-    - 作為 Delta batch sync 的雲端資料來源，確保付費使用者的跨裝置資料最終一致
+    - 作為 Delta batch 上傳的雲端備份儲存，後續將作為資料分析的來源
 - **做法：**
     - App 一律讀取本地資料庫，採 Local-First 架構
     - App 嚴禁直接讀寫 Firestore 來驅動 UI，Auth 流程的必要檢查是唯一例外
@@ -22,8 +22,7 @@
 - **利弊：**
     - Firestore 無需維護伺服器，但廠商鎖定，未來遷移至自建後端成本較高
     - 免費層每日配額 50k reads / 20k writes，project 層級，需搭配 App 端本地計數管控
-    - 選擇即時寫入本地優先、Sync Engine 後台同步的策略
-    - 接受較高 Firestore 操作次數，換取使用者在多裝置間無縫切換的體驗
+    - 選擇即時寫入本地優先、Sync Engine 後台上傳的策略
     - 因偏好設定變更頻率極低，實際成本影響有限
 
 ---
@@ -36,7 +35,7 @@
     - 作為 App / CloudSync 的雲端資料模型，對應 WatermelonDB 本地 schema
 - **做法：**
     - Schema 集中定義於核心設定檔
-    - 各實體包含修改時間戳衝突解決欄位與軟刪除標記欄位兩個標準欄位
+    - 各實體包含修改時間戳欄位與軟刪除標記欄位兩個標準欄位；時間戳供 Delta 上傳篩選用，篩出本地自上次上傳後變動的紀錄
 - **排除：**
     - 即時 listener subscription
     - 伺服器端 business logic，僅負責資料儲存

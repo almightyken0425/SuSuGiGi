@@ -84,13 +84,13 @@
 - **目的：**
     - 管理所有影響全 App 呈現與行為的個人化偏好設定。
 - **做法：**
-    - 偏好狀態集中管理，持久化於本地資料庫
-    - 設定變更即時反映，並由同步引擎同步至雲端供跨裝置一致
-    - 所有偏好設定皆參與 PreferenceSync 雲端同步，含啟動模式
-    - 多裝置間以 Last-Write-Wins 策略決定最終狀態。
-    - analyticsConsent 預設開啟、opt-out 預設加入；寫入 `users/{uid}/preferences.analyticsConsent`，由 ConsentSync 同步。關閉後個人化分析、AI 顧問訓練、B2B 聚合三條管線跳過此 user，記帳備份不受影響。
+    - 偏好狀態集中管理，持久化於本地資料庫；本地設定即唯一真相，永不從雲端下載套用。
+    - 設定變更即時反映，並由 PreferenceUpload 單向上傳 Firestore，供未來分析使用。
+    - 上傳為欄位級覆寫，無 Last-Write-Wins、無衝突解決、不設 device 欄位；接受 Firestore 與各裝置欄位級不一致。
+    - 跨裝置一致由使用者主動匯出匯入銜接，無雲端即時同步。
+    - analyticsConsent 預設開啟、opt-out 預設加入；寫入 `users/{uid}/preferences.analyticsConsent`，同走一般偏好覆寫上傳，不做 consent 特例。關閉後個人化分析、AI 顧問訓練、B2B 聚合三條管線跳過此 user，記帳備份不受影響。
 - **上游對應：**
-    - analyticsConsent 對應需求層分析使用退出機制，與整合層 cloud 側 `cloud_service/analytics_pipeline.md` 的 ConsentSync。
+    - analyticsConsent 對應需求層分析使用退出機制，與整合層 cloud 側 `cloud_service/analytics_pipeline.md` 的偏好上傳軌。
 - **排除：**
     - 使用者自訂調色盤
     - 自動依裝置地區選擇時區
@@ -112,7 +112,7 @@
 - **做法：**
     - 主題設計以全域 Token 管理
     - 確保跨頁面顏色、字體、間距一致，禁止寫死
-    - 啟動模式偏好設定參與 PreferenceSync 雲端同步，採 Last-Write-Wins 衝突解決；本地快取為加速啟動讀取用，非 source of truth；App 啟動後依設定決定初始導航
+    - 啟動模式偏好設定即本地真相，App 啟動直接讀本地、依設定決定初始導航；變更後同走 PreferenceUpload 單向上傳
 - **排除：**
     - 使用者自訂調色盤
     - 依時間或情境自動切換啟動模式
