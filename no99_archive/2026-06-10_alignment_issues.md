@@ -51,15 +51,15 @@
 | ISSUE-15 | premium logic 歸檔錯位 | 中 | spec、impl | 待處理 |
 | ISSUE-16 | recording 邏輯補載 | 中 | spec | 已完成 |
 | ISSUE-17 | 首頁三畫面規格缺口 | 中 | spec、design、impl | 已完成 |
-| ISSUE-18 | 清單畫面三層對齊 | 中 | spec、design、impl | 待處理 |
-| ISSUE-19 | 偏好頁登入態拍板 | 中 | spec、design、impl | 待處理 |
+| ISSUE-18 | 清單畫面三層對齊 | 中 | spec、design、impl | 已完成 |
+| ISSUE-19 | 偏好頁登入態拍板 | 中 | spec、design、impl | 已完成 |
 | ISSUE-20 | 匯率換算邏輯對齊 | 中 | spec、impl | 待處理 |
 | ISSUE-21 | dev 工具豁免聲明 | 中 | spec、product map | 待處理 |
 | ISSUE-22 | cloud sync 細節補載 | 低 | spec | 待處理 |
 | ISSUE-23 | 匯入匯出死碼清理 | 低 | impl | 待處理 |
 | ISSUE-24 | design 端變體待補 | 低 | design | 待處理 |
 | ISSUE-25 | 低嚴重度掃尾 | 低 | spec、impl | 待處理 |
-| ISSUE-26 | 註冊表與 map 邊界整理 | 低 | product map、註冊表 | 待處理 |
+| ISSUE-26 | 註冊表與 map 邊界整理 | 低 | product map、註冊表 | 已完成 |
 
 ---
 
@@ -787,7 +787,7 @@
 
 ## ISSUE-26 註冊表與 map 邊界整理
 
-- **狀態:** 待處理
+- **狀態:** 已完成
 - **優先序:** 低
 - **背景:**
     - 三件結構層級的帳面整理
@@ -809,3 +809,8 @@
     - 註冊表 `~/.claude/skills/decision_framework_router/products_registry.md`
     - product git `no2_product_planning/no2_product_map/app/app_setting.md`
     - product git `no2_product_planning/no2_product_map/app/recording_core.md`
+- **處理結果（2026-06-11）:**
+    - 調研後三件僅第一件需動，後兩件已消解或屬視角差異，實際只動註冊表一檔
+    - 第一件：`product_map_paths` 改 `no2_product_planning/no2_product_map/app/`（主責對應 app 平台目錄，對齊欄位語意與 user_management 範例；平台服務跨 module 共用、不混入單一 module）
+    - 第二件不動：Product Map 屬功能視角，把 Category/Account CRUD 放 AppSetting 自洽，與 spec 畫面拆法屬不同粒度；「editor 歸 recording_core」的拆法 Product Map 從未採用，`recording_core.md` 只含 Transaction/TransferEditor
+    - 第三件不動：analyticsConsent 已由 commit `b560013` 給專屬 `AnalyticsConsent` 節點，`app_setting.md` 與 `analytics_pipeline.md` 已載落點與 ConsentSync；`ui_behavior_hooks` 是 impl 三支 React hook（useCalculator／useFrozenSelectionOrder／useHeaderInset），不入 Product Map 粒度
