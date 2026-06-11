@@ -41,8 +41,8 @@
 | ISSUE-05 | 付費閘 realign 回寫 | 中 | spec、impl | 已完成 |
 | ISSUE-06 | currency 系列視覺回寫 | 中 | spec、design、impl | 已完成 |
 | ISSUE-07 | 搜尋 placeholder 文案拍板 | 中 | spec | 待處理 |
-| ISSUE-08 | 交易轉帳 editor 規格回寫 | 中 | spec | 待處理 |
-| ISSUE-09 | DualPickerBox 元件促升 | 中 | design | 待處理 |
+| ISSUE-08 | 交易轉帳 editor 規格回寫 | 中 | spec | 已完成 |
+| ISSUE-09 | DualPickerBox 元件促升 | 中 | design | 已完成 |
 | ISSUE-10 | 登入鏈規格實作對齊 | 中 | spec、impl | 待處理 |
 | ISSUE-11 | settings management 對齊 | 中 | spec、impl | 待處理 |
 | ISSUE-12 | firestore 配額旗標收斂 | 中 | spec、impl | 待處理 |
@@ -274,7 +274,7 @@
 
 ## ISSUE-08 交易轉帳 editor 規格回寫
 
-- **狀態:** 待處理
+- **狀態:** 已完成、2026-06-11、spec 兩檔回寫對齊 design 與 impl（`no5_transaction_editor_screen.md`、`no6_transfer_editor_screen.md`）
 - **優先序:** 中
 - **背景:**
     - 交易與轉帳兩個 editor 是記帳主流程
@@ -305,7 +305,7 @@
 
 ## ISSUE-09 DualPickerBox 元件促升
 
-- **狀態:** 待處理
+- **狀態:** 已完成、2026-06-11、design 在 20_components 建 DualPickerBox 定義並汰換 Merge/Transfer 私有 picker box、showcase 同步
 - **優先序:** 中
 - **背景:**
     - impl 已抽出共用元件 `DualPickerBox`
