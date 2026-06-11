@@ -50,7 +50,7 @@
 | ISSUE-14 | 清除資料庫漏兩表 | 中 | impl | 待處理 |
 | ISSUE-15 | premium logic 歸檔錯位 | 中 | spec、impl | 待處理 |
 | ISSUE-16 | recording 邏輯補載 | 中 | spec | 待處理 |
-| ISSUE-17 | 首頁三畫面規格缺口 | 中 | spec、impl | 待處理 |
+| ISSUE-17 | 首頁三畫面規格缺口 | 中 | spec、design、impl | 已完成 |
 | ISSUE-18 | 清單畫面三層對齊 | 中 | spec、design、impl | 待處理 |
 | ISSUE-19 | 偏好頁登入態拍板 | 中 | spec、design、impl | 待處理 |
 | ISSUE-20 | 匯率換算邏輯對齊 | 中 | spec、impl | 待處理 |
@@ -534,7 +534,7 @@
 
 ## ISSUE-17 首頁三畫面規格缺口
 
-- **狀態:** 待處理
+- **狀態:** 已完成、C1 刪下滑關閉 spec、C2 未選卡改細灰邊框對齊 design、C3 補無帳戶空白、C4 搜尋換算副文字三層撤除（拍板不做、原 plan 的 impl 補實作不採；首頁 PeriodPage 字級對齊 design token 保留）、C5 搜尋/首頁/匯率清單三畫面補返回重查＋list_policy 澄清 Custom 仍受空狀態節、C6 design 加註維持分組收合（更正原「三層相反」為 spec/impl 同向收合、僅 design canvas 展示用展開）
 - **優先序:** 中
 - **背景:**
     - 首頁、篩選、搜尋三畫面各有缺口
