@@ -49,7 +49,7 @@
 | ISSUE-13 | 帳戶類別 CRUD 收斂 logic 層 | 中 | impl | 待處理 |
 | ISSUE-14 | 清除資料庫漏兩表 | 中 | impl | 待處理 |
 | ISSUE-15 | premium logic 歸檔錯位 | 中 | spec、impl | 待處理 |
-| ISSUE-16 | recording 邏輯補載 | 中 | spec | 待處理 |
+| ISSUE-16 | recording 邏輯補載 | 中 | spec | 已完成 |
 | ISSUE-17 | 首頁三畫面規格缺口 | 中 | spec、design、impl | 已完成 |
 | ISSUE-18 | 清單畫面三層對齊 | 中 | spec、design、impl | 待處理 |
 | ISSUE-19 | 偏好頁登入態拍板 | 中 | spec、design、impl | 待處理 |
@@ -499,7 +499,7 @@
 
 ## ISSUE-16 recording 邏輯補載
 
-- **狀態:** 待處理
+- **狀態:** 已完成
 - **優先序:** 中
 - **背景:**
     - 記帳核心五條邏輯都是 impl 領先
@@ -518,17 +518,22 @@
     - 多 mergeCategories 同型別硬檢查
 - **修法:**
     - 五份 spec 逐項補載 impl 行為
-    - 以 impl 現狀為準、不動 impl
-    - hideUndo 與 closeUndo 重複、留決策點
+    - 以 impl 現狀為準
+    - hideUndo 與 closeUndo 合併
     - transfer_logic 檔頭過期檔名併 ISSUE-25
-- **決策點:**
-    - 重複的 hideUndo 與 closeUndo 是否合併
+- **決議:**
+    - 重複的 hideUndo 與 closeUndo 取合併
+    - spec 為 logic 命名仲裁端、收斂為 closeUndo
+    - impl 刪 hideUndo、呼叫端改用 closeUndo
+    - 補載後規格只留規則、移除理由區塊
 - **動到的檔案:**
     - spec git `no3_logics/no9_transaction_logic.md`
     - spec git `no3_logics/no8_transfer_logic.md`
     - spec git `no3_logics/no10_recurring_transactions_logic.md`
     - spec git `no3_logics/no11_undo_logic.md`
     - spec git `no3_logics/no16_merge_logic.md`
+    - impl git `src/contexts/UndoContext.tsx`
+    - impl git `src/components/UndoDebugConsole.tsx`
 
 ---
 
