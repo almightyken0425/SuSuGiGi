@@ -40,7 +40,7 @@
 | ISSUE-04 | app bootstrap 規格整修 | 高 | spec | 待處理 |
 | ISSUE-05 | 付費閘 realign 回寫 | 中 | spec、impl | 已完成 |
 | ISSUE-06 | currency 系列視覺回寫 | 中 | spec、design、impl | 已完成 |
-| ISSUE-07 | 搜尋 placeholder 文案拍板 | 中 | spec | 待處理 |
+| ISSUE-07 | 搜尋 placeholder 文案拍板 | 中 | spec | 已完成 |
 | ISSUE-08 | 交易轉帳 editor 規格回寫 | 中 | spec | 已完成 |
 | ISSUE-09 | DualPickerBox 元件促升 | 中 | design | 已完成 |
 | ISSUE-10 | 登入鏈規格實作對齊 | 中 | spec、impl | 待處理 |
@@ -248,7 +248,16 @@
 
 ## ISSUE-07 搜尋 placeholder 文案拍板
 
-- **狀態:** 待處理
+- **狀態:** 已完成
+    - 拍板採通用、不採逐畫面專屬
+    - 6 畫面刪逐畫面 placeholder 文案
+    - search_policy 集中定 placeholder 文案一處
+    - autoFocus 規則收斂二分、涵蓋全搜尋畫面
+    - 連帶校 no20、no22、no24 wireframe 失準
+    - no4 文案對齊 design、補 chevron 與無結果副標
+    - 多數 workflow 報的既有問題已由 ISSUE-06、08 在 main 解決
+    - 剩餘另開 issue：no20、no22 標題與 design 不一致、需 design 仲裁
+    - 剩餘另開 issue：list_policy 第 152 行 i18n 鍵殘留、同本 issue 性質
 - **優先序:** 中
 - **背景:**
     - 選擇類畫面都有搜尋列
