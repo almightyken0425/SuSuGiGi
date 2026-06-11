@@ -575,35 +575,34 @@
 
 ## ISSUE-18 清單畫面三層對齊
 
-- **狀態:** 待處理
+- **狀態:** 已解決（feat/issue-18-list-alignment）
 - **優先序:** 中
 - **背景:**
     - 類別與帳戶兩張清單畫面三層各有缺口
     - category_list 的空清單提示 spec 有要求
-    - design 與 impl 皆缺
+    - design 有空卡視覺、缺提示文字；impl 不渲染空狀態
     - design 定停用字樣與行高 58
-    - impl 顯示關閉字樣、行高寫死 60
+    - impl 停用字樣用 i18n key `common.close`（渲染關閉、語意誤）、行高寫死 60
     - account_list 的 spec 定義三項
     - 標題 `我的帳戶`、空列表提示、拖拉圖示
-    - design 定案與 impl 皆無此三項
+    - design 三項皆無；impl 缺標題與空提示、但拖拉圖示已有
     - spec 未跟 design 仲裁
     - impl 末段留白寫死 100
     - design token SPACING 5xl 為 64、未跟
-- **修法:**
-    - 空清單提示拍板做不做
-    - 做 → design 補視覺、impl 補實作
-    - 不做 → spec 刪要求
-    - account_list spec 三項以 design 定案為準刪修
-    - 停用字樣與行高、impl 對齊 design
-    - 留白改用 token、消 magic number
-- **決策點:**
-    - 空清單提示去留
+    - 對稱缺口：兩畫面其實都有行高 60 與留白 100，category spec 也帶 design 已棄的拖拉圖示
+- **結案:**（2026-06-11）
+    - 空清單提示拍板「砍」：spec 兩檔刪要求；design 空卡、impl 不渲染，砍後三層對齊
+    - 對稱缺口全補齊：兩畫面行高 60→token 58、留白 100→token 64、兩 spec 都刪拖拉圖示
+    - account_list spec 依 design 定案刪標題、空提示、拖拉圖示
+    - category 停用字樣 `common.close`→新 key `category.disabled`（停用），同步 20 語言檔
+    - design 不動（視覺仲裁端已正確）
 - **動到的檔案:**
     - spec git `no2_screens/no9_category_list_screen.md`
     - spec git `no2_screens/no11_account_list_screen.md`
     - impl git `src/screens/Categories/CategoryListScreen.tsx`
     - impl git `src/screens/Accounts/AccountListScreen.tsx`
-    - design git 視空清單拍板
+    - impl git `src/locales/*.json`（20 檔，新增 `category.disabled`）
+    - design git 不動（砍空清單提示，仲裁端已正確）
 
 ---
 
