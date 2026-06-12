@@ -1,7 +1,7 @@
 ## CloudSync — 雲端同步生態
 
-- **PreferenceSync:**
-    - 全域設定同步
+- **PreferenceUpload:**
+    - 全域設定單向上傳
     - 全 user 享有
 - **TransactionBackup:**
     - 記帳紀錄 silent backup 寫入 Firestore
@@ -14,7 +14,7 @@
 
 ---
 
-### PreferenceSync — Preference 同步
+### PreferenceUpload — Preference 上傳
 
 - **功能：**
     - 主貨幣
@@ -22,9 +22,9 @@
     - 語言
     - 時區
     - 啟動模式
-    - 全域設定的雙向同步
+    - 全域設定的單向上傳
 - **目的：**
-    - 跨裝置 UX 一致性
+    - 供未來資料分析維度，分析管線當前未接
     - 不論訂閱層級
 - **做法：**
     - 寫入 Firestore `users/{uid}/preferences`
@@ -33,10 +33,12 @@
     - 與 analyticsConsent flag 完全脫鉤
 - **排除：**
     - 記帳紀錄屬 TransactionBackup
+    - 從 Firestore 下載 preference 套用回本地
+    - 跨裝置一致性保證
+    - device 欄位
 - **利弊：**
     - 量小，單 user 不到 1KB
     - 成本可忽略
-    - 無分析價值，純為跨裝置 UX
 
 ---
 

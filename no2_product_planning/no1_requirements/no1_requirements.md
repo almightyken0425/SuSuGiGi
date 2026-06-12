@@ -90,8 +90,9 @@
       - **描述:**
         - 使用 Google Firestore 作為付費版跨裝置備份與同步後端
         - 搭配 Firebase Auth 管理使用者身份與權限
-        - 採增量批次同步模型：本地資料優先寫入，上傳至 Firestore，非即時同步
-        - 免費版資料儲存於本機；付費版啟用批次同步
+        - 採增量批次上傳模型：本地資料優先寫入，上傳至 Firestore，非即時同步
+        - 全 user 資料皆儲存於本機並單向上傳備份至 Firestore
+        - 此節描述的批次同步方向，後由訂閱層級與資料機制的關係節收斂為單向上傳備份，無下載回灌
       - **效益:**
         - 託管服，無需自行維護伺服器、資料庫與 API
         - 與 Firebase Auth 如 Google 登入無縫整合
@@ -381,6 +382,35 @@
         - 資料保護對全 user 一致，避免 user 把資料保護當付費差異的疑慮
       - **風險:**
         - user 跨裝置使用須手動匯出匯入，便利性低於即時同步
+
+## preference 上傳策略
+
+- **問題根源：**
+    - 角度：營運與工程
+    - 接續上述雲端同步架構與訂閱層級與資料機制的關係
+    - preference 含 theme、語言、主要幣別、時區、啟動模式、analyticsConsent 六項
+    - 雲端同步架構已收斂為單向上傳備份，preference 是否一併上傳、是否回灌本機，須定義
+    - 認證方案節提到的多裝置同步措辭，在此一併收斂為只上傳備份，無雲端即時同步
+- **評估方案:**
+    - preference 只上傳不下載，本機唯一真相 ★ 選用
+      - **描述:**
+        - 本機 Settings 表是 preference 的唯一真相，永不從雲端下載套用
+        - preference 單向上傳至 Firestore，不下載回灌
+        - 上游 CloudSync 節點 PreferenceSync 改名 PreferenceUpload，標明單向上傳方向
+        - TransactionBackup 軌維持單向上傳備份方向，與 PreferenceUpload 一致
+        - 不設 LWW、不做衝突解決、不設 device 欄位
+        - 接受多裝置欄位級覆寫，造成 Firestore 與各裝置三份不一致
+        - 跨裝置使用場景由 user 主動匯出匯入銜接，無雲端即時同步
+        - 上傳目的僅供資料分析維度
+        - BigQuery mirror 不納入 preference，分析管線當前未接，上傳目的為未來分析，不宣稱現在就在分析
+        - analyticsConsent 不做 consent 特例，同走一般覆寫
+      - **效益:**
+        - 本機讀寫不等雲端，preference 套用無延遲
+        - 無下載回灌即無 LWW 與衝突解決，工程大幅簡化
+        - 未來具備 preference 的分析維度來源
+      - **風險:**
+        - 多裝置 preference 欄位級覆寫，Firestore 與各裝置可能三份不一致，使用者無從察覺
+        - analyticsConsent 同走一般覆寫，GDPR 撤回後的 false 值可能被另一裝置的 true 值全量上傳無聲恢復，屬合規風險
 
 ## 標準化標記與預設資料的取捨
 
