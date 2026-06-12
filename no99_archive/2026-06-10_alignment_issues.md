@@ -46,7 +46,7 @@
 | ISSUE-10 | 登入鏈規格實作對齊 | 中 | spec、impl | 待處理 |
 | ISSUE-11 | settings management 對齊 | 中 | spec、impl | 待處理 |
 | ISSUE-12 | firestore 配額旗標收斂 | 中 | spec、impl | 待處理 |
-| ISSUE-13 | 帳戶類別 CRUD 收斂 logic 層 | 中 | impl | 待處理 |
+| ISSUE-13 | 帳戶類別 CRUD 收斂 logic 層 | 中 | impl | 已完成 |
 | ISSUE-14 | 清除資料庫漏兩表 | 中 | impl | 待處理 |
 | ISSUE-15 | premium logic 歸檔錯位 | 中 | spec、impl | 待處理 |
 | ISSUE-16 | recording 邏輯補載 | 中 | spec | 已完成 |
@@ -421,7 +421,7 @@
 
 ## ISSUE-13 帳戶類別 CRUD 收斂 logic 層
 
-- **狀態:** 待處理
+- **狀態:** 已解決（feat/issue-13-converge-crud-logic）
 - **優先序:** 中
 - **背景:**
     - 仲裁流向規定 logic 由 spec 仲裁、impl 在 service 層跟進
@@ -439,11 +439,21 @@
     - 畫面改呼叫 service、行為不變
     - 既有測試補對應案例
     - 屬純重構、預期不動 spec
+- **結案:**（2026-06-12）
+    - create / update / reorder 收進 categoryLogic 與 accountLogic、畫面改呼叫 service
+    - reorder 收有序 id 清單、service 內 re-fetch 再批次寫（對齊 deleteXCascade 慣例、可純測）
+    - createAccount 內含種匯率：建帳戶一個 write、ensureRateForNewAccount 隨後第二個 write（循序、非巢狀，避免 writer 死鎖）
+    - CategoryList 收支兩個相同 reorder handler 收斂成單一 handleReorder
+    - sortOrder 哨兵 999→同類未刪 max+1（append 末尾）：唯一行為微調，可見行為「新項目排末尾」不變，impl-internal、不動 spec
+    - 補 create / update / reorder guard 測試（logic 兩檔；全 239 測試綠、tsc 0、lint 0 error）
+    - 四層盤點：spec 不動（四操作早列在 logic 層、reorder 輸入即 id 清單、createAccount 種匯率為 spec 步驟）、design 不動（零視覺變更），標 REFACTOR_EXEMPT
+    - 範圍外標 follow-up：importService 的 999 哨兵、AccountEditor undo 的 stale-instance、spec 欄位約束未在寫入時驗證
 - **動到的檔案:**
-    - impl git `src/services/categoryLogic.ts`
-    - impl git `src/services/accountLogic.ts`
-    - impl git `src/screens/Categories/` 兩檔
-    - impl git `src/screens/Accounts/` 兩檔
+    - impl git `src/services/categoryLogic.ts`、`categoryLogic.test.ts`
+    - impl git `src/services/accountLogic.ts`、`accountLogic.test.ts`
+    - impl git `src/screens/Categories/CategoryEditorScreen.tsx`、`CategoryListScreen.tsx`
+    - impl git `src/screens/Accounts/AccountEditorScreen.tsx`、`AccountListScreen.tsx`
+    - product git 本檔狀態更新（impl 不經 spec / design）
 
 ---
 
