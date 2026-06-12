@@ -47,13 +47,13 @@
 | ISSUE-11 | settings management 對齊 | 中 | spec、impl | 待處理 |
 | ISSUE-12 | firestore 配額旗標收斂 | 中 | spec、impl | 待處理 |
 | ISSUE-13 | 帳戶類別 CRUD 收斂 logic 層 | 中 | impl | 待處理 |
-| ISSUE-14 | 清除資料庫漏兩表 | 中 | impl | 待處理 |
+| ISSUE-14 | 清除資料庫漏兩表 | 中 | impl | 已完成 |
 | ISSUE-15 | premium logic 歸檔錯位 | 中 | spec、impl | 待處理 |
 | ISSUE-16 | recording 邏輯補載 | 中 | spec | 已完成 |
 | ISSUE-17 | 首頁三畫面規格缺口 | 中 | spec、design、impl | 已完成 |
 | ISSUE-18 | 清單畫面三層對齊 | 中 | spec、design、impl | 已完成 |
 | ISSUE-19 | 偏好頁登入態拍板 | 中 | spec、design、impl | 已完成 |
-| ISSUE-20 | 匯率換算邏輯對齊 | 中 | spec、impl | 待處理 |
+| ISSUE-20 | 匯率換算邏輯對齊 | 中 | spec、impl | 已完成 |
 | ISSUE-21 | dev 工具豁免聲明 | 中 | spec、product map | 待處理 |
 | ISSUE-22 | cloud sync 細節補載 | 低 | spec | 待處理 |
 | ISSUE-23 | 匯入匯出死碼清理 | 低 | impl | 已完成 |
