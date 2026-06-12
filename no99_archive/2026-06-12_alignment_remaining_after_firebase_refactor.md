@@ -61,6 +61,8 @@
 
 複核後原待處理 8 件的 verdict 分布：1 件 resolved、6 件 partial、1 件 open。其中 ISSUE-21、24 經使用者 2026-06-12 決定暫不處理，移入範圍外、不列入下表。狀態矛盾的 4 件另複核確認。
 
+**2026-06-13 更新：** ISSUE-22 已收斂、移出待辦。複核時標 partial／spec，實查發現主項是 impl 多帳號 watermark bug——裝置層級 key 取代了 spec 與資料模型都定義的 per-user `Settings.lastSyncedAt`，造成換帳號漏傳。修正落在 impl，spec 另補兩處細節。詳見下方 ISSUE-22 節。剩餘待辦：ISSUE-01、04、10、11、15。
+
 | issue | 標題 | 原優先序 | 複核後 | 牽涉層 | 殘留項數 | 含決策點 |
 |---|---|---|---|---|---|---|
 | ISSUE-01 | 偏好同步 listener 違規 | 高 | partial（降為低） | impl／spec | 1 | 是 |
@@ -68,7 +70,7 @@
 | ISSUE-10 | 登入鏈規格實作對齊 | 中 | partial（降為低） | impl | 2 | 否 |
 | ISSUE-11 | settings management 對齊 | 中 | partial | spec／impl | 3 | 是 |
 | ISSUE-15 | premium logic 歸檔錯位 | 中 | partial | impl／spec | 5 | 是 |
-| ISSUE-22 | cloud sync 細節補載 | 低 | partial | spec | 2 | 否 |
+| ISSUE-22 | cloud sync 細節補載 | 低 | 已處理 2026-06-13 | impl／spec | 0 | 否 |
 
 ### 已複核關閉、不再列入
 
@@ -209,21 +211,36 @@
 
 ## ISSUE-22 cloud sync 細節補載
 
-- **狀態:** partial
-- **原優先序:** 低
-- **重構動向:**
-    - commit `3c67439` 大改 spec 同步層，刪 `no4_batch_sync_logic.md`，`runBackup` 併入 `no19_transaction_backup_logic.md` 作主協調入口
-    - 初次備份完成旗標機制保留、改名 `STORAGE_KEY_INITIAL_DONE`
-- **殘留:**（純 spec 補載、無決策）
-    - checkBackupQuota 委派補署名：spec `no19` runBackup 段有提「委派至 QuotaManagementLogic 的 checkQuota」但無該函式簽名與責任。`no12_quota_management_logic.md` 已定義 `checkQuota`，宜在 `no19` 補明委派目的與回傳
-    - resetSyncState 的 L4 匯入用途未載：impl `syncEngine.ts` 第 70 行 `resetSyncState` 清 `STORAGE_KEY_INITIAL_DONE` 強制全量重傳，帳號切換時呼叫；spec 各檔均無此段，補載作獨立段說明用途
-- **可選小補:**
-    - detectRemoteUserData 探測機制：impl 以單一 `transactions` collection 近似偵測，spec `no19` 第 39 行籠統寫「探測 Firestore 端是否存在此 user 資料」，可補明探測機制
-- **動到的檔案:**
-    - spec git `no3_logics/no19_transaction_backup_logic.md`
+- **狀態:** 已處理（2026-06-13）
+- **原優先序:** 低（複核改判：主項實為高）
+- **複核改判:** 原列純 spec 補載，實查推翻
+    - 主項是 impl 多帳號 watermark bug，非 spec 缺漏
+    - impl 的 Delta watermark 與 initial／delta routing 走裝置層級 AsyncStorage（`sync_last_push_at`、`sync_initial_backup_done`）
+    - 但 spec `no19` 與資料模型 `no1_data_models` 都定義 per-user `Settings.lastSyncedAt` 為 watermark
+    - 裝置層級 key 只在換帳號選清除時清；換帳號保留、或裝置換登第二帳號從不清
+    - 後果：乙帳號繼承甲的 watermark／已初始化旗標，跳過初次備份、漏傳甲時間點前舊資料
+- **A checkQuota 委派 — 非 gap:**
+    - spec `no19` 第 35 行已具名 checkQuota、寫明委派目的「讀取寫入允許旗標」
+    - 回傳契約由 owner 文件 `no12` 定義；簽名屬 impl 層
+    - 抄進 `no19` 反而重述、違反單一真相。不補
+- **watermark cluster — 修在 impl:**
+    - syncEngine 改用 per-user `Settings.lastSyncedAt`：Null 走初次備份、非 Null 為 Delta 基準
+    - 退場裝置層級 `sync_last_push_at`、`sync_initial_backup_done`
+    - 移除 resetSyncState：`clearLocalData` 已清 Settings，重建即 Null、自然走初次備份，繃帶多餘
+    - 新用戶 Settings `lastSyncedAt` 由 0 改 Null，對齊 spec
+    - 補 syncEngine 多帳號隔離 guard test
+    - spec／資料模型不動（本就正確）
+- **B resetSyncState — 隨上一項收掉:**
+    - 原列「L4 匯入用途未載、需補 spec」；改為 impl 移除整個 resetSyncState，無需補載
+- **C 探測機制 + Delta 無變更 — spec 補載:**
+    - `no19` 補明探測機制（查遠端 transactions 單一集合最多 1 筆、失敗保守視為無資料）
+    - `no19` 補 runDeltaBackup 無變更時跳過、不更新 watermark
+- **動到的檔案與 branch:**
+    - impl git `src/services/syncEngine.ts`、`src/contexts/AuthContext.tsx`、`src/services/userService.ts`、新增 `src/services/syncEngine.test.ts`；branch `feat/issue22-sync-watermark-per-user`
+    - spec git `no3_logics/no19_transaction_backup_logic.md`；branch `feat/issue22-cloud-sync-spec-backfill`
 - **交叉驗證 audit:**
     - parent 檔 `batch_sync_logic` 與 `transaction_backup_logic` 逐項發現
-    - 旗標機制部分由重構併檔處理，餘 checkBackupQuota 與 resetSyncState 兩細節仍缺
+    - 原複核漏判 watermark：僅 grep syncEngine 即斷定 lastSyncedAt 虛構，實則資料模型與 Settings 模型都定義、只是 syncEngine 棄用
 
 ---
 
@@ -233,4 +250,4 @@
 
 - **AppState resume 同步** — ISSUE-04（app_bootstrap 視角）與 ISSUE-15（premium_logic 視角）指向同一段 `PremiumContext.tsx` AppState `active` 呼叫 `syncEngine.sync()`。補 spec 時釐清歸屬，不要兩份 spec 各寫一遍。
 - **mockTier 暫不動** — ISSUE-15 的 `mockTier` 原可掛 ISSUE-21 的 dev 工具豁免。21 暫不處理，mockTier 暫維持現狀、不補規格、不掛豁免。
-- **建議處理順序** — 先處理 ISSUE-15、04 的 spec 補載（含釐清 resume 同步歸屬），再掃 ISSUE-01、10、11、22 的零散殘留。
+- **建議處理順序** — 先處理 ISSUE-15、04 的 spec 補載（含釐清 resume 同步歸屬），再掃 ISSUE-01、10、11 的零散殘留（ISSUE-22 已處理）。
