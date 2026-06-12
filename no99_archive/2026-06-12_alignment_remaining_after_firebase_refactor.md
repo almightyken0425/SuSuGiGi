@@ -59,7 +59,7 @@
 
 ## 總覽
 
-複核後的殘留分布。原待處理 8 件中，1 件 resolved、6 件 partial、1 件 open。狀態矛盾的 4 件另複核確認。
+複核後原待處理 8 件的 verdict 分布：1 件 resolved、6 件 partial、1 件 open。其中 ISSUE-21、24 經使用者 2026-06-12 決定暫不處理，移入範圍外、不列入下表。狀態矛盾的 4 件另複核確認。
 
 | issue | 標題 | 原優先序 | 複核後 | 牽涉層 | 殘留項數 | 含決策點 |
 |---|---|---|---|---|---|---|
@@ -67,10 +67,8 @@
 | ISSUE-04 | app bootstrap 規格整修 | 高 | partial（降為中） | spec | 3 | 否 |
 | ISSUE-10 | 登入鏈規格實作對齊 | 中 | partial（降為低） | impl | 2 | 否 |
 | ISSUE-11 | settings management 對齊 | 中 | partial | spec／impl | 3 | 是 |
-| ISSUE-15 | premium logic 歸檔錯位 | 中 | partial | impl／spec | 6 | 是 |
-| ISSUE-21 | dev 工具豁免聲明 | 中 | open | spec／product map | 3 | 是 |
+| ISSUE-15 | premium logic 歸檔錯位 | 中 | partial | impl／spec | 5 | 是 |
 | ISSUE-22 | cloud sync 細節補載 | 低 | partial | spec | 2 | 否 |
-| ISSUE-24 | design 端變體待補 | 低 | partial | design | 1 | 否 |
 
 ### 已複核關閉、不再列入
 
@@ -80,6 +78,13 @@
 - **ISSUE-14 清除資料庫漏兩表** — commit `14ec5b9` 把硬編碼七表清單改為動態推導 `schema.tables`，自動涵蓋 `users` 與 `currency_configs`。補 guard test 鎖全表覆蓋，五測全綠。
 - **ISSUE-19 偏好頁登入態拍板** — commit `deef8b9` 拍板刪未登入態，偏好頁固定只有登出鈕。導航層保證登入後才可達。登出失敗錯誤提示 impl 已實作（`AuthContext.tsx` Alert）。
 - **ISSUE-20 匯率換算邏輯對齊** — spec `630aa17` 初始匯率改固定種 1 佔位、補載 `getCurrencyPairs` 與 `resolveTransferDisplay`；impl 三 commit 收斂 `createCurrencyRate` 進 service、抽 `resolveTransferDisplay` 純函式、`convertAmount` 共用 `resolveRateFromRecord`。
+
+### 範圍外、暫不處理
+
+使用者 2026-06-12 決定暫不處理下列兩件。複核結論仍記錄於此供日後參考，不列入可執行清單。下次盤點若再標出，視為已知暫緩、非遺漏。
+
+- **ISSUE-21 dev 工具豁免聲明（open）** — 六個 dev 工具單位 spec 全缺、Product Map 無節點承載 debug_info。design 端已有明文豁免、上游無對應。暫緩處理。連帶影響：ISSUE-15 的 `mockTier` 原可掛此豁免，21 暫緩後改暫維持現狀。
+- **ISSUE-24 design 端變體待補（partial）** — 多數變體已補（login loading、search 轉帳列、home transfer fixtures、paywall 載入中、import 來源時區）。僅剩 import step3 缺 transfer 配對介面。暫緩處理。
 
 ---
 
@@ -185,13 +190,13 @@
 - **殘留:**
     - premiumLogic.ts 歸檔錯位（決策點）：檔案內容為 `canUserPerformAction` 訂閱授權，實屬 SubscriptionGateLogic（對應 `no17`），卻掛在 `no6_premium_logic` 名下。決策改 impl 檔名歸位或改 spec 配對描述
     - triggerMultiDeviceSync 死碼：spec `no17` 已標廢止，impl `premiumLogic.ts` 第 17 行識別碼與第 55 行 case 分支仍在，刪除
-    - mockTier 補規格（決策點，與 ISSUE-21 連動）：impl `PremiumContext.tsx` 實裝 `setMockTier` 偽造訂閱層，屬 dev 工具，可改掛豁免聲明、暫不補規格
     - launch gate 補規格：impl `PremiumContext.tsx` 第 28 行 `isPremiumLoaded` 作啟動閘，防付費者起動時誤判 LEVEL_0，spec `no6` 未載
     - AppState 自動刷新補規格：impl `PremiumContext.tsx` 第 122 行 useEffect 監聽 AppState `active`，spec `no6` 未載
     - 登出降級補規格：impl `PremiumContext.tsx` 第 115 行 user 變 null 時設 `currentTier=LEVEL_0`、清 mockTier，spec `no6` 未載
 - **決策點:**
     - 歸位動 impl 檔名或動 spec 配對
-    - mockTier 走豁免聲明或補規格
+- **不在本 issue 範圍:**
+    - `mockTier` 屬 dev 工具，原可掛 ISSUE-21 豁免；ISSUE-21 暫不處理，故 mockTier 暫維持現狀、不補規格、不列殘留
 - **動到的檔案:**
     - spec git `no3_logics/no6_premium_logic.md`、`no3_logics/no17_subscription_gate_logic.md`
     - impl git `src/services/premiumLogic.ts`、`src/contexts/PremiumContext.tsx`、視決策
@@ -199,32 +204,6 @@
     - parent 檔 `premium_logic` 逐項發現的歸檔錯位與四段未載行為
 - **重疊提示:**
     - 「AppState 自動刷新」與 ISSUE-04「resume 同步」同一段 impl 行為
-    - 「mockTier 補規格」與 ISSUE-21「dev 工具豁免」同一決策
-
----
-
-## ISSUE-21 dev 工具豁免聲明
-
-- **狀態:** open
-- **原優先序:** 中
-- **重構動向:**
-    - 偏好重構未涉 dev 工具單位，本 issue 全開原狀
-- **殘留:**
-    - spec 端豁免聲明缺：`shared_ui_policies/` 現有六檔（date_picker、delete_button、header、list、search、undo_bar），無 dev 工具豁免檔。新增一份列明六單位（debug_info、debug_info_by_category、mock_data_settings、mock_data_tooling、database_adapter_infra、premium.mockTier）與豁免理由
-    - Product Map 決策（決策點）：`structure.md` 無開發工具節點。map 端增節點承載 dev 工具職責，或雙端豁免聲明
-    - 若選豁免，map `structure.md` 或 app 索引增豁免聲明，確保下次盤點不再標缺
-- **決策點:**
-    - map 端增描述或增豁免
-    - 建議豁免，避免為 dev 工具開 Product Map 節點
-- **背景:**
-    - design 端已有明文豁免（`project/30_screens/CLAUDE.md` 註明三個 debug 工具 dev-only 不還原）
-    - 上游 spec 與 product map 無對應，每次盤點這批都被重標缺
-- **動到的檔案:**
-    - spec git `no2_screens/shared_ui_policies/`
-    - product git `no2_product_planning/no2_product_map/`、視決策
-- **交叉驗證 audit:**
-    - parent 檔「孤兒與範圍外單位」`debug_info_screen` 無節點承載
-    - parent 檔跨單位歸納「dev 工具帶缺 spec 豁免聲明」涉六單位
 
 ---
 
@@ -248,32 +227,10 @@
 
 ---
 
-## ISSUE-24 design 端變體待補
-
-- **狀態:** partial
-- **原優先序:** 低
-- **重構動向:**
-    - 與偏好重構無關
-    - commit `f7e5513` 補 login loading 態與 search 轉帳列變體、home transfer fixtures
-    - 更早 commit `e1124f4` 補 paywall 載入中變體、`5535029` 補 import 來源時區說明
-- **已補:**
-    - login loading 變體、search 轉帳結果列、home transfer fixtures、paywall 商品載入中、import 來源時區說明
-- **殘留:**
-    - import step3 缺 transfer 配對介面：`ImportStep3Matching` 目前只有帳戶與收支類別三段，無轉帳配對 UI（檔內註解確認範圍僅三段）
-- **動到的檔案:**
-    - design git `project/30_screens/no22_import_screen/`
-- **交叉驗證 audit:**
-    - parent 檔 `import_screen` 發現「design 缺 transfer 變體」
-    - 顯示用 transfer fixtures 已補，匯入配對的 transfer 變體仍缺
-- **備註:**
-    - 原清單總覽欄已被標「已完成」（working tree 改動），但複核發現此一項仍缺，故仍列入
-
----
-
 ## 跨 issue 重疊提示
 
 同一段 impl 行為或決策被多個 issue 從不同視角各看一次，處理時併一處避免重工。
 
 - **AppState resume 同步** — ISSUE-04（app_bootstrap 視角）與 ISSUE-15（premium_logic 視角）指向同一段 `PremiumContext.tsx` AppState `active` 呼叫 `syncEngine.sync()`。補 spec 時釐清歸屬，不要兩份 spec 各寫一遍。
-- **mockTier 處置** — ISSUE-15（premium 多載行為視角）與 ISSUE-21（dev 工具豁免視角）同一決策。先定 ISSUE-21 的豁免方向，ISSUE-15 的 mockTier 跟著掛豁免。
-- **建議處理順序** — 先 ISSUE-21 定 dev 工具豁免方向（影響 ISSUE-15 的 mockTier），再處理 ISSUE-15、04 的 spec 補載，最後掃 ISSUE-01、10、11、22、24 的零散殘留。
+- **mockTier 暫不動** — ISSUE-15 的 `mockTier` 原可掛 ISSUE-21 的 dev 工具豁免。21 暫不處理，mockTier 暫維持現狀、不補規格、不掛豁免。
+- **建議處理順序** — 先處理 ISSUE-15、04 的 spec 補載（含釐清 resume 同步歸屬），再掃 ISSUE-01、10、11、22 的零散殘留。
