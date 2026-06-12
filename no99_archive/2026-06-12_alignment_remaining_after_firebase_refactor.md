@@ -65,7 +65,7 @@
 |---|---|---|---|---|---|---|
 | ISSUE-01 | 偏好同步 listener 違規 | 高 | partial（降為低） | impl／spec | 1 | 是 |
 | ISSUE-04 | app bootstrap 規格整修 | 高 | partial（降為中） | spec | 3 | 否 |
-| ISSUE-10 | 登入鏈規格實作對齊 | 中 | partial（降為低） | impl | 2 | 否 |
+| ISSUE-10 | 登入鏈規格實作對齊 | 中 | 處置中（待 merge） | spec／impl | 0 | 否 |
 | ISSUE-11 | settings management 對齊 | 中 | partial | spec／impl | 3 | 是 |
 | ISSUE-15 | premium logic 歸檔錯位 | 中 | partial | impl／spec | 5 | 是 |
 | ISSUE-22 | cloud sync 細節補載 | 低 | partial | spec | 2 | 否 |
@@ -138,21 +138,29 @@
 
 ## ISSUE-10 登入鏈規格實作對齊
 
-- **狀態:** partial
+- **狀態:** 處置中（(a)(b) 均已備好 working tree、待 merge）
 - **原優先序:** 中（複核後降為低）
 - **重構已收:**
     - (c) 本地無 Settings 以雲端偏好寫入：upload-only 後不下載偏好，此分支 moot，impl 改跑 `initializeNewUser`
     - (d) IAP 查詢後更新本地 Premium：`remove-postauth-iap-await` 顯式移除登入路徑 IAP 查詢，spec 與 impl 同步刪除
     - post_auth spec「視 Premium 決定上雲」矛盾殘句已清
-- **殘留:**（皆 impl 行為缺漏、無決策）
-    - (a) 登出未清 Premium 快取：spec `no2_login_logout_logic.md` 第 21 行要求清本地 Premium 快取，impl `AuthContext.tsx` signOut 在 `setUser(null)` 後未呼叫 `clearPremiumCache()`（該函式定義於 `premiumStatusCache.ts` 第 38 行但未 import），持久化快取殘留
-    - (b) 登出失敗未強制清 session token：spec 第 24 行要求登出失敗強制清本地 session token，impl 登出失敗分支只 `Alert.alert` 與 `throw`
+- **複核更正 (2026-06-12)：(a) 重新裁決——非 impl 殘留，是 spec 漏改殘留：**
+    - 原判「impl 漏呼叫 `clearPremiumCache`」前提錯誤。premium／IAP 授權綁裝置／Apple ID、不綁 app 帳號（`getAvailablePurchases` 推 tier 全程無 uid 參與），`premium_status_cache` 為單一全域 key、無 uid scoping、只作離線回退、不作授權真相
+    - 登出清快取反而有害：付費者登出後離線／冷啟動，快取被清 → 回退 LEVEL_0 → 付費者被誤降（正是快取要防的事）。「A 登出、B 同裝置登入讀到 A 快取」非洩漏——訂閱綁裝置，B 本就享同份
+    - 登出不清本機是刻意設計（commit `031da8f`，清除唯一掛換帳號分支、只 reset WatermelonDB 帳務資料）；spec `no2_login_logout_logic.md`「清除本地 Premium 快取狀態」一行只在搬檔／reorg commit 出現、從沒被決策 commit 背書、與同段下一行「登出不清、只換帳號才清」自相矛盾，判為漏改殘留
+    - 處置：刪該 spec 行、impl 不動（branch `feat/issue10-spec-line21-fix`，spec worktree working tree 已備好）
+- **複核處置 (2026-06-13)：(b) 經 git 考古確認為真 impl bug，已修：**
+    - git 考古：spec「強制清除本地 session token」一行與 (a) 同源（commit `a2dba99` 搬檔夾帶、無決策背書）；但這次 impl 端有可觀測 bug，且其意圖（登出失敗仍收斂登出狀態）正確，故保留並改寫、不比照 (a) 刪除
+    - impl bug：`firebase.ts` signOut 把 `GoogleSignin.signOut()` 與 `auth().signOut()` 綁同一 try，前者偶發原生錯誤先 throw 會跳過後者 → Firebase 憑證殘留；`AuthContext.tsx` signOut 失敗時 `setUser(null)` 在 try 內未執行 → UI 停在登入態、下次啟動自動恢復登入。嚴重度中（correctness 為主、security 中低）、觸發機率低
+    - RNFirebase 語意：`auth().signOut()` 本身就是清本地憑證的權威動作（iOS 底層清 keychain），無獨立「強制清 token」官方 API，故 spec 原句不可直譯
+    - 處置：impl `firebase.ts` 把整段 Google 清理（含同步 `getCurrentUser`）包進內層 try、確保 `auth().signOut()` 必跑；`AuthContext.tsx` 把 `setUser(null)` 收進 `finally`（成功／失敗都收斂登出）、登出失敗不再 rethrow（避免呼叫端未處理拒絕）；spec 那行改寫為「仍將本地登入狀態清為登出」。tsc ＋ eslint 全綠
+    - code-review (xhigh) 已過：3 項真發現全修——getCurrentUser 解耦漏網、dead rethrow → unhandled rejection、`setUser(null)` 重複收斂進 finally；review 另報「premium 快取跨帳號洩漏」經 (a) 結論駁回（授權綁裝置不綁帳號、B 同機本就享同份、非洩漏）；keychain 失敗冷啟恢復登入屬平台天花板（無官方強制清憑證手段）、已知取捨
 - **動到的檔案:**
-    - impl git `src/contexts/AuthContext.tsx`
-    - spec git 兩檔已對齊、不動
+    - spec git `no3_logics/no2_login_logout_logic.md`（(a) 刪 premium 快取行、(b) 改寫登出失敗分支，已備好）
+    - impl git `src/services/firebase.ts`、`src/contexts/AuthContext.tsx`（(b) 已修，已備好）
 - **交叉驗證 audit:**
     - parent 檔 `login_logout_logic` 與 `post_auth_logic` 逐項發現
-    - 四段缺口收兩段、餘 (a)(b) 兩段帳號切換正確性相關，仍須補
+    - 四段缺口收兩段；(a) 改判為 spec 漏改殘留（已刪）、(b) 改判為真 impl bug（已修 ＋ spec 改寫）；ISSUE-10 殘留清零、待 merge
 
 ---
 
