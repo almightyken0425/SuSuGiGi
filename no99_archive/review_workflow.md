@@ -1,36 +1,78 @@
-# 2026-06-10 · 記帳 App 多軸 Review Workflow Prompt 草稿（第 3–8 軸）
+# 2026-06-10 · 記帳 App 多軸 Review Workflow Prompt 草稿（第 1–7 軸）
 
 ## Context
 
 SuSuGiGi 記帳 app（module `no2_accounting_app`）分軸 review 的 workflow prompt 草稿。
 
-- 全套 8 軸，本檔收第 3–8 軸。
-- 第 1 軸 Product 層內部品質、第 2 軸四層對齊總盤點已定稿，不在此檔。
-- 每支 prompt 對應一個獨立 session，複製貼上即用。
-- session 開在 ai-company 根目錄，prompt 內路徑為 repo 相對路徑。
-- 全部 read-only：只讀、不改檔、輸出報告；需要修的另開 worktree。
-- 需對抗驗證的軸（4、7、8）內含 skeptic 段，壓假陽性。
-- 不在這 8 軸內：simulator 視覺走 `/sim-review`、git 衛生走 `/game-over`，皆單線、不需 workflow。
-
 ## 軸索引
 
 | 軸 | 主題 | 性質 |
 |---|---|---|
-| 3 | Spec 層內部品質 | 純 spec 內，術語與越界 |
-| 4 | Impl 程式正確性 / bug | 純 code runtime 正確性，含 i18n |
-| 5 | Design ↔ Impl 視覺對齊 | token / 元件 / layout 忠實度 |
-| 6 | Spec ↔ Impl 行為 / 資料對齊 | 非視覺軸 |
-| 7 | Impl 架構與分層品質 | code 組織與抽象 |
-| 8 | Impl 安全性與信任邊界 | secrets / 後端授權 / 信任邊界 |
-
-## 搭配建議
-
-- 全 read-only，6 個 session 可同時開、互不干擾。
-- 第 7、8 軸 verify 段較重、token 花費高；要省就在該 session 加一句「先跑 N 個樣本」。
+| 1 | 各層各自審查 + 四層對齊 | 整包跑：四層內審 + 跨層對齊 + 對抗驗證 |
+| 2 | Spec 層內部品質 | 純 spec 內，術語與越界 |
+| 3 | Impl 程式正確性 / bug | 純 code runtime 正確性，含 i18n |
+| 4 | Design ↔ Impl 視覺對齊 | token / 元件 / layout 忠實度 |
+| 5 | Spec ↔ Impl 行為 / 資料對齊 | 非視覺軸 |
+| 6 | Impl 架構與分層品質 | code 組織與抽象 |
+| 7 | Impl 安全性與信任邊界 | secrets / 後端授權 / 信任邊界 |
 
 ---
 
-## 第 3 軸 · Spec 層內部品質
+## 第 1 軸 · 各層各自審查 + 四層對齊（整包版）
+
+```
+用 workflow 對 SuSuGiGi no2_accounting_app 一次做完各層各自審查 + 四層對齊審查。
+
+═══ 階段一 各層各自審查（多 agent 並行），只審該層內在品質，並各自產出內容地圖 ═══
+
+【Impl】唯一審 code 的一層，八維度 code review：
+  ① 分層職責：業務邏輯有沒有漏進 screen/context
+  ② 狀態管理：Context/store/hook 三範式邊界、不必要的 re-render
+  ③ 資料層與同步：WatermelonDB model/schema/migration 一致性、syncEngine 推拉順序與衝突解決、監聽器生命週期
+  ④ 核心記帳邏輯：金額精度、多幣別換算、定期排程的時區與併發
+  ⑤ 付費配額：entitlement 信任邊界、能否被 client 繞過、強制點在不在 mutation 層
+  ⑥ 模組耦合：循環依賴、UI 直接打 DB 的跨層洩漏
+  ⑦ 元件複用：重複 pattern、prop drilling、已宣告廢除的手刻 row 殘留
+  ⑧ 型別與外部邊界：any/as 逃逸、Firestore/CSV/IAP 進入點有沒有 schema 驗證
+
+【Spec】審規格文件內在品質，不是 code：
+  ① 術語一致：是否只用本檔或 SuSuGiGiSpec 內已定義名詞，抓未定義就使用的詞
+  ② 跨層職責沒越界：no1_data_models 不得寫 impl 私有型別名、no2_screens 不得寫 design 視覺 token 值或 impl 元件 props、no3_logics 不得寫平台 API/第三方套件名
+  ③ MVC 分層政策：Model(no1)/View(no2)/Logic(no3) 三層各自寫作政策遵循
+  ④ 內部一致：20 個 logic 之間、screen 與 logic、data model 引用彼此自洽不矛盾，shared_ui_policies 與各 screen 一致
+  ⑤ 結構合理：no1_data_models 只 1 檔（對比 no2 30 檔/no3 20 檔）是否把多個 model 塞一檔、該不該拆
+
+【Design】審設計工件內在品質，不是 code：
+  ① foundations token 健康度：atomic/canvas/typography/layout/platform 五類 token 有沒有衝突、重複、orphan（定義了沒人用）
+  ② component_tokens 完整：每個 20_components 元件有沒有對應 component token
+  ③ 元件純度：components.jsx 是否完全從 foundations 構成、有無 raw number 硬寫值
+  ④ screen 純度：30_screens 的 26 個 screen 是否完全由 foundations + components 組成（30_screens/CLAUDE.md 純度規則）
+  ⑤ canvas 可運行：components-showcase 是否覆蓋所有元件、visualizers/15_fixtures 齊全
+
+【Product】審規劃邏輯內在品質，不是 code：
+  ① 提案層自洽：no1_root_mentality（心智模型）/no2_root_value（不可取代性）/no3_business_model（商業模式）三者邏輯連貫、互不矛盾
+  ② LEVEL 分級定義自洽：no3_business_model 的 LEVEL_0~3/B 定義內部一致
+  ③ 需求→Map 追溯：no1_requirements 每個需求有沒有落到 no2_product_map
+  ④ Map 結構完整：app/firebase/cloud_service/external_service/web_console 五視角的 structure.md、module 視角目錄名是否與 design/spec/impl 逐字一致
+  ⑤ Map→Roadmap 覆蓋：no3_dev_roadmap 是否覆蓋 product_map、優先級邏輯、有無孤兒（roadmap 列了但 map 沒有）
+
+═══ 階段二 用四份內容地圖做跨層對齊比對，沿這幾條軸 ═══
+  • logic：spec no3_logics 20 檔 ↔ impl services — 行為有沒有對上、誰多誰少
+  • screen：spec no2_screens 30 ↔ design 30_screens 26 ↔ impl src/screens — 三方配對
+  • data model：spec no1_data_models ↔ impl WatermelonDB models — 欄位與關聯一致
+  • 付費鏈：Product business_model 的 LEVEL ↔ spec subscription_gate ↔ impl premiumLogic
+  • Map 落地：Product Map app 視角的功能 ↔ 下游三層 module 有沒有在中途消失
+  • web_console 視角：Product Map 有但 impl 只有 app — 是規劃中還是該標未落地
+  比對找：spec 寫了 impl 沒做、impl 有 spec 沒寫、design 與 impl 視覺對不上、Product Map 功能在下游消失、LEVEL 定義跨層漂移。
+
+═══ 階段三 各層問題 + 對齊疑點全部對抗式驗證 ═══
+
+═══ 階段四 合併排序，報告寫到 no99_archive，各層問題與對齊缺口分兩區。只分析不改檔 ═══
+```
+
+---
+
+## 第 2 軸 · Spec 層內部品質
 
 ```
 用一個 workflow（多 agent 編排）審 SuSuGiGi 記帳 app 的 Spec 層品質。純 review：只讀、不改檔、輸出報告。
@@ -56,7 +98,7 @@ fan-out：每份 spec 一個 agent，各查兩件事：
 
 ---
 
-## 第 4 軸 · Impl 程式正確性 / bug
+## 第 3 軸 · Impl 程式正確性 / bug
 
 ```
 用一個 workflow（多 agent 編排）做 SuSuGiGi 記帳 app 的 impl 程式 review，找 runtime correctness bug。純 review：只讀、不改檔、輸出報告。不查架構與分層與共用抽取（另一軸），也不查安全繞過（另一軸）。
@@ -85,7 +127,7 @@ fan-out 用 find→adversarial verify。第一段每個維度一個 finder agent
 
 ---
 
-## 第 5 軸 · Design ↔ Impl 視覺對齊
+## 第 4 軸 · Design ↔ Impl 視覺對齊
 
 ```
 用一個 workflow（多 agent 編排）查 SuSuGiGi 記帳 app（module no2_accounting_app）impl UI 是否照 design 做。純 review：只讀、不改檔、輸出報告。
@@ -116,7 +158,7 @@ fan-out：每個畫面一個 agent，同時讀 design 側與 impl 側比對：
 
 ---
 
-## 第 6 軸 · Spec ↔ Impl 行為 / 資料對齊
+## 第 5 軸 · Spec ↔ Impl 行為 / 資料對齊
 
 ```
 用一個 workflow（多 agent 編排）查 SuSuGiGi 記帳 app（module no2_accounting_app）impl 行為與資料層是否照 Spec。純 review：只讀、不改檔、輸出報告。
@@ -143,7 +185,7 @@ fan-out：每條 logic 一個 agent、data model 另一組 agent，各自比對 
 
 ---
 
-## 第 7 軸 · Impl 架構與分層品質
+## 第 6 軸 · Impl 架構與分層品質
 
 ```
 用一個 workflow（多 agent 編排）做 SuSuGiGi 記帳 app 的 impl 架構與分層 review，從零查。純 review：只讀、不改檔、輸出報告。查 code 組織與抽象，不查 runtime bug（另一軸）。
@@ -166,7 +208,7 @@ fan-out 用 find→verify。第一段每個維度一個 finder agent：
 
 ---
 
-## 第 8 軸 · Impl 安全性與信任邊界
+## 第 7 軸 · Impl 安全性與信任邊界
 
 ```
 用一個 workflow（多 agent 編排）做 SuSuGiGi 記帳 app 的 impl 安全性 review。純 review：只讀、不改檔、輸出報告。技術棧 RN + Firebase Auth/Firestore + Google Sign-In + IAP。
