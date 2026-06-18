@@ -2,7 +2,7 @@
 
 ## 手動測試 plan
 
-## paywall
+## paywall, IAP flow
 
 ## https://www.privacypolicygenerator.info/
 
@@ -18,14 +18,10 @@
 
 ## 類別上限 10 -> 7，定期交易&匯入匯出不納入付費項目，基本上概念就只有限制建立類別7&帳戶3，不可新增類別與帳戶，若超過7&3，不論哪一個，停止新增記帳，停止項目不包含已建立的定期交易schedule&未來預計會產生的定期交易
 
-## homescreen 原本展開的類別切換收入支出之後回來展開的資料不見了，但箭頭標示是展開的
-
 ## 盤點 susugigi 名稱改為 $wish，包含 firebase
 
-## 匯率管理，主要貨幣應該要在右邊
+## 鎖定直立畫面
 
-## search screen 裡面的 icon 不應該跟隨金額顏色
+## donut chart 如果只有支出，會是一個閉環的圓，但結尾其實應該要留一點點空間
 
-## category list 把收入支出的分類title拔掉
-
-## category/account editor 的分類 title 拿掉，category/account 名稱的部分要有 placeholder
+## search bar 應該要有玻璃背景感，現在都是不透明顏色
