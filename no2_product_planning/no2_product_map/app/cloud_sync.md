@@ -58,7 +58,7 @@
     - flag 只影響未來啟動 BigQuery 時是否被 mirror
     - 法律基礎為 contract 履行記帳服務契約所必要
 - **排除：**
-    - user 端取回管道，user 取回走付費版 CSV 匯出
+    - user 端取回管道，user 取回走 CSV 匯出
     - 多裝置即時同步機制
     - BigQuery mirror 屬 analytics pipeline 產品圖文件
 - **利弊：**
@@ -86,7 +86,7 @@
 - **利弊：**
     - 單向上傳邏輯簡單
     - user 完全無感
-    - 不提供取回功能，user 取回走付費版 CSV 匯出
+    - 不提供取回功能，user 取回走 CSV 匯出
 
 ---
 
