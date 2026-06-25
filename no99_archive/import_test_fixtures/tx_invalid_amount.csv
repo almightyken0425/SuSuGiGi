@@ -1,0 +1,4 @@
+transaction_datetime,category,account,amount,currency,note,result
+2026-01-01,Food,Cash,-150.00,TWD,valid amount,BLOCKED: amount column unmappable (a row below has a bad amount)
+2026-01-02,Food,Cash,"1,234.56",TWD,thousands separator is rejected,BAD amount: thousands separator -> poisons amount column
+2026-01-03,Food,Cash,$200,TWD,currency symbol is rejected,BAD amount: currency symbol -> poisons amount column

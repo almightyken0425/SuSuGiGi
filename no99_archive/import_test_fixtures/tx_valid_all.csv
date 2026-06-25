@@ -1,0 +1,9 @@
+transaction_datetime,category,account,amount,currency,note,result
+2026-01-01,Salary,Cash,50000.00,TWD,monthly pay,OK income (positive amount)
+2026-01-02 09:30:00,Food,Cash,-150.50,TWD,"lunch, drinks",OK expense; comma note kept intact
+2026-01-03 12:00:00+08:00,Transport,Cash,-30.1234,TWD,bus fare,OK 4-decimal amount; +08:00 offset
+2026-01-04 18:00:00Z,Travel,Cash,-200.00,USD,hotel abroad,OK USD; Z offset; Cash splits into a USD account
+2026-01-05,Salary,Cash,1000.00,usd,freelance in usd,OK lowercase usd treated as USD
+2026-01-06,Gift,Bank,-5000,JPY,souvenir,OK JPY; Bank JPY account
+2026-01-07,Adjust,Cash,100.00,TWD,positive adjust is income,OK Adjust as income category
+2026-01-08,Adjust,Cash,-50.00,TWD,negative adjust is expense,OK Adjust as expense category

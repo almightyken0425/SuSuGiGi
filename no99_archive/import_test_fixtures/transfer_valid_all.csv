@@ -1,0 +1,5 @@
+transfer_datetime,from_account,from_currency,from_amount,to_account,to_currency,to_amount,note,result
+2026-01-01,Cash,TWD,10000.00,Bank,TWD,10000.00,same currency,OK same-currency transfer
+2026-01-02 10:00:00,Cash,TWD,5000.50,Savings,TWD,5000.50,datetime same currency,OK same-currency with cents
+2026-01-03 14:00:00+08:00,Cash,TWD,30000.00,Cash,USD,1000.00,cross currency splits Cash by currency,OK cross-currency; Cash splits TWD/USD; seeds a TWD/USD rate
+2026-01-04,Bank,twd,2000,Wallet,TWD,2000,lowercase currency and integer amount,OK lowercase twd treated as TWD; integer amount

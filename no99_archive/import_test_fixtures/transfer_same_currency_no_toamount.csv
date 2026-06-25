@@ -1,0 +1,3 @@
+transfer_datetime,from_account,from_currency,from_amount,to_account,to_currency,to_amount,note,result
+2026-01-01,Cash,TWD,10000.00,Bank,TWD,,no to_amount defaults to from_amount,OK same-currency; to_amount defaults to from_amount
+2026-01-02,Bank,TWD,3000.00,Wallet,TWD,,same currency no to_amount,OK same-currency; to_amount defaults to from_amount

@@ -1,0 +1,4 @@
+transaction_datetime,category,account,amount,currency,note,result
+2026-01-01,Food,Cash,-150.00,TWD,valid date,BLOCKED: date column unmappable (a row below has a bad date)
+2026-01-02,Food,Cash,-50.00,TWD,valid date,BLOCKED: date column unmappable (a row below has a bad date)
+2026/01/03,Food,Cash,-20.00,TWD,slash format is rejected,BAD date: slash format YYYY/MM/DD -> poisons date column
