@@ -86,10 +86,14 @@ Platform: Web Console
 Platform: Firebase
 ├── Authentication
 ├── Storage（待定義）
-└── Firestore
-    ├── DataCollections
-    ├── SecurityRules
-    └── QuotaBaseline
+├── Firestore
+│   ├── DataCollections
+│   ├── SecurityRules
+│   └── QuotaBaseline
+└── CloudFunctions（未實作）
+    ├── IAPReceiptValidation
+    ├── AppStoreServerNotifications
+    └── EntitlementWriter
 
 Platform: Cloud Service
 ├── AIAdvisor / Backend
@@ -138,6 +142,7 @@ ExcludedModule
 | Authentication        | Firebase | Firebase 身份驗證服務                          | [authentication.md](firebase/authentication.md) |
 | Storage               | Firebase | Firebase 資料備份儲存，待定義                          | [storage.md](firebase/storage.md) |
 | Firestore             | Firebase | 雲端資料庫，Delta batch sync 後端              | [firestore.md](firebase/firestore.md) |
+| CloudFunctions        | Firebase | IAP 收據驗證、App Store Server Notifications、寫 entitlement，未實作 | [cloud_functions.md](firebase/cloud_functions.md) |
 | AIAdvisor / Backend   | Cloud    | AI 財務顧問後端，LEVEL_3，架構待定              | [ai_advisor_backend.md](cloud_service/ai_advisor_backend.md) |
 | MacroData             | Cloud    | 總體資料服務，LEVEL_B，未實作                   | [macro_data.md](cloud_service/macro_data.md) |
 | AnalyticsPipeline     | Cloud    | 分析資料管道，R1 拍板、未啟動                   | [analytics_pipeline.md](cloud_service/analytics_pipeline.md) |
