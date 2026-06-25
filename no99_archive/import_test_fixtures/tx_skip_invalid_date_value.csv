@@ -1,0 +1,3 @@
+transaction_datetime,category,account,amount,currency,note,result
+2026-01-01 12:00:00+08:00,Food,Cash,-150.00,TWD,valid row is imported,OK imported
+2026-02-30 12:00:00+08:00,Food,Cash,-50.00,TWD,Feb 30 does not exist so this row is skipped,SKIP: 2026-02-30 is not a real date -> NaN at import

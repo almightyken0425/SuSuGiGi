@@ -1,0 +1,8 @@
+source_file,input_datetime,from_account,from_currency,from_amount,to_account,to_currency,to_amount,note
+transfer_valid_all.csv,2026-01-01,Cash,TWD,10000.00,Bank,TWD,10000.00,same currency
+transfer_valid_all.csv,2026-01-02 10:00:00,Cash,TWD,5000.50,Savings,TWD,5000.50,datetime same currency
+transfer_valid_all.csv,2026-01-03 14:00:00+08:00,Cash,TWD,30000.00,Cash,USD,1000.00,cross currency splits Cash by currency
+transfer_valid_all.csv,2026-01-04,Bank,TWD,2000,Wallet,TWD,2000,lowercase currency and integer amount
+transfer_same_currency_no_toamount.csv,2026-01-01,Cash,TWD,10000.00,Bank,TWD,10000.00,no to_amount defaults to from_amount
+transfer_same_currency_no_toamount.csv,2026-01-02,Bank,TWD,3000.00,Wallet,TWD,3000.00,same currency no to_amount
+transfer_skip_cross_no_toamount.csv,2026-01-02,Cash,TWD,10000.00,Bank,TWD,10000.00,same currency without to_amount is imported
