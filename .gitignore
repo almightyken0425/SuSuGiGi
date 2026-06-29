@@ -4,3 +4,9 @@
 /no3_product_designs/no2_accounting_app/
 /no4_product_specs/
 /no6_product_development/
+
+# 機密金鑰絕不入 git（Apple App Store Server API .p8 等）
+*.p8
+
+# macOS 目錄雜碎
+.DS_Store
