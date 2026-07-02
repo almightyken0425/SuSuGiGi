@@ -7,6 +7,8 @@
 
 # 機密金鑰絕不入 git（Apple App Store Server API .p8 等）
 *.p8
+# Xcode Cloud secret 暫存（GoogleService-Info.plist 的 base64，貼進 ASC 後即刪）
+*gsi-base64-DELETE-AFTER-USE*
 
 # macOS 目錄雜碎
 .DS_Store
