@@ -1,7 +1,10 @@
 ## CloudFunctions — 伺服器端 IAP 驗證與 entitlement
 
 - **狀態：**
-    - 未實作。模組已建立（spec 與 impl git），程式骨架待 scaffold
+    - spec 與 impl git 皆已建立
+    - impl 含交易驗證、通知接收、帳單熔斷與健康檢查 function
+    - Apple 對帳與 entitlement 讀寫抽為服務層
+    - 授權推導邏輯與服務層附單元測試
 
 - **功能：**
     - 驗證 IAP 收據的真偽與有效性
