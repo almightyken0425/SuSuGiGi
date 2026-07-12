@@ -20,6 +20,9 @@ WHERE _status != 'deleted' AND deleted_on IS NULL
 ```
 
 - 無 `deleted_on` 的表只加 `_status != 'deleted'`
+- 庫內存在早期測試帳號的活殘列，uid `V3c97KLtQBZtq7GH7AJ7xP4KJWH2`，六業務表與 `settings` 皆有
+- 殘列不帶墓碑，雙重過濾濾不掉，對賬 SQL 一律再綁 `user_id = '<uid>'`
+- `<uid>` 為當前登入使用者，以 `SELECT id FROM users WHERE email = '<登入 email>'` 取得
 - `disabled_on` 是停用非刪除，帳戶分類停用後資料仍計入
 - 時間戳皆為 ms 整數；model 的 date setter 會把 0 寫成 null，驗數值讀 `_raw`
 - `local_storage` 表是 WatermelonDB 內部 kv，目前實庫為空
