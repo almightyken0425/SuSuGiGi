@@ -2667,9 +2667,9 @@ WHERE user_id='<當前使用者 id>'
 
 - 時點：步 40 匯入完成後
 - 管道：sqlite
-- 對象：匯入檔一四列的落地結果
+- 對象：檔一守門擋下與檔二三列的落地結果
 
-有效兩列落地，缺金額列與超界列皆略過
+檔一全檔擋於欄位對應不落地；檔二有效兩列落地，超界列略過
 
 ```sql
 SELECT
@@ -2678,10 +2678,11 @@ SELECT
   (SELECT COUNT(*) FROM transactions WHERE user_id='<當前使用者 id>' AND note='缺金額' AND _status!='deleted' AND deleted_on IS NULL) AS missing_field;
 ```
 
-- imported 為 2、over_max 為 0，符合即 R-BS-078 過
-- imported 為 2、missing_field 為 0，符合即 R-IE-067 過
+- imported 為 2，檔二兩好列落地
+- missing_field 為 0，檔一整檔擋於欄位對應，符合即 R-IE-067 過
+- over_max 為 0，超界列存檔驗證失敗略過，符合即 R-BS-078 過
+- missing_field 大於 0 代表守門失效缺金額列落地，R-IE-067 不過
 - over_max 大於 0 代表超界金額落地，R-BS-078 不過
-- missing_field 大於 0 代表缺金額列落地，R-IE-067 不過
 
 ---
 

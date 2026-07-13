@@ -10,11 +10,11 @@
 | FINDING-04 | open | R-TX-048/R-TX-015 | 定期結束日重開編輯器顯示今天，非原設日期；有覆寫風險 |
 | FINDING-05 | open | — | createSchedule 不寫 updated_on，活排程永不進增量備份，雲端還原全丟 |
 | FINDING-06 | open | R-IE-068 | 匯入非法日期未略過，Hermes 滾動進位改期落庫 |
-| FINDING-07 | open | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
+| FINDING-07 | fixed | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
 | FINDING-08 | open | R-CM-104/105/R-XD-010 | 合併復原對自轉帳雙重 prepareUpdate 炸掉，轉帳段半還原 |
 | FINDING-09 | open | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
 | FINDING-10 | open | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
-| FINDING-11 | open | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
+| FINDING-11 | fixed | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
 | OBS-01 | observation | — | 貨幣格式畫面重設後按勾選，NULL 被畫面選值改寫回覆寫 |
 
 ---
@@ -221,6 +221,13 @@
 - 補 regression test：含空備註列的 CSV，note 欄仍須在 text 候選內且自動帶入
 - 與 FINDING-06 同檔 `importService.ts`，修復時注意與 finding06-import-date-validate branch 的合併順序
 
+### 處置
+
+- 2026-07-13 併入 feat/finding11-column-gate-align 修復，原獨立 branch 廢棄
+- Optional 欄 note 與 toAmount 空值視為合規，非空值全數合格即入候選；必填欄維持整欄門檻
+- regression test `importService.columnCandidates.test.ts` 鎖定候選門檻語意
+- simulator 驗過：note 空值欄自動帶入、transfer 同幣別留空 to_amount 可匯
+
 ---
 
 ## FINDING-08 合併復原對自轉帳雙重 prepareUpdate，轉帳段半還原
@@ -356,6 +363,16 @@ A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C
 - 這是設計層拍板題，先回上游決定：必填欄改門檻制或逐列略過（吻合說明檔與 R-IE-067/R-BS-078），或維持整欄封殺並改寫說明檔與規格、廢掉兩條列級規則
 - 與 FINDING-07 同在 `importService.ts` 驗證線，修復排程需協調
 - 拍板後補 regression test 鎖定選擇的語意
+
+### 處置
+
+- 2026-07-13 拍板維持整欄封殺，文件全面改為欄位守門語意，程式行為不動
+- 下傳範圍：說明檔 templateService、spec no21、Product Map DataOperations、規則清單
+- R-IE-067 改斷言必填欄含空值或非法格式整欄不入候選；R-IE-068 移除金額半句
+- 前提更正：守門與存檔非同一把驗證尺——超界金額通過守門，於存檔驗證逐列略過，R-BS-078 仍可達、保留 active
+- 場次 A-90 步 37 至 40 與 CP-A-90-4 改寫為守門語意，fixture 拆檔一守門、檔二超界
+- 修復 branch feat/finding11-column-gate-align，regression test 鎖雙尺語意
+- simulator 驗過：壞檔擋於欄位對應、說明檔新文字、超界列逐列略過
 
 ---
 
