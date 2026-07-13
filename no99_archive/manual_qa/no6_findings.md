@@ -9,7 +9,7 @@
 | FINDING-03 | open | R-DM-041 | 排程開始日帶建立當下時刻，spec 要求使用者時區零時轉存 UTC |
 | FINDING-04 | open | R-TX-048/R-TX-015 | 定期結束日重開編輯器顯示今天，非原設日期；有覆寫風險 |
 | FINDING-05 | open | — | createSchedule 不寫 updated_on，活排程永不進增量備份，雲端還原全丟 |
-| FINDING-06 | open | R-IE-068 | 匯入非法日期未略過，Hermes 滾動進位改期落庫 |
+| FINDING-06 | fixed | R-IE-068 | 匯入非法日期未略過，Hermes 滾動進位改期落庫 |
 | FINDING-07 | fixed | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
 | FINDING-08 | fixed | R-CM-104/105/R-XD-010 | 合併復原對自轉帳雙重 prepareUpdate 炸掉，轉帳段半還原 |
 | FINDING-09 | open | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
@@ -188,6 +188,16 @@
 - `parseDate` 解析成功後 round-trip 驗證：把時間戳轉回年月日與輸入比對，不一致回 NaN
 - 或 `isValidDateFormat` 直接驗月 1 至 12、日 1 至當月天數
 - regression test 不能依賴引擎行為：直接斷言 `parseDate('2026-07-32 00:00:00', '+00:00')` 回 NaN，三分支各補一條
+
+### 處置
+
+- 2026-07-13 修復 merge main，branch feat/finding06-import-date-validate，impl commit 831ba8b
+- `parseDate` 三分支前加 `isRealDateTime` 值域門：月 1 至 12、日 1 至當月天數含閏年、時分秒鐘面範圍
+- 值域判定走曆法算術，不依賴引擎 `Date` 行為
+- `isValidDateFormat` 維持只驗格式：格式壞走欄位守門、值域超界走執行階段逐列略過，與 FINDING-11 拍板的守門尺分工一致，勿把值域搬回守門
+- 預覽將略過紀錄數同步接 `parseDate`，補齊本 finding 登記的預覽漏計
+- regression test 於 `importService.parseDate.test.ts` 斷言三分支超界回 NaN，含閏年與時分秒邊界，不依賴引擎行為
+- simulator 驗過：三好列五壞列 fixture 涵蓋三分支與月、二月、時超界；壞列零落庫、預覽與完成對話框略過皆 5、好列日期落點正確
 
 ---
 
