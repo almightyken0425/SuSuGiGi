@@ -848,7 +848,7 @@
 | R-IE-021 | 選擇非 CSV 檔案顯示僅支援 CSV 格式對話框 | `no15_import_wizard_screen` | UI | T1 | P1 | A | — |
 | R-IE-022 | 讀取檔案錯誤顯示讀取檔案失敗對話框 | `no21_data_transfer_logic` | UI | T4 | P2 | 無 | 需注入檔案讀取故障 |
 | R-IE-023 | 選擇有效 CSV 後解析並顯示檔案名稱 | `no15_import_wizard_screen` | UI | T1 | P1 | A | — |
-| R-IE-024 | 系統依欄位型別合規性自動建議必填欄位對應 | `no21_data_transfer_logic` | UI | T1 | P1 | A | — |
+| R-IE-024 | 系統依欄位型別合規性自動建議欄位對應 | `no21_data_transfer_logic` | UI | T1 | P1 | A | 可選欄空值視為合規、全空欄亦入候選；必填欄整欄合規才入候選，見 R-IE-067 |
 | R-IE-025 | 欄位對應每系統欄位一列並帶必填標記 | `no15_import_wizard_screen` | UI | T1 | P2 | A | — |
 | R-IE-026 | 無符合格式可用欄位時顯示無符合欄位提示 | `no15_import_wizard_screen` | UI | T1 | P2 | A | — |
 | R-IE-027 | 選擇 CSV 欄位更新該系統欄位對應 | `no15_import_wizard_screen` | UI | T1 | P2 | A | — |
