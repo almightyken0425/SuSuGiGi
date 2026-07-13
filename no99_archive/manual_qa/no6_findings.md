@@ -7,7 +7,7 @@
 | FINDING-01 | fixed | R-TX-105 | 跨幣別轉帳每次儲存都補錄匯率，無變更儲存也補 |
 | FINDING-02 | spec-revised | R-DM-035 | 匯率生效日存完整時刻，規格檢討後認定非缺陷、改修 spec |
 | FINDING-03 | spec-revised | R-DM-041 | 排程開始日帶建立當下時刻，規格檢討後認定非缺陷、改修 spec |
-| FINDING-04 | open | R-TX-048/R-TX-015 | 定期結束日重開編輯器顯示今天，非原設日期；有覆寫風險 |
+| FINDING-04 | fixed | R-TX-048/R-TX-015 | 定期結束日重開編輯器顯示今天，非原設日期；有覆寫風險 |
 | FINDING-05 | fixed | — | createSchedule 不寫 updated_on，活排程永不進增量備份，雲端還原全丟 |
 | FINDING-06 | fixed | R-IE-068 | 匯入非法日期未略過，Hermes 滾動進位改期落庫 |
 | FINDING-07 | fixed | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
@@ -15,6 +15,7 @@
 | FINDING-09 | open | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
 | FINDING-10 | fixed | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
 | FINDING-11 | fixed | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
+| FINDING-12 | open | — | 排程實例無變更存檔仍跳範圍對話框，強迫作答、放大誤觸 |
 | OBS-01 | observation | — | 貨幣格式畫面重設後按勾選，NULL 被畫面選值改寫回覆寫 |
 
 ---
@@ -155,6 +156,17 @@
 
 - 加 effect：`rule?.endOn` 由 null 變有值時，若使用者尚未手動改 picker，把 `pickerDate` 同步為 `new Date(Number(rule.endOn))`
 - 統一 `endOn` 型別為 number：load 時 `Number(sch.endOn)`，杜絕 Date/number 混用
+
+### 處置
+
+- 2026-07-13 修復並實測通過，branch feat/finding04-endon-resync，impl 單層
+- `RecurringOptions` 補 resync effect：endOn 載到且 picker 未經手動操作時同步 pickerDate；手動操作過則不覆蓋，pickerTouched ref 把關
+- 交易與轉帳兩 editor 載入排程時 `Number(sch.endOn)` 正規化，堵 number/Date 混用源頭
+- 元件測試補五條：mount 既存值、async 載入補同步、重點特定日期回寫原值非今天、手選日期不被載入蓋掉、endOn 混入 Date 物件仍正規化
+- tsc 零錯、jest 全套綠
+- simulator 雙路實測 2026-07-13，uid 過濾 vFJhIxCmOhVxHY9j32Qw7CkOt7n2：seed 結束日 9/1 的定期交易與定期轉帳各一，重開編輯器 picker 顯示 9/1 非今天，R-TX-015 與 R-TX-048 皆過
+- sqlite 對賬過：重點 `特定日期` 再存檔後，兩排程 end_on 維持 9/1 未被覆寫
+- 實測衍生另案：排程實例無變更存檔仍跳範圍對話框，登 FINDING-12
 
 ---
 
@@ -446,6 +458,35 @@ A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C
 - 場次 A-90 步 37 至 40 與 CP-A-90-4 改寫為守門語意，fixture 拆檔一守門、檔二超界
 - 修復 branch feat/finding11-column-gate-align，regression test 鎖雙尺語意
 - simulator 驗過：壞檔擋於欄位對應、說明檔新文字、超界列逐列略過
+
+---
+
+## FINDING-12 排程實例無變更存檔仍跳範圍對話框
+
+- 發現：2026-07-13，FINDING-04 修復實測中，使用者實測回報
+- 判定：UX 缺陷，無單一規則 id 直接對應；2026-07-13 拍板列修，走變更偵測
+
+### 現象
+
+開啟排程實例編輯器，未做任何修改直接存檔，仍跳範圍對話框強迫作答，選項為 `僅此一筆` 與 `此筆及未來`。
+
+### 根因
+
+- `TransactionEditorScreen.tsx` 約 248 行：`if (id && scheduleId && scheduleRecurrence)` 為唯一條件，凡排程實例存檔一律走範圍對話框
+- 全程無變更偵測；TransferEditorScreen 同構
+- 同族旁證：FINDING-01 的無變更儲存補錄匯率，同一條不偵測變更的路線
+
+### 影響
+
+- 每次查看排程實例後按完成都被問一題，UX 干擾
+- 對話框選項有資料後果：`此筆及未來` 會截斷原排程、另建新排程，誤觸風險被放大
+
+### 修法方向
+
+- 存檔時比對載入快照與當前值，無變更直接關閉、不跳對話框
+- 變更定義涵蓋金額、日期、分類、帳戶、備註、定期規則的 frequency、interval、endOn
+- endOn 比對用 number 正規化值，FINDING-04 已把載入路徑統一為 number
+- 補 regression test：無變更存檔不跳對話框、不寫 DB；有變更照問
 
 ---
 
