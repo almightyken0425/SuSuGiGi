@@ -79,7 +79,7 @@
 | R-DM-038 | `useThousandsUnit` 開啟時以千為單位顯示 | `no1_data_models` | UI | T1 | P2 | A | — |
 | R-DM-039 | CurrencyConfig 不同步雲端僅存本地 | `no1_data_models` | FB | T2 | P2 | B | — |
 | R-DM-040 | 排程 `interval` 數值上限 999 | `no1_data_models` | UI | T1 | P2 | A | — |
-| R-DM-041 | 排程開始日以使用者時區零時轉存 UTC | `no1_data_models` | DB | T2 | P1 | A | — |
+| R-DM-041 | 排程開始時點含日期與時刻 | `no1_data_models` | DB | T2 | P1 | A | — |
 | R-DM-042 | 排程範本備註長度上限 200 字元 | `no1_data_models` | UI | T1 | P2 | A | — |
 | R-DM-043 | 排程範本備註寫入時去除前後空白 | `no1_data_models` | DB | T2 | P2 | A | — |
 | R-DM-044 | User 表 `id` 對應 Auth UID | `no1_data_models` | DB | T2 | P2 | B | — |
