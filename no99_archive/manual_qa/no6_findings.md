@@ -11,7 +11,7 @@
 | FINDING-05 | open | — | createSchedule 不寫 updated_on，活排程永不進增量備份，雲端還原全丟 |
 | FINDING-06 | open | R-IE-068 | 匯入非法日期未略過，Hermes 滾動進位改期落庫 |
 | FINDING-07 | fixed | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
-| FINDING-08 | open | R-CM-104/105/R-XD-010 | 合併復原對自轉帳雙重 prepareUpdate 炸掉，轉帳段半還原 |
+| FINDING-08 | fixed | R-CM-104/105/R-XD-010 | 合併復原對自轉帳雙重 prepareUpdate 炸掉，轉帳段半還原 |
 | FINDING-09 | open | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
 | FINDING-10 | open | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
 | FINDING-11 | fixed | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
@@ -268,6 +268,16 @@ Undo failed: Diagnostic error: Cannot update a record with pending changes (tran
 - 或快照擷取端就互斥分流，自轉帳只進 deleted 清單
 - 補 regression test：合併含 source↔target 轉帳後 undo，斷言帳戶、交易、兩類轉帳、排程五段全還原
 - 一併修 UndoContext 註解，或把 revert 改為單一 batch 真原子
+
+### 修復
+
+- 修復：2026-07-13，impl branch `feat/finding08-merge-undo-self-transfer`，修法方向兩案皆採
+- `mergeService.ts` `revertMerge`：還原前把 `deletedSelfTransferIds` 自 from/to 兩清單濾除；全 revert 收斂為單一 `database.batch`，batch 前任何例外整筆不落庫、根絕半還原
+- `MergeEditorScreen.tsx`：快照三清單改互斥，自轉帳只進 deleted 清單
+- `UndoContext.tsx`：註解改為各 revertAction 單一 write 內單一 batch，與實況相符
+- regression test `mergeService.revertSelfTransfer.test.ts`：fake DB 重現 pending invariant 與條件過濾；舊碼跑之必炸同字樣錯誤（已實際驗證）；斷言五段全還原與單一 batch
+- 復驗：2026-07-13 simulator 實測。合併含互轉、第三戶轉帳、排程的帳戶後復原，無失敗 alert，sqlite 對賬五段全還原
+- 補判：`R-CM-102`、`R-CM-103`、`R-CM-104`、`R-CM-105`、`R-CM-106`、`R-XD-010` 過
 
 ---
 
