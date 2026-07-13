@@ -8,7 +8,7 @@
 | FINDING-02 | spec-revised | R-DM-035 | 匯率生效日存完整時刻，規格檢討後認定非缺陷、改修 spec |
 | FINDING-03 | open | R-DM-041 | 排程開始日帶建立當下時刻，spec 要求使用者時區零時轉存 UTC |
 | FINDING-04 | open | R-TX-048/R-TX-015 | 定期結束日重開編輯器顯示今天，非原設日期；有覆寫風險 |
-| FINDING-05 | open | — | createSchedule 不寫 updated_on，活排程永不進增量備份，雲端還原全丟 |
+| FINDING-05 | fixed | — | createSchedule 不寫 updated_on，活排程永不進增量備份，雲端還原全丟 |
 | FINDING-06 | fixed | R-IE-068 | 匯入非法日期未略過，Hermes 滾動進位改期落庫 |
 | FINDING-07 | fixed | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
 | FINDING-08 | fixed | R-CM-104/105/R-XD-010 | 合併復原對自轉帳雙重 prepareUpdate 炸掉，轉帳段半還原 |
@@ -180,6 +180,17 @@
 - `updateSchedule` 截斷與 `revertScheduleUpdate` 還原的 endOn 寫入補 stamp
 - 歷史資料回填：對 `updated_on = 0` 的排程列補當下戳，讓下次備份撈起
 - 補 guard test：每張表 create 路徑必須落 stamp
+
+### 處置
+
+- 2026-07-13 修復落在 branch feat/finding05-schedule-stamp，impl 層
+- `createSchedule` create callback 補 `stampUpdate`
+- endOn 寫入共四處補 stamp：`updateSchedule` FUTURE 截斷、`deleteSchedule` FUTURE 截斷、`restoreScheduleInstances` 還原、`revertScheduleUpdate` 還原——後兩處為修法方向外的同類漏洞，一併修
+- 開機回填新增 `cleanupScheduleStamps.ts`，PreferenceContext loadSettings 內執行；未 stamp 判斷讀 `_raw.updated_on` 避開 `@date` getter falsy 坑；乾淨時零寫入
+- `auditStamp.guard.test.ts` 加第二道鎖：掃全 src 的 record-builder `.create(rec =>` / `prepareCreate(rec =>` callback，必含 stamp helper；暫拔 stampUpdate 紅在 `recurringLogic.ts:85`、還原即綠，紅綠自驗過
+- simulator 驗證 2026-07-13，uid 過濾 vFJhIxCmOhVxHY9j32Qw7CkOt7n2：種病灶把活排程 `f08sch14005aaaaa` 戳歸零 → 重啟回填補戳 → 備份後該排程上雲且 `deletedOn` null；操作者新建 MONTHLY 排程 `0PkJxlxm6hvZkP7o` 建立即帶戳、與 `created_at` 差 2ms → 備份後上雲
+- jest 70 suites 綠、tsc 零錯
+- 驗證環境附註：該 uid 的 `Settings.lastSyncedAt` 曾被未來時鐘場次寫成未來值、超前約 43 天，期間增量備份靜默全跳過；驗證前已將該值修回正常、備份恢復。此 watermark 韌性缺口是否另登 finding 待拍板
 
 ---
 
