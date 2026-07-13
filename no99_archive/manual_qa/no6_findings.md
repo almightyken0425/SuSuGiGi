@@ -12,7 +12,7 @@
 | FINDING-06 | fixed | R-IE-068 | 匯入非法日期未略過，Hermes 滾動進位改期落庫 |
 | FINDING-07 | fixed | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
 | FINDING-08 | fixed | R-CM-104/105/R-XD-010 | 合併復原對自轉帳雙重 prepareUpdate 炸掉，轉帳段半還原 |
-| FINDING-09 | open | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
+| FINDING-09 | fixed | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
 | FINDING-10 | fixed | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
 | FINDING-11 | fixed | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
 | FINDING-12 | open | — | 排程實例無變更存檔仍跳範圍對話框，強迫作答、放大誤觸 |
@@ -377,6 +377,17 @@ QA BOOT delegate task=runBackup trigger=login
 - `runPostAuth` 加 guard：若 `authUser.uid === 目前已登入的 user.uid` 且非真正的新登入（例如比對前後 uid 相同），僅做輕量的 token 刷新處理，跳過 `generateMissingInstances`、`detectAccountSwitch`、`clearLocalData` 等冷啟專屬工作
 - 或改用 `onIdTokenChanged` 與 `onAuthStateChanged` 分流：登入態變化走輕量 token 更新，uid 真正變化（含從 null 變有值）才觸發完整 `runPostAuth`
 - 補 regression test：模擬同 uid 的 auth 監聽器重觸發，斷言 `generateMissingInstances`／`runBackup` 不重跑
+
+### 處置
+
+- 2026-07-13 修復並實測通過，branch feat/finding09-auth-token-refresh-guard，impl commit ec66d71，merge commit 4872760
+- `runPostAuth` 改回傳成功與否；監聽器內加 `currentUidRef` 記錄目前已完整處理的 uid，比對相同即整段略過
+- ref 標記時機是關鍵：模擬器冷啟動實測發現 RNFirebase 會同步連續觸發兩次同一 uid，若在 `runPostAuth` 內部（await 鏈跑完後）才標記會標記得太晚，擋不住第二次；改為呼叫 `runPostAuth` 前同步標記才根絕
+- `runPostAuth` 失敗時重置 ref，維持原本失敗即靜默、下次同 uid 觸發仍可重試的語意
+- regression test 新增 `AuthContext.tokenRefreshGuard.test.tsx` 三條：同 uid 重觸發略過、不同 uid 換帳號仍全跑、兩次同步觸發模擬冷啟動雙重 emit 僅跑一次
+- jest 全套 70 suites 綠、tsc 零錯
+- simulator 冷啟動實測 2026-07-13：修復前 CDP log 印兩次 `trigger=login`，修復後僅一次；DB 交易與轉帳筆數核對過，uid 過濾 vFJhIxCmOhVxHY9j32Qw7CkOt7n2，操作前後皆為 11 與 5，無異常
+- 前景恢復因 token 刷新重觸發的情境本身未實機重現：QA 原場次 A-17 步 26 至 30 靠調整主機系統時鐘強制觸發，本輪操作者評估風險後選擇不採此手法；guard 邏輯已由上述併發情境與 jest 覆蓋，此路徑僅靠程式碼推導與側錄比對佐證，未走實機重現
 
 ---
 
