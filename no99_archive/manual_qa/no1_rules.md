@@ -73,7 +73,7 @@
 | R-DM-032 | 轉帳備註長度上限 200 字元 | `no1_data_models` | UI | T1 | P2 | A | — |
 | R-DM-033 | 轉帳備註寫入時去除前後空白 | `no1_data_models` | DB | T2 | P2 | A | — |
 | R-DM-034 | `impliedRate` 同步時欄名轉 `impliedRateScaled` | `no1_data_models` | FB | T2 | P1 | B | — |
-| R-DM-035 | 匯率生效日儲存該日 UTC 零時 | `no1_data_models` | DB | T2 | P1 | A | — |
+| R-DM-035 | 匯率生效時點含日期與時刻 | `no1_data_models` | DB | T2 | P1 | A | — |
 | R-DM-036 | 匯率以主單位對主單位數值儲存 | `no1_data_models` | DB | T2 | P1 | A | — |
 | R-DM-037 | `decimalPlaces` 為 Null 時採貨幣預設小數位 | `no1_data_models` | UI | T1 | P2 | A | — |
 | R-DM-038 | `useThousandsUnit` 開啟時以千為單位顯示 | `no1_data_models` | UI | T1 | P2 | A | — |
@@ -516,7 +516,7 @@
 | R-TX-092 | 跨幣別建立於 `CurrencyRates` 新增正反兩筆記錄 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
 | R-TX-093 | 正向記錄為轉出對轉入幣別匯率為隱含匯率 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
 | R-TX-094 | 反向記錄匯率為隱含匯率的倒數 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
-| R-TX-095 | 兩筆匯率記錄生效日期皆為轉帳發生日 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
+| R-TX-095 | 兩筆匯率記錄生效時點皆為轉帳 `date` 值 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
 | R-TX-096 | `updateTransfer` 缺必填欄位回傳驗證失敗 | `no8_transfer_logic` | LOG | T4 | P2 | 無 | logic 後備閘，jest validationGuards 覆蓋，UI 擋死不可手測 |
 | R-TX-097 | `updateTransfer` 金額小於等於 0 回傳驗證失敗 | `no8_transfer_logic` | LOG | T4 | P2 | 無 | logic 後備閘，jest validationGuards 覆蓋，UI 擋死不可手測 |
 | R-TX-098 | 更新轉帳金額超出可儲存範圍時存檔驗證失敗 | `no8_transfer_logic` | UI | T1 | P1 | A | — |
@@ -528,7 +528,7 @@
 | R-TX-104 | 匯率日期或幣別對變動時補錄正反兩筆匯率 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
 | R-TX-105 | 匯率日期幣別對皆未變時不新增匯率記錄 | `no8_transfer_logic` | DB | T2 | P1 | A | — |
 | R-TX-106 | 換對手帳戶成新幣別對時金額日期不變仍補錄 | `no8_transfer_logic` | DB | T2 | P1 | A | — |
-| R-TX-107 | 更新補錄的生效日期為更新後轉帳發生日 | `no8_transfer_logic` | DB | T2 | P1 | A | — |
+| R-TX-107 | 更新補錄的生效時點為更新後轉帳 `date` 值 | `no8_transfer_logic` | DB | T2 | P1 | A | — |
 | R-TX-108 | `deleteTransfer` 軟刪除記錄而非物理刪除 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
 | R-TX-109 | 刪除轉帳不刪除任何已產生的匯率記錄 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
 | R-TX-110 | 連續操作時後一筆復原等待取代前一筆 | `no11_undo_logic` | UI | T1 | P1 | A | — |
@@ -791,8 +791,8 @@
 | R-CU-048 | 匯率查找僅查直接記錄，不經中間幣別接力換算 | `no7_currency_conversion_logic` | UI+DB | T4 | P2 | 無 | jest currencyService 覆蓋無記錄回 1 不接力 |
 | R-CU-049 | 幣別對無任何匯率記錄時回傳匯率 1 | `no7_currency_conversion_logic` | UI+DB | T3 | P1 | A | 匯入建立僅含交易的外幣帳戶 |
 | R-CU-050 | 最新記錄為反向交易對時回傳其匯率倒數 | `no7_currency_conversion_logic` | UI+DB | T2 | P0 | A | — |
-| R-CU-051 | 多筆記錄依生效日期倒序，取最新生效日期者 | `no7_currency_conversion_logic` | UI+DB | T2 | P0 | A | — |
-| R-CU-052 | 同一生效日期多筆並存時以更新時間最新者為準 | `no7_currency_conversion_logic` | UI+DB | T2 | P0 | A | — |
+| R-CU-051 | 多筆記錄依生效時點倒序，取最新生效時點者 | `no7_currency_conversion_logic` | UI+DB | T2 | P0 | A | — |
+| R-CU-052 | 同一生效時點多筆並存時以更新時間最新者為準 | `no7_currency_conversion_logic` | UI+DB | T2 | P0 | A | — |
 | R-CU-053 | 匯率列表蒐集帳戶使用之外幣並去重，同幣別多帳戶僅一列 | `no7_currency_conversion_logic` | UI | T1 | P1 | A | — |
 | R-CU-054 | 主要貨幣不出現在匯率列表 | `no7_currency_conversion_logic` | UI | T1 | P1 | A | — |
 | R-CU-055 | 新建非主要貨幣帳戶時種入一筆匯率值 1 佔位記錄 | `no7_currency_conversion_logic` | UI+DB | T2 | P1 | A | — |
@@ -1250,7 +1250,7 @@
 | R-XD-017 | 清除資料庫僅標記當前使用者紀錄，不影響其他帳號本機紀錄 | `no23_local_database_logic` | DB | T2 | P1 | B | — |
 | R-XD-018 | 清除資料庫軟刪傳播雲端刪除標記，備份把刪除同步上雲 | `no23_local_database_logic` | DB+FB | T2 | P0 | B | — |
 | R-XD-019 | 備份冷卻屬裝置層級，換帳號不重置，5 分鐘內跳過備份 | `no19_transaction_backup_logic` | FB+LOG | T2 | P1 | B | — |
-| R-XD-020 | 跨幣別轉帳建立補錄正反兩筆匯率，生效日為轉帳發生日 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
+| R-XD-020 | 跨幣別轉帳建立補錄正反兩筆匯率，生效時點為轉帳 `date` 值 | `no8_transfer_logic` | DB | T2 | P0 | A | — |
 | R-XD-021 | 匯率異動後清空報表快取，多幣別報表依最新匯率重算 | `no22_home_period_state_logic` | UI | T1 | P1 | A | — |
 | R-XD-022 | 刪除跨幣別轉帳不刪已補錄匯率，換算沿用殘留匯率 | `no8_transfer_logic` | DB+UI | T2 | P1 | A | — |
 | R-XD-023 | 週起始日變更後清空報表快取，週期間起訖依新值重推 | `no22_home_period_state_logic` | UI | T1 | P1 | A | — |
