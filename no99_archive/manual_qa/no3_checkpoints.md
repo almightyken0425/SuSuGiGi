@@ -825,7 +825,7 @@ WHERE amount = 600100
     - 排程查詢恰 1 列；`frequency` 為 DAILY、`interval` 1、`is_transfer` 0、`template_amount` 600100；排程記錄新增成立即 R-RC-023 過
     - `template_note` 逐字為 `排01日常`，無前後空白，R-DM-043 過
     - `end_on` 為 NULL，點永不後儲存無結束日，R-RC-019 過
-    - `start_on` 換算裝置時區落上月 25 日且時刻為零時，R-DM-041 過；落當日但帶時刻則 R-DM-041 登偏差，續場不擋
+    - `start_on` 換算裝置時區落上月 25 日即 R-DM-041 過，時刻粒度不另判
     - 實例 n 等於上月 25 日至今日含兩端的天數；`first_on` 換算裝置時區落上月 25 日；`last_on` 不晚於對賬當下；broken 為 0
     - 首筆實例 `schedule_id` 指向排01 排程 id、`schedule_instance_date` 等於 `start_on` 對應時刻，R-RC-025 過
 
@@ -2298,7 +2298,7 @@ WHERE schedule_id = '<排07 id>'
 ORDER BY schedule_instance_date;
 ```
 
-- 當月 9 日零時對應列 `deleted_on` 非 null 且無同 `schedule_instance_date` 的存活列
+- 當月 9 日對應列 `deleted_on` 非 null 且無同 `schedule_instance_date` 的存活列
 - 存活實例仍止於當月 8 日，重開未重建當月 9 日即符合 R-BS-011
 
 ---

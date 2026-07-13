@@ -6,7 +6,7 @@
 | --- | --- | --- | --- |
 | FINDING-01 | fixed | R-TX-105 | 跨幣別轉帳每次儲存都補錄匯率，無變更儲存也補 |
 | FINDING-02 | spec-revised | R-DM-035 | 匯率生效日存完整時刻，規格檢討後認定非缺陷、改修 spec |
-| FINDING-03 | open | R-DM-041 | 排程開始日帶建立當下時刻，spec 要求使用者時區零時轉存 UTC |
+| FINDING-03 | spec-revised | R-DM-041 | 排程開始日帶建立當下時刻，規格檢討後認定非缺陷、改修 spec |
 | FINDING-04 | open | R-TX-048/R-TX-015 | 定期結束日重開編輯器顯示今天，非原設日期；有覆寫風險 |
 | FINDING-05 | fixed | — | createSchedule 不寫 updated_on，活排程永不進增量備份，雲端還原全丟 |
 | FINDING-06 | fixed | R-IE-068 | 匯入非法日期未略過，Hermes 滾動進位改期落庫 |
@@ -115,6 +115,16 @@
 
 - impl 修：排程建立時把 startOn normalize 到使用者時區零時再轉 UTC 存
 - 實例時刻語意（是否同步歸零）由修復場一併決策
+
+### 處置結果
+
+- 結案：2026-07-13，規格修訂、非 app 缺陷，狀態 spec-revised
+- 產品拍板：排程開始時點就是建立當下選定的日期與時刻，實例到該時點才補產；零時歸零非產品意圖
+- 拍板依據場景：晚間 19:37 建立的排程，到期日當天要到 19:37 後開 app 才補產該期，屬預期行為
+- 曾按原規格完成 impl 修（createSchedule 歸零 chokepoint + 使用者時區零時 helper + 啟動回填 shim + 13 tests），拍板後全數撤除，impl 維持現行為、零改動
+- 規格連動修訂：spec `no1_data_models` Schedules.startOn 改述為含日期與時刻；R-DM-041 規則文字同步改述；CP-A-08-01 判準改為落日即過、時刻粒度不另判；CP-A-17-08 判準去零時字面
+- 補判：A-08 原始證據（start_on 帶 19:37、實例繼承同時刻）依修訂後 R-DM-041 重判為過
+- 波及備忘：與 FINDING-02 同族同路線收案，兩欄位語意各自獨立修訂；FINDING-05 的 updated_on 缺 stamp 屬另一寫入面向，不因本案收案
 
 ---
 
