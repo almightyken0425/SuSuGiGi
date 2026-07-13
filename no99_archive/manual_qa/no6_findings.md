@@ -13,7 +13,7 @@
 | FINDING-07 | fixed | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
 | FINDING-08 | fixed | R-CM-104/105/R-XD-010 | 合併復原對自轉帳雙重 prepareUpdate 炸掉，轉帳段半還原 |
 | FINDING-09 | open | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
-| FINDING-10 | open | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
+| FINDING-10 | fixed | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
 | FINDING-11 | fixed | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
 | OBS-01 | observation | — | 貨幣格式畫面重設後按勾選，NULL 被畫面選值改寫回覆寫 |
 
@@ -396,6 +396,17 @@ A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C
 
 - 四處查詢補 `notDeleted()`（與 transactions 等表同慣例）
 - 補 regression test：軟刪某對匯率後 `resolveCurrencyRate` 回 1、`pairRateExists` 回 false、CurrencyContext rates 不含墓碑
+
+### 處置
+
+- 2026-07-13 修復落在 branch feat/finding10-rate-soft-delete-filter，impl 層
+- 補 `notDeleted()` 共五處：根因四處，加上 `getCurrencyPairs` 的 accounts 查詢——軟刪帳戶的幣別對原會留在匯率管理列表，修復時發現的同類漏洞、一併修
+- `currency_configs` 查核過無 deleted_on 欄，顯示端 configs 訂閱不在病灶
+- regression test 補八條：墓碑解析回 1、新墓碑不壓舊活列、純墓碑對 `ensureRate` 重開補種、活列在則 no-op、軟刪帳戶不補種也不出幣別對、CurrencyContext 訂閱 source guard 鎖 `notDeleted()`
+- 測試 mock 擴充：解讀 deleted_on where 子句、補 `fetchCount`、加 accounts store，墓碑行為真被執行而非只驗子句存在
+- simulator 驗證 2026-07-13，uid 過濾 vFJhIxCmOhVxHY9j32Qw7CkOt7n2：KWD 對僅剩墓碑（最新墓碑 0.008）時新增 KWD 帳戶，補種活列 1.0 生效；100 KWD 支出小計以 1:1 顯示 100，非墓碑換算的 12,500；匯率管理列表無 EUR、AUD 幽靈對
+- sqlite 對賬過：KWD 活列恰一筆 rate 1.0、五筆墓碑原封不動、支出落庫正確
+- jest 69 suites 綠、tsc 零錯
 
 ---
 
