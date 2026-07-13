@@ -4,7 +4,7 @@
 
 | 編號 | 狀態 | 規則 | 摘要 |
 | --- | --- | --- | --- |
-| FINDING-01 | open | R-TX-105 | 跨幣別轉帳每次儲存都補錄匯率，無變更儲存也補 |
+| FINDING-01 | fixed | R-TX-105 | 跨幣別轉帳每次儲存都補錄匯率，無變更儲存也補 |
 | FINDING-02 | open | R-DM-035 | 匯率生效日存完整時刻，spec 要求該日 UTC 零時 |
 | FINDING-03 | open | R-DM-041 | 排程開始日帶建立當下時刻，spec 要求使用者時區零時轉存 UTC |
 | FINDING-04 | open | R-TX-048/R-TX-015 | 定期結束日重開編輯器顯示今天，非原設日期；有覆寫風險 |
@@ -45,6 +45,16 @@
 - 匯率表膨脹：每次無意義儲存多 2 列（append-only 表、不影響換算正確性——換算取最新列，值相同）
 - `R-TX-106`（換幣別對補錄）本輪無法乾淨歸因：恆真條件遮蔽 pairChanged 攻擊面，修復後需重驗 R-TX-105 與 R-TX-106
 - 修復追蹤：spawn task「修 transferLogic dateChanged 型別比對」
+
+### 處置
+
+- 2026-07-13 修復 merge main，branch feat/transfer-date-compare-fix，impl commit 26b4959
+- `updateTransfer` 的 `dateChanged` 改為 `Number(originalDate) !== input.date`，比對前把 `@date` getter 回傳的 Date 物件轉回 ms
+- regression test 補五條，seed 改用 Date 物件忠實模擬 getter，堵住舊測試以 number seed 讓 bug 隱形的缺口
+- 測項覆蓋：無變更與只改備註不補錄，改日期、改金額、換幣別對各補正反兩筆
+- simulator DB 對賬過：無變更與只改備註兩步零新列，該補的四波各補兩列
+- R-TX-105 與 R-TX-106 皆重驗通過，補錄生效日等於更新後轉帳日，R-TX-107 同過
+- no3 對賬手冊 CP-A-05-3 的 R-TX-106 重驗註記已可解除，解除動作歸 QA 場次
 
 ---
 
