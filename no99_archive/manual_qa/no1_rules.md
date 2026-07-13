@@ -202,7 +202,7 @@
 | R-BS-075 | 名稱與備註寫入時去除前後空白 | `input_field_policy` | UI+DB | T2 | P1 | A | — |
 | R-BS-076 | 全空白名稱視為未填由完成按鈕必填閘擋下 | `input_field_policy` | UI | T1 | P1 | A | — |
 | R-BS-077 | 允許同名帳戶與分類並存無警告完成按鈕不鎖 | `input_field_policy` | UI | T1 | P2 | A | — |
-| R-BS-078 | 金額超出可儲存範圍於存檔時驗證失敗 | `input_field_policy` | DB | T3 | P2 | A | 經匯入路徑注入超界金額 |
+| R-BS-078 | 金額超出可儲存範圍於存檔時驗證失敗 | `input_field_policy` | DB | T3 | P2 | A | 經匯入路徑注入超界金額；注入檔金額欄其餘值須全合法，否則欄位守門先擋 |
 | R-BS-079 | 名稱超長於存檔時驗證失敗涵蓋匯入路徑 | `input_field_policy` | DB | T4 | P2 | 無 | 匯入路徑 slice 截斷非驗證失敗；spec-impl 落差 |
 | R-BS-080 | 交易金額為 0 時金額門檻未達完成按鈕 disabled | `input_field_policy` | UI | T1 | P1 | A | — |
 | R-BS-081 | 轉帳轉出轉入金額未大於 0 時完成按鈕 disabled | `input_field_policy` | UI | T1 | P1 | A | — |
@@ -891,8 +891,8 @@
 | R-IE-064 | 日期含時區偏移後綴優先以內嵌偏移解析 | `no21_data_transfer_logic` | DB | T2 | P1 | A | — |
 | R-IE-065 | 無偏移後綴日期依所選來源時區解析 | `no21_data_transfer_logic` | DB | T2 | P1 | A | — |
 | R-IE-066 | 每列配新主鍵匯出檔重匯新增獨立紀錄 | `no21_data_transfer_logic` | DB | T2 | P0 | A | — |
-| R-IE-067 | 必填欄位為空的列匯入時略過 | `no21_data_transfer_logic` | UI+DB | T2 | P0 | A | — |
-| R-IE-068 | 金額或日期解析失敗的列略過並計入略過數 | `no21_data_transfer_logic` | UI+DB | T2 | P0 | A | — |
+| R-IE-067 | 必填欄位含空值或非法格式的欄整欄不入候選 | `no21_data_transfer_logic` | UI | T1 | P0 | A | 守門尺管格式與儲存精度；超界金額屬存檔驗證，見 R-BS-078 |
+| R-IE-068 | 日期解析失敗的列略過並計入略過數 | `no21_data_transfer_logic` | UI+DB | T2 | P0 | A | 金額格式壞值由欄位守門擋於對應，不進執行階段 |
 | R-IE-069 | 比對動作選跳過的帳戶其資料列計入略過 | `no21_data_transfer_logic` | UI+DB | T2 | P1 | A | — |
 | R-IE-070 | 文字欄位含逗號以雙引號包覆可正確匯入 | `no21_data_transfer_logic` | DB | T2 | P1 | A | — |
 | R-IE-071 | 名稱前後空白於比對與匯入時忽略 | `no21_data_transfer_logic` | DB | T2 | P1 | A | — |
