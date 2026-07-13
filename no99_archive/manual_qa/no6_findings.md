@@ -13,6 +13,8 @@
 | FINDING-07 | open | R-IE-024 | 備註欄含空值即被候選剔除，round-trip 重匯整批丟備註 |
 | FINDING-08 | open | R-CM-104/105/R-XD-010 | 合併復原對自轉帳雙重 prepareUpdate 炸掉，轉帳段半還原 |
 | FINDING-09 | open | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
+| FINDING-10 | open | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
+| FINDING-11 | open | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
 | OBS-01 | observation | — | 貨幣格式畫面重設後按勾選，NULL 被畫面選值改寫回覆寫 |
 
 ---
@@ -294,6 +296,66 @@ QA BOOT delegate task=runBackup trigger=login
 - `runPostAuth` 加 guard：若 `authUser.uid === 目前已登入的 user.uid` 且非真正的新登入（例如比對前後 uid 相同），僅做輕量的 token 刷新處理，跳過 `generateMissingInstances`、`detectAccountSwitch`、`clearLocalData` 等冷啟專屬工作
 - 或改用 `onIdTokenChanged` 與 `onAuthStateChanged` 分流：登入態變化走輕量 token 更新，uid 真正變化（含從 null 變有值）才觸發完整 `runPostAuth`
 - 補 regression test：模擬同 uid 的 auth 監聽器重觸發，斷言 `generateMissingInstances`／`runBackup` 不重跑
+
+---
+
+## FINDING-10 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on
+
+- 發現：2026-07-13，場次 A-90 步 11。清空資料庫後 JPY 小計仍用舊匯率換算
+- 判定：**FAIL**。無單一規則 id 直接對應；違反軟刪不可見不變量，R-CU-049 的查無回 1 被墓碑架空
+
+### 現象
+
+A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C90餐飲` 小計顯示 17,185 = 9001 + 9003 × 0.909054。0.909054 正是 7/11 已軟刪的 TWD/JPY 匯率墓碑。活匯率表為零列，換算本應回 1、小計應為 18,004。
+
+### 根因
+
+`src/services/currencyService.ts` 與 `src/contexts/CurrencyContext.tsx` 的 currency_rates 查詢全線缺 `deleted_on IS NULL` 過濾：
+
+- `resolveCurrencyRate` 約 161 行：Q.or 雙向對查詢無 notDeleted，取到墓碑列
+- `pairRateExists` 約 21 行：同缺，軟刪對被當作已存在、抑制 ensureRate 補種
+- `ensureRatesForNewBase` 約 71 行：accounts 查詢同缺 notDeleted
+- `CurrencyContext` 約 59 行：顯示端匯率訂閱同缺，墓碑灌進 rates state
+
+### 影響
+
+- 使用者刪除匯率記錄後，換算仍用被刪的舊匯率，畫面與報表金額錯
+- 清空資料庫的重置語意破功，舊匯率幽靈續命
+- `pairRateExists` 誤判已存在，會抑制新匯率補種路徑
+
+### 修法方向
+
+- 四處查詢補 `notDeleted()`（與 transactions 等表同慣例）
+- 補 regression test：軟刪某對匯率後 `resolveCurrencyRate` 回 1、`pairRateExists` 回 false、CurrencyContext rates 不含墓碑
+
+---
+
+## FINDING-11 欄位守門整欄封殺，說明檔承諾的逐列略過不可達
+
+- 發現：2026-07-13，場次 A-90 步 37 至 38 / CP-A-90-4
+- 判定：**FAIL** `R-IE-067`（必填欄空值列匯入時略過）、`R-BS-078`（超界金額存檔驗證失敗略過）。兩規則的逐列略過行為經 UI 不可達
+
+### 現象
+
+匯入 CSV 四列，其中一列金額空值、一列金額超界。欄位對應步 `金額` 無自動帶入、下拉候選清單無 `amount` 可選，必填未對應、前進封死。好列兩筆連帶全滅，無從走到逐列略過。
+
+### 根因與矛盾
+
+- `scanColumnCompliance` 要求整欄 100% 合格才進候選（`importService.ts` 約 157 行），任一格壞即整欄除名
+- 欄位守門與逐列略過用同一把驗證尺（`isValidAmount` 等），任何會被逐列略過的值必先觸發整欄封殺，列級略過永不可達
+- 但 app 自產的說明檔（CP-A-14-01 驗過的 `$wish_transaction_guide.txt`）白紙黑字承諾：`A row is skipped if a required field is empty, or if its date, amount, or currency is not in an accepted format`
+- 說明檔、規則（R-IE-067/R-BS-078）與實作三方矛盾；A-14 的 R-IE-026 又把整欄封殺當正確行為驗過，規則集內部也互相打架
+
+### 影響
+
+- 使用者拿到一個 100 列、僅 1 列打錯的檔，整檔不可匯入，與說明檔的預期相反
+- 逐列略過的兩條規則是死規則，永遠驗不到
+
+### 修法方向
+
+- 這是設計層拍板題，先回上游決定：必填欄改門檻制或逐列略過（吻合說明檔與 R-IE-067/R-BS-078），或維持整欄封殺並改寫說明檔與規格、廢掉兩條列級規則
+- 與 FINDING-07 同在 `importService.ts` 驗證線，修復排程需協調
+- 拍板後補 regression test 鎖定選擇的語意
 
 ---
 

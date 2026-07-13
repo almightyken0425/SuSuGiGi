@@ -1631,7 +1631,7 @@ sudo systemsetup -setusingnetworktime on
 |  | 32 | 主機日期設下月 25 日，殺 app 後重開補產 | 補產至下月 20 日止不列報表 | — |
 | 🔎 | CP-A-17-11 | 停下交由 Claude 對賬 | — | R-XD-002 R-XD-003 |
 |  | 33 | 執行場尾還原自動時間指令 | 系統時鐘切回自動 | — |
-|  | 34 | 進`設定`點`時區`切回原時區，`啟動設定`確認為`首頁` | 收斂完成 launchMode home | — |
+|  | 34 | 進`設定`點`時區`切回原時區，`啟動設定`確認為`首頁`，`管理帳戶`重新啟用步 31 停用的排07範本帳戶 | 收斂完成 launchMode home，範本帳戶回啟用 | — |
 
 ---
 
@@ -1684,8 +1684,8 @@ xcrun simctl launch booted com.almightyken0425.susugigiapp
 | 🔎 | CP-A-18-05 | 停下交由 Claude 對賬 | — | R-SR-016 |
 |  | 10 | sqlite 注入一筆交易於 JPY 帳戶，`amount` 存 15505、其精度細於 JPY 小數位；進 `設定` 點 `匯出收入/支出` 匯出 | 匯出金額以儲存精度輸出，不依幣別截斷 | — |
 | 🔎 | CP-A-18-06 | 停下交由 Claude 對賬 | — | R-IE-076 |
-|  | 11 | 刪除任一筆交易使復原列出現；sqlite 破壞該復原目標記錄使還原失敗；點復原列 `復原` | 顯示失敗提示並關閉復原列 | R-TX-117 |
-|  | 12 | sqlite 注入超額帳戶類別批次至剛好上限：啟用帳戶總數 3、啟用類別總數 7 | 注入完成 | — |
+|  | 11 | ~~sqlite 破壞復原目標~~ 改判：還原走記憶體模型實例不重查 DB，外部破壞觸發不了失敗；本規則由 A-16 步 35 FINDING-08 實測覆蓋（復原失敗 alert 顯示且復原列關閉） | 顯示失敗提示並關閉復原列 | R-TX-117 |
+|  | 12 | sqlite 調整至剛好上限：**未刪除**帳戶總數 3、**未刪除**類別總數 7。配額計數是 `countActive*` 未刪即算、停用不豁免；大庫執行時對多餘列暫時 stamp `deleted_on` 壓到上限、步 18 前還原，還原務必以 id 定位、用名字會誤復活歷史墓碑 | 佈置完成 | — |
 |  | 13 | 於 `管理帳戶` 點 `新增帳戶` | 導航至 PaywallScreen | R-CM-046 |
 |  | 14 | 於 `管理類別` 點 `新增類別` | 導航至 PaywallScreen | R-CM-006 |
 |  | 15 | sqlite 停用 3 帳戶其一，啟用帳戶剩 2、停用 1；於 `管理帳戶` 點 `新增帳戶` | 停用仍計入總數不退還配額，仍導 PaywallScreen | R-XD-006 |
@@ -1770,6 +1770,7 @@ VALUES ('acc_zzz', '<uid>', '帳11', 1, 'ZZZ', 99,
 - 步 2 debug 解鎖：小螢幕建議 iPhone SE，dev build 下連點版本號 7 下即解鎖
 - 步 4、6、15、18 斷網：simulator 無獨立飛航開關，共用主機網路
 - 斷網手段：關閉 Mac Wi-Fi；復網即重開 Wi-Fi
+- 遠端桌面操作時關 Wi-Fi 會自斷連線，斷網步驟（R-CU-077、R-AU-002、R-AU-005）標待補、實體在場再補；補測步 5 前先造一筆外幣交易，因步 9 已清庫
 
 步 19 終止並重啟 app
 
@@ -1779,9 +1780,12 @@ xcrun simctl launch booted com.almightyken0425.susugigiapp
 ```
 
 - CP-A-19-3、CP-A-19-4 dev harness：登出後 user 為空值
-- CP-A-19-3 直呼 `syncEngine.sync()`
-- CP-A-19-4 直呼 `uploadPreferences('', { launchMode: 'home' })`
+- app 內無 harness 全域掛點；直呼走 `qa_tools/cdp_harness.mjs`，以 CDP `Runtime.evaluate` 加 Metro `__r(模組id)` 呼叫模組函式
+- 模組 id 從 dev bundle 撈：`curl Metro bundle | grep '"src/services/syncEngine.ts"'`，`__d(...)` 倒數第二個參數即 id，Metro 重啟後 id 可能變、每次先重撈
+- CP-A-19-3 直呼 `__r(<syncEngine id>).syncEngine.sync()`，過關證據為 `QA BACKUP skip reason=no_user`
+- CP-A-19-4 直呼 `__r(<userService id>).uploadPreferences('', { launchMode: 'home' })`，過關證據為 `QA PREF skip reason=no_user`
 - 對賬手段見 `checkpoints_A-19.md`
+- ⚠ 調時鐘場次後遺症：`sync_last_at` 冷卻戳記若停在未來，備份會靜默跳過至該時刻，對賬前檢查並清除（AsyncStorage `removeItem`）
 
 ---
 
