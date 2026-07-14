@@ -2040,6 +2040,7 @@ xcrun simctl launch booted $BUNDLE
 - 前置狀態：承 B-01，帳號一已登入，滿配額基礎資料在，Firestore `users/{uid}` 文件已建
 - 帳號需求：帳號一為主帳號。全程需 Firestore console 或 Admin 讀寫管道，注入偏好異值與逐欄對賬。R-ST-101 需 BigQuery mirror 讀取權限。需 CDP console 抓取管道對賬 log marker
 - 基準值：語言 `zh-Hant`、時區 `Asia/Taipei`、基準貨幣 `TWD`、週起始 `auto`、啟動 `home`、主題 `theme1`、分析同意 true
+- 場首佈置：偏好頁先把基準貨幣切回 `TWD` 再拍基準快照；B-01 首登依地區日本推導為 `JPY`、與本場基準不同
 - 金額區間：3200 至 3299，本場僅臨時交易用
 
 ---
@@ -2109,7 +2110,7 @@ S0 取得 uid 與 manifest 路徑
 BUNDLE=com.almightyken0425.susugigiapp
 DATA=$(xcrun simctl get_app_container booted $BUNDLE data)
 ls "$DATA/Documents" | grep -i asynclocalstorage
-MANIFEST="$DATA/Documents/RCTAsyncLocalStorage_V1/manifest.json"
+MANIFEST="$DATA/Library/Application Support/com.almightyken0425.susugigiapp/RCTAsyncLocalStorage_V1/manifest.json"
 echo "$MANIFEST"
 ```
 
@@ -2122,10 +2123,12 @@ xcrun simctl terminate booted $BUNDLE
 xcrun simctl launch booted $BUNDLE
 ```
 
-S2 清除冷卻戳 sync_last_at
+S2 重走全量佈置，sqlite 水位清 Null 並移除冷卻鍵
 
 ```bash
 xcrun simctl terminate booted $BUNDLE
+DB=$(find "$DATA" -name 'watermelon.db' | head -1)
+sqlite3 "$DB" "UPDATE settings SET last_synced_at = NULL WHERE user_id = '<uid>';"
 python3 - "$MANIFEST" <<'PY'
 import json,sys
 p=sys.argv[1]; d=json.load(open(p))
@@ -2135,6 +2138,8 @@ PY
 xcrun simctl launch booted $BUNDLE
 ```
 
+- 全量路由條件為 sqlite 水位 Null 且雲端探測為空，兩者缺一走增量或 full delta
+
 S3 注入當日寫入配額至上限並鎖今日 UTC 日期
 
 ```bash
@@ -2143,7 +2148,7 @@ python3 - "$MANIFEST" <<'PY'
 import json,sys,datetime
 p=sys.argv[1]; d=json.load(open(p))
 d['sync_quota_writes']='2000'
-d['sync_quota_date']=datetime.datetime.utcnow().strftime('%Y-%m-%d')
+d['sync_quota_date']=datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%d')
 d.pop('sync_last_at',None)
 json.dump(d,open(p,'w'))
 PY
@@ -2163,26 +2168,38 @@ PY
 xcrun simctl launch booted $BUNDLE
 ```
 
-S5 進時鐘 6 分鐘跨過 5 分鐘冷卻
+S5 跨過 5 分鐘冷卻的等效佈置，移除裝置冷卻鍵
 
 ```bash
-sudo systemsetup -setusingnetworktime off
-sudo date -v+6M
+xcrun simctl terminate booted $BUNDLE
+python3 - "$MANIFEST" <<'PY'
+import json,sys
+p=sys.argv[1]; d=json.load(open(p))
+d.pop('sync_last_at',None)
+json.dump(d,open(p,'w'))
+PY
+xcrun simctl launch booted $BUNDLE
 ```
 
-S6 進時鐘一日跨過 UTC 日界
+S6 跨過 UTC 日界的等效佈置，把配額日期鍵注入昨天
 
 ```bash
-sudo date -v+1d
+xcrun simctl terminate booted $BUNDLE
+python3 - "$MANIFEST" <<'PY'
+import json,sys,datetime
+p=sys.argv[1]; d=json.load(open(p))
+d['sync_quota_date']=(datetime.datetime.now(datetime.UTC)-datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+d.pop('sync_last_at',None)
+json.dump(d,open(p,'w'))
+PY
+xcrun simctl launch booted $BUNDLE
 ```
 
-S7 還原時鐘回當下
-
-```bash
-sudo systemsetup -setusingnetworktime on
-```
-
-- 時區切換以模擬器 Settings app 的 General 內 Date & Time 頁設定，本場不需切區，僅需系統時鐘
+- 本場不調整系統時鐘，時鐘前移一律以上述等效佈置取代
+    - 調 Mac 系統時鐘會牽動 VPN 與網路對時，2026-07-14 拍板停用
+    - 前景恢復場景無法以終止改檔取代，改以真實等待跨過冷卻
+- 重走全量備份的開關是 sqlite 的 `settings.last_synced_at` 清為 Null
+    - 裝置冷卻鍵只管 5 分鐘冷卻，單清該鍵仍走增量
 
 ---
 
@@ -2193,29 +2210,29 @@ sudo systemsetup -setusingnetworktime on
 |  | 1 | 跑 S0 取得 uid 與 MANIFEST 路徑 | 印出 uid 與 manifest 絕對路徑 | — |
 |  | 2 | 首頁點設定鈕進設定頁，偏好設定區關閉 `允許資料分析` 開關 | 開關切至關 | — |
 |  | 3 | Firestore console 逐一刪除 `users/{uid}/accounts` `categories` `transactions` `transfers` `currency_rates` `schedules` 六集合全部文件，保留 `users/{uid}` 主文件 | 六集合空、主文件仍在 | — |
-|  | 4 | 跑 S2 清冷卻戳，再跑 S1 冷啟動 app 觸發啟動備份 | app 重啟落首頁 | — |
+|  | 4 | 跑 S2 重走全量佈置，冷啟動即觸發啟動備份 | app 重啟落首頁、走全量路由 | — |
 | 🔎 | CP-B-03-01 | 停下交由 Claude 對賬 | | R-BS-012 R-IE-092 R-IE-094 |
 | 🔎 | CP-B-03-02 | 停下交由 Claude 對賬 | | R-IE-100 R-AU-079 R-AU-082 R-AU-083 |
 | 🔎 | CP-B-03-03 | 停下交由 Claude 對賬 | | R-IE-079 R-IE-098 R-IE-080 R-DM-034 |
 | 🔎 | CP-B-03-04 | 停下交由 Claude 對賬 | | R-IE-101 R-DM-007 R-IE-087 |
 |  | 5 | 不動時鐘不清冷卻戳，立刻再跑 S1 冷啟動 app | app 重啟落首頁 | — |
 | 🔎 | CP-B-03-05 | 停下交由 Claude 對賬 | | R-IE-086 R-IE-088 |
-|  | 6 | 跑 S5 進時鐘 6 分鐘 | 系統時鐘前移 6 分 | — |
+|  | 6 | 跑 S4 讀回三鍵確認冷卻戳在場，原時鐘前移步位、等效佈置下不需動作 | 三鍵印出、冷卻戳為前一輪備份時刻 | — |
 |  | 7 | 首頁底部三顆新增鈕點支出鈕，輸入金額 3300 元，選前場既有任一支出類別與任一 TWD 帳戶，右上點 `完成` | 交易入列首頁 | — |
 |  | 8 | 重複步驟 7 建支出金額 3301 元、3302 元各一筆 | 兩筆再入列 | — |
 |  | 9 | 首頁點轉帳新增鈕，轉出選前場既有 TWD 帳戶輸入 3303 元，轉入選前場既有 JPY 帳戶輸入 3304 元，右上點 `完成` | 跨幣別轉帳入列 | — |
-|  | 10 | 首頁點設定鈕再返回首頁一次觸發前景備份，或跑 S1 冷啟動 app | 觸發增量備份 | — |
+|  | 10 | 跑 S5 跨冷卻並冷啟動，觸發增量備份 | 增量上傳本輪新資料 | — |
 | 🔎 | CP-B-03-06 | 停下交由 Claude 對賬 | | R-IE-083 R-IE-095 R-IE-102 |
-|  | 11 | 跑 S5 再進時鐘 6 分鐘，跑 S1 冷啟動 app 重觸備份 | 同一組資料重傳 | — |
+|  | 11 | 再跑 S5 重觸備份 | 自上輪起無新變更、備份零上傳 | — |
 | 🔎 | CP-B-03-07 | 停下交由 Claude 對賬 | | R-IE-097 R-IE-103 |
-|  | 12 | 跑 S5 進時鐘 6 分鐘。首頁建支出金額 3305 元一筆。以 Cmd+Shift+H 退 app 至桌面再點 app icon 回前景 | app 回前景 | — |
+|  | 12 | 首頁建支出金額 3305 元一筆。自前一輪備份起真實等待 6 分鐘跨過冷卻。以 Cmd+Shift+H 退 app 至桌面再點 app icon 回前景 | app 回前景、前景恢復觸發備份 | — |
 | 🔎 | CP-B-03-08 | 停下交由 Claude 對賬 | | R-BS-013 R-BS-014 R-AU-084 |
 |  | 13 | 首頁建支出金額 3306 元一筆待上傳 | 交易入列首頁 | — |
 |  | 14 | 跑 S3 注入配額 2000 並清冷卻戳後冷啟動 app | app 重啟落首頁 | — |
 | 🔎 | CP-B-03-09 | 停下交由 Claude 對賬 | | R-AU-080 R-IE-091 R-OF-005 |
-|  | 15 | 跑 S6 進時鐘一日跨 UTC 日界，跑 S1 冷啟動 app 重觸備份 | app 重啟落首頁 | — |
+|  | 15 | 跑 S6 等效跨 UTC 日界，含冷啟動重觸備份 | 配額歸零重計、待傳資料上雲 | — |
 | 🔎 | CP-B-03-10 | 停下交由 Claude 對賬 | | R-AU-081 |
-|  | 16 | 跑 S7 還原系統時鐘回當下 | 時鐘回當下 | — |
+|  | 16 | 確認系統時鐘與網路對時未被更動 | 本場無時鐘還原需求 | — |
 
 ---
 
@@ -2302,7 +2319,7 @@ sqlite3 "$DB" "SELECT id FROM categories WHERE type = 'expense' AND _status != '
 ### INJ-600
 
 - 把 UID、ACCT、CAT 換成 SQL-IDS 抓到的三值
-- amount 存分為單位，340000 至 349900 對應 3400 至 3499 元
+- amount 以萬倍縮放儲存，34000000 至 34990000 對應 3400 至 3499 元
 - date 用相對時刻，以當下往前遞減毫秒鋪 600 筆
 
 ```bash
@@ -2316,7 +2333,7 @@ INSERT INTO transactions
 SELECT
   'b4inj-' || printf('%03d', n),
   'UID', 'ACCT', 'CAT',
-  340000 + ((n-1) % 100) * 100,
+  34000000 + ((n-1) % 100) * 10000,
   (strftime('%s','now') * 1000) - n * 1000,
   'b4 batch inject',
   strftime('%s','now') * 1000,
@@ -2334,7 +2351,7 @@ FROM seq;
 ```bash
 sqlite3 "$DB" "UPDATE settings SET last_synced_at = NULL, updated_on = strftime('%s','now') * 1000 WHERE user_id = 'UID';"
 
-MANIFEST="$CONTAINER/Documents/RCTAsyncLocalStorage_V1/manifest.json"
+MANIFEST="$CONTAINER/Library/Application Support/com.almightyken0425.susugigiapp/RCTAsyncLocalStorage_V1/manifest.json"
 python3 - "$MANIFEST" <<'PY'
 import json, sys
 p = sys.argv[1]
@@ -2379,7 +2396,7 @@ WHERE user_id = 'UID';
 
 - 軌別：B 軌，simulator 加測試帳號，需雲端與本機對賬
 - 預估分鐘：40
-- 前置狀態：承 B-04，授權快取 `premium_status_cache_<uid>` 為 `LEVEL_1`，無 `entitlements/<uid>` 文件，帳戶 4 筆類別 8 筆超 `LEVEL_0` 上限
+- 前置狀態：承 B-04，授權快取 `premium_status_cache_<uid>` 為 `LEVEL_1`，無 `entitlements/<uid>` 文件，帳戶 5 筆類別 8 筆超 `LEVEL_0` 上限；帳戶數含 B-04 步 15 加建的 B4-02
 - 帳號需求：帳號一為主帳號，全程使用
 - 管道需求：Firestore console 對賬 `users/<uid>`、sqlite 讀 `watermelon.db`、AsyncStorage 注入與清空 `premium_status_cache_<uid>` 與 `sync_last_at`
 - 金額區間：`3500` 至 `3599`，離線新增交易用
@@ -2486,8 +2503,9 @@ xcrun simctl launch booted com.almightyken0425.susugigiapp
 
 - 軌別：B，simulator 加測試帳號，需雲端對賬與帳號切換
 - 預估分鐘：55
-- 前置狀態：承 B-05，帳號一登入，資料完整但超上限，場首刪 B4-01 帳戶類別使類別恢復 3/7
+- 前置狀態：承 B-05，帳號一登入，資料完整但超上限，場首刪 B4-01 帳戶類別與 B4-02 帳戶使帳戶類別恢復 3/7
 - 帳號需求：帳號一為主帳號、帳號二只在本場用
+- 帳號二為真付費帳號時的前置：登入前刪其 `entitlements/{uid2}` 文件並清裝置 `premium_status_cache_{uid2}` 鍵；快取殘留會讓等級判斷在配額閘門前放行，步 19 與 CP-B-06-08 的 LEVEL_0 前提即不成立；刪除前先快照文件內容供事後重注
 - 帳號需求：全程需 Firestore console 或 Admin 讀寫管道，注入刪除 entitlement、注入偏好異值、對賬六集合備份
 - 帳號需求：需 AsyncStorage 注入清空管道，改 `sync_last_at` 繞冷卻、注入 premium 離線快取
 - 帳號需求：需 CDP console 抓 log marker 對賬冷卻與備份
@@ -2502,7 +2520,7 @@ xcrun simctl launch booted com.almightyken0425.susugigiapp
 | 過 | 步 | 步驟 | 預期 | cover |
 |---|---|---|---|---|
 |  | 1 | Claude 讀基準：sqlite 各表 `uid1` 記錄數、`settings` 中 `uid1` 的 `last_synced_at`、Firestore `users/{uid1}` 六集合文件數、`entitlements` 兩帳號文件，存為基準快照 | 基準快照建立 | — |
-|  | 2 | 首頁進設定，點 `管理帳戶` 刪 `B4-01` 帳戶，點 `管理類別` 刪 `B4-01` 類別 | 類別恢復 3/7 | — |
+|  | 2 | 首頁進設定，點 `管理帳戶` 刪 `B4-01` 與 `B4-02` 帳戶，點 `管理類別` 刪 `B4-01` 類別 | 帳戶類別恢復 3/7 | — |
 |  | 3 | 佈置：Claude 以 Admin 注入 `entitlements/{uid1}` tier LEVEL_2 status active，見檢查點檔 CP-B-06-08 注入語句 | 帳號一雲端授權升 LEVEL_2 | — |
 |  | 4 | 佈置：simctl 前景重啟 app 刷新授權，見檢查點檔 CP-B-06-08 指令 | app 回首頁帳號一顯 premium | — |
 |  | 5 | 帳號一建 marker：首頁左下支出鍵，金額 3601，選任一帳戶類別，點 `完成`；再建金額 3602 | 帳號一兩筆 marker 入帳 | — |
@@ -2835,7 +2853,7 @@ R-AU-026 可測性
 ```bash
 BUNDLE=com.almightyken0425.susugigiapp
 APP=$(xcrun simctl get_app_container booted "$BUNDLE" data)
-MAN="$APP/RCTAsyncLocalStorage_V1/manifest.json"
+MAN="$APP/Library/Application Support/com.almightyken0425.susugigiapp/RCTAsyncLocalStorage_V1/manifest.json"
 # 實機 dev build 改用 Xcode Devices 視窗下載容器後編輯同檔的 manifest.json
 ```
 
