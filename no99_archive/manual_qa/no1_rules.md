@@ -1093,7 +1093,7 @@
 | R-AU-046 | 恢復購買查到購買且當前帳號取得授權顯示恢復成功 | `no26_paywall_screen` | UI+實機 | T1 | P0 | C | — |
 | R-AU-047 | 查無可還原購買顯示無可還原購買提示 | `no26_paywall_screen` | UI+實機 | T1 | P1 | C | — |
 | R-AU-048 | 查到購買但當前帳號未取得授權顯示無可還原提示 | `no26_paywall_screen` | UI+實機 | T3 | P0 | C | 第二帳號還原已綁他帳號購買 |
-| R-AU-049 | 恢復購買操作失敗顯示恢復失敗對話框 | `no26_paywall_screen` | UI+實機 | T3 | P2 | C | 斷網點按恢復購買 |
+| R-AU-049 | 恢復購買操作失敗顯示恢復失敗對話框 | `no26_paywall_screen` | UI+實機 | T4 | P2 | 無 | 還原查詢與等級判定全本地，離線不失敗；三路實測皆彈中性或成功提示，失敗前提不可達 |
 | R-AU-050 | 點按關閉按鈕或暫不升級關閉付費牆 Modal | `no26_paywall_screen` | UI | T1 | P2 | B | — |
 | R-AU-051 | 付費牆使用條款與隱私政策連結開啟外部頁面 | `no26_paywall_screen` | UI | T1 | P2 | B | — |
 | R-AU-052 | 登入後訂閱後端 Entitlement 即時更新本機訂閱等級 | `no6_premium_logic` | UI+FB | T3 | P0 | B | Firestore 注入 Entitlement 文件 |

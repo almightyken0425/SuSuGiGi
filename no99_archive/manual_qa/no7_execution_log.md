@@ -23,7 +23,11 @@
 | B 軌 | B-05 | — | 擱置 |
 | B 軌 | B-90 | 2026-07-14 | 收案 |
 | B 軌 | B-06 | 2026-07-14 | 收案 |
-| C 軌 | C 系列 | — | 待跑 |
+| C 軌 | C-01 | 2026-07-15 | 收案 |
+| C 軌 | C-02 | 2026-07-16 | 收案 |
+| C 軌 | C-03 | 2026-07-16 | 收案 |
+| C 軌 | C-04 | 2026-07-16 | 收案 |
+| C 軌 | C-90 | 2026-07-16 | 收案 |
 
 ---
 
@@ -121,6 +125,63 @@
 
 ---
 
+## C 軌帳號分派
+
+- 主付費帳號 susugigi20260604，uid 為 YmmlzyjjJRVBWiBLfTLfryniLXl2，場次代號 C1
+- 免費帳號 susugigi20260529，uid 為 V3c97KLtQBZtq7GH7AJ7xP4KJWH2，場次代號 C2
+- sandbox Apple ID 為 almightyken002，全新建立、無購買歷史
+- 實機 KeniPhone iPhone 17 Pro，dev build 129；App Check 的 Firestore Enforce 於開跑前按下，debug token 已登記
+- 對賬管道：容器檔案走 devicectl 直拉直推、JS log 走 Metro 8081 CDP、後端走 Cloud Logging API 與 fs_admin
+
+## 場次 C-01 執行紀錄
+
+- 檢查點通過，出場等於入場成立，全場零寫入
+- 四項基線與出場皆符：雲端無授權文件、users 兩欄 null、快取 key 不存在、還原時窗零 verifyTransaction 執行
+- 執行偏差，對賬 log 權限現場補開，service account 加記錄檢視者角色
+
+## 場次 C-02 執行紀錄
+
+- 五檢查點全過，續訂沿用同一原始交易編號、updated_on 刷新
+- CP-C-02-01 執行偏差：Interrupted Purchases 的條款卡被當場同意，待處理窗僅數秒
+    - 窗內 device 無送驗 marker、後端三次執行皆在交易完成後，拍板以短窗佐證收案
+- 取消購買與飛航失敗兩步順序後補，以年費升級面板執行，皆過
+- 觀察，同筆交易送驗三次（兩次購買事件加一次 reconcile），後端冪等、結果一致
+- 觀察，Google 登入偶發 auth/no-token 一次，重試即過，收 no6 OBS-02
+
+## 場次 C-03 執行紀錄
+
+- 五檢查點全過：冷啟憑證刷新、前景 reconcile 補送、刪雲端文件後補寫 active、跨帳號還原後端拒絕、快取不跨帳號沿用
+- 跨帳號拒絕字串以 client 收到的後端錯誤原文佐證；functions log 不落該字串，佐證路徑登偏差
+- 前景 reconcile 對賬以前後快照差分隔離事件；updated_on 增量且 expires 不變，證明是 reconcile 重寫非續訂
+
+## 場次 C-04 執行紀錄
+
+- 通過：自然到期翻 expired、0529 離線冷啟不沿用付費、還原不誤改等級、0604 離線冷啟與前景維持 LEVEL_1、離線零補寫、無到期日視為無期限
+- R-AU-049 判前提不可達轉補遺未竟；離線還原三路實測皆中性或成功提示，no1 與 no2 已修
+- R-OF-009 實測不降級，登 no6 FINDING-13；R-DM-056 與 R-OF-008 以 premiumStatusCache 單元測試補證
+- 執行偏差，首輪離線段 Wi-Fi 在飛航下保持開啟，判定作廢重跑
+    - 真斷網以 Metro 連線消失加後端時窗零呼叫雙重驗證
+- 執行偏差，TestFlight 自動更新一度蓋掉 dev build，重裝 build 129 續跑，容器資料未受影響
+- 後端 storeNotification 接 Apple 伺服器通知，裝置離線時授權文件仍自動更新，屬架構事實非缺陷
+
+## 場次 C-90 執行紀錄
+
+- CP-C-90-1 佐證成立：0604 與 0529 兩列 users 的 iap_entitlements_json 與 iap_active_purchases_json 全 NULL
+- 本 session 三次購買多輪續訂後兩欄仍空，印證 impl 無寫入端，R-DM-046 維持補遺未竟
+
+---
+
+## C 軌殘留狀態
+
+- 0604 雲端授權文件為 expired；sandbox 訂閱鏈續訂額度用盡、自然到期
+- 0529 全程無授權，雲端無授權文件
+- txnIndex 歸戶紀錄保留，原始交易編號 2000001205666846 指向 0604
+- 實機留 dev build 129；TestFlight 自動更新需保持關閉，否則會蓋掉 dev build
+- 裝置 premium 快取殘留 0604 的過期值與一把 legacy 無後綴 key，皆無害
+- App Check 的 Firestore Enforce 保持開啟
+
+---
+
 ## B 軌殘留狀態
 
 - 本機資料庫僅帳號一，經 B-06 硬清除後重建，帳戶類別交易皆空、水位為 Null
@@ -138,3 +199,7 @@
 - 重走全量備份的開關是 sqlite settings 表的 last_synced_at 清 Null；裝置冷卻鍵只管五分鐘冷卻
 - zsh 環境下 UID 為唯讀變數，佈置腳本的變數命名須避開
 - CDP 附掛會重播 console 歷史且時間戳為抵達時刻，計數前先做一次安靜附掛取得重播基準
+- 實機容器檔案以 devicectl copy 直拉直推，需 dev-signed build；TestFlight 版容器不可拉
+- 實機 JS log 只進 DevTools 通道，Console.app 撈不到；對賬走 Metro 8081 CDP，離線段以前後快照差分隔離事件
+- iOS 飛航模式會記住 Wi-Fi 曾被手動重開，之後每次開飛航 Wi-Fi 保持開啟；真斷網須另關 Wi-Fi 並驗證
+- sandbox 月訂五分鐘一期，同一訂閱鏈續訂約十二次用盡即自然到期；離線測試窗僅一期，佈置須貼續訂落地時點

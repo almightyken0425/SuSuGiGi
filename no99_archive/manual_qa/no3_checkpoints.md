@@ -4227,6 +4227,10 @@ entitlement snapshot error, using offline cache
 - 判定
     - 離線回退 marker 出現，且當前 tier 為 LEVEL_1，付費者未誤降，符合即 R-DM-053 過
     - 無 reconcile marker，訂閱連線失敗未觸發補寫，符合即 R-OF-007 過
+- 執行註記 2026-07-16
+    - 實機離線無 CDP 通道，marker 不可得
+    - 以三路反證判定：設定 頁等級畫面、快取直讀 tier 1 未過期、後端時窗零 verifyTransaction 執行
+    - R-DM-053 與 R-OF-007 判過，佐證降級登偏差
 
 ---
 
@@ -4245,6 +4249,10 @@ entitlement snapshot error, using offline cache
     - 快取 `expirationDate` 早於等於當下，`checkIsPremium` 回 false
     - 離線回退解析 tier 為 LEVEL_0，`升級至 Premium` 列出現
     - 符合即 R-DM-056 過
+- 執行註記 2026-07-16
+    - 佈置乙丙被 Firestore 本地副本屏蔽：離線冷啟自本地副本取得 active 文件、回寫快取覆蓋注入值，越期路徑不可達
+    - R-DM-056 以 `premiumStatusCache` 單元測試補證通過
+    - R-OF-009 實測不降級，登 no6 FINDING-13
 
 ---
 
