@@ -16,7 +16,9 @@
 | FINDING-10 | fixed | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
 | FINDING-11 | fixed | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
 | FINDING-12 | open | — | 排程實例無變更存檔仍跳範圍對話框，強迫作答、放大誤觸 |
+| FINDING-13 | open | R-OF-009 | 離線越期降級被 Firestore 本地副本屏蔽，離線付費無限期維持 |
 | OBS-01 | observation | — | 貨幣格式畫面重設後按勾選，NULL 被畫面選值改寫回覆寫 |
+| OBS-02 | observation | — | 帳號切換期 console 噴 permission-denied 與偶發 auth/no-token，功能不受影響 |
 
 ---
 
@@ -501,6 +503,35 @@ A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C
 
 ---
 
+## FINDING-13 離線越期降級被 Firestore 本地副本屏蔽
+
+- 發現：2026-07-16，場次 C-04 步 11 至 13 / CP-C-04-3
+- 判定：**FAIL** `R-OF-009`（離線且快取到期日早於當下，訂閱等級降 LEVEL_0，spec `no6_premium_logic`）
+
+### 現象
+
+實機離線注入越期快取後冷啟，等級不降。`升級至 Premium` 列不出現，注入的快取值被 app 改寫回真實到期日。
+
+### 根因
+
+- RNFirebase Firestore 預設開啟磁碟持久層，entitlement 監聽離線時由本地副本回應、不報錯
+- `src/contexts/PremiumContext.tsx` 監聽成功分支直接採信文件 tier，並回寫 premium 快取（覆蓋注入值）
+- 帶時鐘檢查的 `resolveTierFromCache` 僅在監聽錯誤或查無文件時執行；本地副本持有 active 文件時永不觸發
+- client 對文件路徑不做到期檢查屬既有拍板（後端權威）；與本地副本疊加後，離線側完全沒有到期界線
+
+### 影響
+
+- 付費者離線後付費無限期維持，直到裝置重新連網由後端翻牌
+- 快取 `expirationDate` 的離線降級設計（R-OF-009 與 R-DM-056 的整合面）形同虛設
+- 降級邏輯本體健在：`premiumStatusCache` 單元測試 15 條全綠，僅整合層不可達
+
+### 修法方向
+
+- 監聽成功分支對來自本地副本的快照補到期檢查（讀 snapshot metadata 的 fromCache 分流），線上路徑維持後端權威不動
+- 或接受現狀、修訂 spec 承認離線以文件副本為準並廢 R-OF-009；屬產品層拍板題
+
+---
+
 ## OBS-01 貨幣格式重設後按勾選會改寫回覆寫值
 
 - 發現：2026-07-11，場次 A-06 步 37 / 步 50，同場踩中兩次
@@ -515,3 +546,21 @@ A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C
 - 顯示無差（NULL 與預設值 render 相同），僅 DB 語意漂移：`無覆寫` 變 `覆寫成預設值`
 - 操作者直覺是「重設後按完成確認」，兩位數字段規則（R-DM-037 的 Null 路徑）就沒真正生效
 - 改善方向：重設後 handleDone 應維持 NULL（追蹤 local state 是否來自重設），或重設即關閉畫面
+
+---
+
+## OBS-02 帳號切換期 console 錯誤噪音
+
+- 發現：2026-07-16，場次 C-04 前後的帳號切換（0604 與 0529 互換）
+- 分類：觀察，非規則違反；切換完成後功能全部正常
+
+### 現象
+
+- 0529 登入切換期 console 兩則錯誤：`[PrefUpload] Create user doc failed; retrying as update: permission-denied` 與 `[Firestore] getUserDocument error: permission-denied`
+- 0604 Google 登入偶發一次 `auth/no-token`，重試即成功
+
+### 判讀
+
+- Create 失敗轉 update 是程式既有後備路徑，錯誤列印屬噪音
+- getUserDocument 被拒疑似切換瞬間以新 auth 讀舊帳號文件的競態，登入完成後讀寫正常
+- 若日後收斂：切換期讀寫統一改用切換後 uid，後備路徑降噪為 warn
