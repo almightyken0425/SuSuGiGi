@@ -15,8 +15,8 @@
 | FINDING-09 | fixed | R-BS-015 | 前景恢復因 Auth token 刷新重跑整套開機流程，含排程補產與備份 |
 | FINDING-10 | fixed | — | 軟刪匯率仍參與換算，rate 查詢全線漏濾 deleted_on |
 | FINDING-11 | fixed | R-IE-067/R-BS-078 | 欄位守門整欄封殺，說明檔承諾的逐列略過不可達 |
-| FINDING-12 | open | — | 排程實例無變更存檔仍跳範圍對話框，強迫作答、放大誤觸 |
-| FINDING-13 | open | R-OF-009 | 離線越期降級被 Firestore 本地副本屏蔽，離線付費無限期維持 |
+| FINDING-12 | fixed | — | 排程實例無變更存檔仍跳範圍對話框，強迫作答、放大誤觸 |
+| FINDING-13 | fixed | R-OF-009 | 離線越期降級被 Firestore 本地副本屏蔽，離線付費無限期維持 |
 | OBS-01 | observation | — | 貨幣格式畫面重設後按勾選，NULL 被畫面選值改寫回覆寫 |
 | OBS-02 | observation | — | 帳號切換期 console 噴 permission-denied 與偶發 auth/no-token，功能不受影響 |
 
@@ -501,6 +501,15 @@ A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C
 - endOn 比對用 number 正規化值，FINDING-04 已把載入路徑統一為 number
 - 補 regression test：無變更存檔不跳對話框、不寫 DB；有變更照問
 
+### 處置
+
+- 2026-07-16 修復 merge main，topic finding12-nochange-scope-dialog，impl d58331a / spec 041b806
+- 抽共用 `scheduleInstanceDraft.isScheduleInstanceDraftUnchanged`：載入排程連結時存快照，存檔比對金額、關聯 id、備註、日期、頻率、間隔、endOn
+- 無變更直接關閉編輯器、不進範圍對話框、不寫 DB；快照缺席或任一欄位比不上一律當有變更（寧可多問）
+- 交易與轉帳兩 editor 同接同一判定；轉帳比對雙金額 from/to
+- spec no5、no6 補無變更例外，走 ELSE 分支保留原對話框行為
+- 單元測試 10 條鎖判定；tsc 零錯、jest 全綠、lint 零新警告、spec 術語審查零違規
+
 ---
 
 ## FINDING-13 離線越期降級被 Firestore 本地副本屏蔽
@@ -529,6 +538,16 @@ A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C
 
 - 監聽成功分支對來自本地副本的快照補到期檢查（讀 snapshot metadata 的 fromCache 分流），線上路徑維持後端權威不動
 - 或接受現狀、修訂 spec 承認離線以文件副本為準並廢 R-OF-009；屬產品層拍板題
+
+### 處置
+
+- 2026-07-16 拍板甲案（補到期閘），修復 merge main，topic finding13-offline-expiry-gate，impl e24eca7 / spec dee1df2
+- 抽純函式 `entitlementTier.resolveEntitlementTier(entitlement, fromCache, now)`：線上快照（fromCache=false）採信後端 tier（後端權威、含 Apple 寬限期）；離線本地副本（fromCache=true）補 `checkIsPremium` 到期閘，越期降 LEVEL_0
+- 監聽改 `includeMetadataChanges: true` 才分得出 fromCache；快取仍存後端原值、不把降級後 tier 污染回去
+- 寬限期同尺：離線到期判定與 premium 快取用同一個 `checkIsPremium`（拍板接受寬限期內同尺降級）
+- spec no6_premium_logic 補 resolveEntitlementTier 段與到期閘理由
+- 單元測試 7 條鎖線上採信與離線越期降級；tsc 零錯、jest 665 綠、我方檔零 lint error
+- 實機驗證成立：0604 離線登入時本地副本 active(tier1) 越期，log `entitlement tier=1 status=active fromCache=true` → `resolve source=cache-doc tier=LEVEL_0`，升級列出現，降級路徑真實觸發
 
 ---
 
