@@ -203,7 +203,7 @@
 | R-BS-076 | 全空白名稱視為未填由完成按鈕必填閘擋下 | `input_field_policy` | UI | T1 | P1 | A | — |
 | R-BS-077 | 允許同名帳戶與分類並存無警告完成按鈕不鎖 | `input_field_policy` | UI | T1 | P2 | A | — |
 | R-BS-078 | 金額超出可儲存範圍於存檔時驗證失敗 | `input_field_policy` | DB | T3 | P2 | A | 經匯入路徑注入超界金額；注入檔金額欄其餘值須全合法，否則欄位守門先擋 |
-| R-BS-079 | 名稱超長於存檔時驗證失敗涵蓋匯入路徑 | `input_field_policy` | DB | T4 | P2 | 無 | 匯入路徑 slice 截斷非驗證失敗；spec-impl 落差 |
+| R-BS-079 | 匯入路徑名稱超長截斷至上限後存入，不作驗證失敗 | `input_field_policy` | DB | T4 | P2 | 無 | 2026-07-17 spec 修訂改述為截斷語意；截斷落庫驗證歸自動化債 |
 | R-BS-080 | 交易金額為 0 時金額門檻未達完成按鈕 disabled | `input_field_policy` | UI | T1 | P1 | A | — |
 | R-BS-081 | 轉帳轉出轉入金額未大於 0 時完成按鈕 disabled | `input_field_policy` | UI | T1 | P1 | A | — |
 | R-BS-082 | 轉帳轉出與轉入帳戶相同時完成按鈕 disabled | `input_field_policy` | UI | T1 | P1 | A | — |
