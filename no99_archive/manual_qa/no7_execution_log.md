@@ -188,6 +188,7 @@
 
 - CP-C-90-1 佐證成立：0604 與 0529 兩列 users 的 iap_entitlements_json 與 iap_active_purchases_json 全 NULL
 - 本 session 三次購買多輪續訂後兩欄仍空，印證 impl 無寫入端，R-DM-046 維持補遺未竟
+- 2026-07-17 補判：spec 修訂把二欄改述為棄用殘欄恆 Null，本場對賬結果依修訂後規則補判為過，補遺未竟撤銷
 
 ---
 

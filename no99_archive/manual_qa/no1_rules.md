@@ -84,8 +84,8 @@
 | R-DM-043 | 排程範本備註寫入時去除前後空白 | `no1_data_models` | DB | T2 | P2 | A | — |
 | R-DM-044 | User 表 `id` 對應 Auth UID | `no1_data_models` | DB | T2 | P2 | B | — |
 | R-DM-045 | 登入時系統更新 `lastLoginAt` | `no1_data_models` | DB | T2 | P2 | B | — |
-| R-DM-046 | IAP entitlements 與有效訂閱以 JSON 存 User 表 | `no1_data_models` | DB | T4 | P2 | 無 | impl 無 runtime 路徑寫此二欄，DB 恆 null；spec-impl 落差 |
-| R-DM-047 | `currentTier` 從 IAP 有效訂閱列表解析 | `no1_data_models` | LOG | T2 | P1 | C | — |
+| R-DM-046 | User 表 IAP 二欄為棄用殘欄，任何路徑不寫入、恆為 Null | `no1_data_models` | DB | T2 | P2 | C | 2026-07-17 spec 修訂改述；C-90 容器下載 sqlite 對賬 |
+| R-DM-047 | `currentTier` 由伺服器端授權記錄解析，離線依 PremiumCache 推定 | `no1_data_models` | LOG | T2 | P1 | C | 2026-07-17 spec 修訂同步改述；C-02 已依授權記錄判定 |
 | R-DM-048 | runtime tier 值域僅 LEVEL_0 至 LEVEL_2 | `no1_data_models` | LOG | T4 | P2 | 無 | 負向值域斷言無法窮舉驗證 |
 | R-DM-049 | `isPremiumLoaded` 就緒前不以佔位 LEVEL_0 判定授權 | `no1_data_models` | LOG | T2 | P1 | A | — |
 | R-DM-050 | 線上更新或離線回退完成後 `isPremiumLoaded` 為 true | `no1_data_models` | LOG | T2 | P2 | A | — |
