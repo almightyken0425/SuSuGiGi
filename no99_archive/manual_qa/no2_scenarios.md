@@ -2109,7 +2109,7 @@ S0 取得 uid 與 manifest 路徑
 ```bash
 BUNDLE=com.almightyken0425.susugigiapp
 DATA=$(xcrun simctl get_app_container booted $BUNDLE data)
-ls "$DATA/Documents" | grep -i asynclocalstorage
+ls "$DATA/Library/Application Support/com.almightyken0425.susugigiapp" | grep -i asynclocalstorage
 MANIFEST="$DATA/Library/Application Support/com.almightyken0425.susugigiapp/RCTAsyncLocalStorage_V1/manifest.json"
 echo "$MANIFEST"
 ```
