@@ -2925,8 +2925,7 @@ MAN="$APP/Library/Application Support/com.almightyken0425.susugigiapp/RCTAsyncLo
 - 補遺標的僅 R-DM-046
 - 動工前先對 impl 核實可測性
 - 核實結論見末節 impl 核實
-- 下表為診斷序列非覆蓋序列
-- cover 欄全空，R-DM-046 落 補遺未竟
+- 2026-07-17 spec 修訂改述：二欄為棄用殘欄、恆為 Null；本場 sqlite 對賬即為覆蓋，R-DM-046 補判為過
 - C1 已持 active 訂閱，無需新購即可觸發授權路徑
 - 破壞性容器下載排場尾
 
@@ -2937,7 +2936,7 @@ MAN="$APP/Library/Application Support/com.almightyken0425.susugigiapp/RCTAsyncLo
 |  | 3 | app 切至背景等三秒，再切回前景 | 前景恢復觸發訂閱狀態刷新，`升級至 Premium` 列仍不出現 | — |
 |  | 4 | 上滑完全移除 app | app 退出，記憶體不再回寫 | — |
 |  | 5 | Xcode Devices 視窗下載 C1 裝置的 app 容器 | 容器下載完成，內含 `watermelon.db` | — |
-| 🔎 | CP-C-90-1 | 停下交由 Claude 對賬 users 表 IAP 欄位 | — | — |
+| 🔎 | CP-C-90-1 | 停下交由 Claude 對賬 users 表 IAP 欄位 | — | R-DM-046 |
 
 ---
 
@@ -2959,13 +2958,5 @@ MAN="$APP/Library/Application Support/com.almightyken0425.susugigiapp/RCTAsyncLo
 - 結論
     - 二欄恆為 null
     - sandbox 購買與登入皆不改二欄
-    - DB對賬無正向可觀測狀態
-    - R-DM-046 手動測不到，判 補遺未竟
-
----
-
-## 補遺未竟
-
-| ID | 原因 |
-| --- | --- |
-| R-DM-046 | impl 無 runtime 路徑寫 users 表 `iap_entitlements_json` 與 `iap_active_purchases_json`；model setter 定義但無呼叫端；IAP 授權僅寫 Firestore `entitlements/{uid}` 與 AsyncStorage premium 快取；沙盒購買與登入皆不改二欄；DB對賬恆得 null，無正向可觀測狀態 |
+    - 原判：規則寫「以 JSON 存 User 表」、無正向可觀測狀態、判補遺未竟
+    - 2026-07-17 spec 修訂：二欄改述為棄用殘欄、恆為 Null；恆 null 即成可觀測判準，本場對賬結果補判 R-DM-046 過

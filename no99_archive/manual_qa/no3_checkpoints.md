@@ -4273,14 +4273,13 @@ WHERE id = '<C1 uid>'
 ```
 
 - 規則原意
-    - R-DM-046 稱 IAP entitlements 與有效訂閱以 JSON 存 User 表
-    - 依規則預期二欄應為非空有效 JSON
+    - 原 R-DM-046 稱 IAP entitlements 與有效訂閱以 JSON 存 User 表，依此預期二欄應為非空有效 JSON
+    - 2026-07-17 spec 修訂改述：二欄為棄用殘欄，任何路徑不寫入、恆為 Null
 - 實測必得
     - `iap_entitlements_json` 為 null
     - `iap_active_purchases_json` 為 null
     - 因 impl 無寫入端，見場次檔 impl 核實
 - 判定
-    - 二欄恆 null，無正向可觀測狀態
-    - 本場無法確立 R-DM-046 通過
-    - 判 補遺未竟，計入 misfitIds
-    - 本檢查點僅作佐證，不覆蓋任何規則
+    - 依修訂後規則，二欄恆 null 即符合預期
+    - 二欄皆 null 即 R-DM-046 過；任一欄出現值即 FAIL
+    - 原判補遺未竟已撤，2026-07-16 對賬結果補判為過
