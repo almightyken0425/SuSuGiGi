@@ -215,7 +215,7 @@
 - `auditStamp.guard.test.ts` 加第二道鎖：掃全 src 的 record-builder `.create(rec =>` / `prepareCreate(rec =>` callback，必含 stamp helper；暫拔 stampUpdate 紅在 `recurringLogic.ts:85`、還原即綠，紅綠自驗過
 - simulator 驗證 2026-07-13，uid 過濾 vFJhIxCmOhVxHY9j32Qw7CkOt7n2：種病灶把活排程 `f08sch14005aaaaa` 戳歸零 → 重啟回填補戳 → 備份後該排程上雲且 `deletedOn` null；操作者新建 MONTHLY 排程 `0PkJxlxm6hvZkP7o` 建立即帶戳、與 `created_at` 差 2ms → 備份後上雲
 - jest 70 suites 綠、tsc 零錯
-- 驗證環境附註：該 uid 的 `Settings.lastSyncedAt` 曾被未來時鐘場次寫成未來值、超前約 43 天，期間增量備份靜默全跳過；驗證前已將該值修回正常、備份恢復。此 watermark 韌性缺口是否另登 finding 待拍板
+- 驗證環境附註：該 uid 的 `Settings.lastSyncedAt` 曾被未來時鐘場次寫成未來值、超前約 43 天，期間增量備份靜默全跳過；驗證前已將該值修回正常、備份恢復。此 watermark 韌性缺口 2026-07-17 拍板不另登 finding——判定為 QA 人工時鐘場次特例，app 不加防護、維持本附註為紀錄
 
 ---
 
