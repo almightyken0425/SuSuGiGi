@@ -19,7 +19,7 @@
 | FINDING-13 | fixed | R-OF-009 | 離線越期降級被 Firestore 本地副本屏蔽，離線付費無限期維持 |
 | OBS-01 | observation | — | 貨幣格式畫面重設後按勾選，NULL 被畫面選值改寫回覆寫 |
 | OBS-02 | observation | — | 帳號切換期 console 噴 permission-denied 與偶發 auth/no-token，功能不受影響 |
-| OBS-03 | observation | — | 本機空庫先建帳戶後雲端還原，佔位匯率 1.0 時點壓過歷史真匯率 |
+| OBS-03 | fixed | — | 本機空庫先建帳戶後雲端還原，佔位匯率 1.0 時點壓過歷史真匯率 |
 
 ---
 
@@ -602,3 +602,14 @@ A-19 清空資料庫把全部匯率軟刪。A-90 新建 JPY 交易 9003 後，`C
 - 佔位帶當下時點是既有設計（FINDING-02 拍板的時點語意），還原資料帶原時點也正確；壓過是兩者疊加的時序邊角
 - 自救路徑有效：手動改匯率寫新時點列即恢復
 - 若日後收斂：建帳戶種佔位前先等雲端還原完成，或佔位改用極舊時點使任何真匯率都能勝出
+
+### 處置
+
+- 2026-07-17 修復落在 branch feat/obs03-placeholder-rate-sentinel，impl + spec 兩層；採判讀列的第二條收斂路——佔位改用極舊時點
+- 觸發面更正：app 無雲端下載記帳資料的路（syncEngine 只上傳、登入不自動還原）；本案的「雲端還原」實為 QA 以 devicectl 把備份列推回實機 sqlite。產品內等價路徑今天就可達——先建外幣帳戶種下佔位，再補記過去日期的跨幣別轉帳或匯入歷史帳，連動匯率帶原記錄日、同樣被佔位壓過。判讀列「正常流程不觸發」據此下修：補記舊帳屬正常使用
+- `ensureRate` 佔位種入的 `date` 改具名常數 `PLACEHOLDER_RATE_DATE`，值為 epoch 後 1ms；刻意取正數，WatermelonDB `@date` setter 會把 0 吞成 null
+- 效果：任何真實匯率的時點皆壓過佔位，含後到、時點較舊的真實匯率；該幣別對僅佔位一列時照樣被選取，換算維持 1
+- guard test 三段鎖：佔位列 `date` 為 sentinel、OBS-03 情境重播（佔位先種、較舊真匯率後到、真匯率勝出）、sentinel 列仍可被查詢選取
+- spec no7 createInitialCurrencyRate 同步補時點語意：`date` 固定極早佔位時點、真實記錄必然壓過、僅佔位時照樣被選取
+- 既有裝置已種下的當下時點佔位列不回溯遷移；自救路徑（手動改匯率）不變
+- 驗證：tsc、eslint、jest 全綠，82 suites / 675 passed
