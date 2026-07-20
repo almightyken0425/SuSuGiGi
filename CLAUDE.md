@@ -38,6 +38,10 @@ SuSuGiGi 產品採四層 git 拆分。
     - Design git：尚無，後端無 UI
     - Spec git：`no4_product_specs/no3_cloud_functions/`
     - Impl git：`no6_product_development/no3_cloud_functions/`
+- `no4_support_site`
+    - Design git：無，靜態頁不設設計工件層
+    - Spec git：無，內容即真相
+    - Impl git：`no6_product_development/no4_support_site/`
 
 完整權威配對表由 `decision_framework_router` skill 的 `products_registry.md` 維護。
 
