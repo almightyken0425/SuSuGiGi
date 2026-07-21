@@ -1,7 +1,0 @@
-# Firestore 讀取管道的 service account key，絕不進 git
-qa_tools/serviceAccountKey.json
-qa_tools/*.key.json
-
-# qa_tools 的 node 依賴與鎖檔，本機安裝、不進 git
-qa_tools/node_modules/
-qa_tools/package-lock.json
