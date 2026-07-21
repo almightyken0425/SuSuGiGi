@@ -1,3 +1,0 @@
-transaction_datetime,category,account,amount,currency,note,result
-2026-01-01,Food,Cash,-150.00,TWD,valid currency,BLOCKED: currency column unmappable (a row below has a bad code)
-2026-01-02,Food,Cash,-50.00,XYZ,unknown ISO code is rejected,BAD currency: XYZ not ISO 4217 -> poisons currency column

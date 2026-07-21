@@ -1,3 +1,0 @@
-transfer_datetime,from_account,from_currency,from_amount,to_account,to_currency,to_amount,note,result
-2026-01-01,Cash,TWD,10000.00,Bank,TWD,10000.00,valid amount,BLOCKED: from_amount column unmappable (a row below has a bad amount)
-2026-01-02,Cash,TWD,"1,234.56",Bank,TWD,1234.56,thousands separator breaks from_amount,BAD from_amount: thousands separator -> poisons from_amount column

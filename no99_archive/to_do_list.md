@@ -1,1 +1,0 @@
-## app上架後開啟 firebase - app check - authenticatio - enforce

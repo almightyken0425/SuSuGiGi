@@ -1,3 +1,0 @@
-transaction_datetime,category,account,amount,currency,note,result
-2026-01-01,Food,Cash,-150.00,TWD,valid row,BLOCKED: account column unmappable (a row below is empty)
-2026-01-02,Food,,-50.00,TWD,empty account,BAD account: empty required field -> poisons account column
