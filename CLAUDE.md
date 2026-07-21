@@ -4,7 +4,7 @@
 
 ## git 拆分結構
 
-SuSuGiGi 產品拆為六類 git。頂層一類，其餘五類依 module 拆分。
+SuSuGiGi 產品拆為頂層 Product git 與依 module 拆分的各層 git。
 
 - **頂層 Product git：**
     - 即本 repo
