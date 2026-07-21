@@ -77,7 +77,7 @@ SuSuGiGi 記帳 app（module `no2_accounting_app`）分軸 review 的 workflow p
 ```
 用一個 workflow（多 agent 編排）審 SuSuGiGi 記帳 app 的 Spec 層品質。純 review：只讀、不改檔、輸出報告。
 
-範圍：product/SuSuGiGi/no4_product_specs/no2_accounting_app/，約 47 份 md：
+範圍：product/SuSuGiGi/no3_product_specs/no2_accounting_app/，約 47 份 md：
 - no1_data_models/no1_data_models.md，Model 層
 - no2_screens/，26 份，View 層
 - no3_logics/，20 份，Logic 層
@@ -103,7 +103,7 @@ fan-out：每份 spec 一個 agent，各查兩件事：
 ```
 用一個 workflow（多 agent 編排）做 SuSuGiGi 記帳 app 的 impl 程式 review，找 runtime correctness bug。純 review：只讀、不改檔、輸出報告。不查架構與分層與共用抽取（另一軸），也不查安全繞過（另一軸）。
 
-範圍：product/SuSuGiGi/no6_product_development/no2_accounting_app/src/。
+範圍：product/SuSuGiGi/no5_product_development/no2_accounting_app/src/。
 
 fan-out 用 find→adversarial verify。第一段每個維度一個 finder agent：
 1. 並發與生命週期：race、stale closure、useEffect 依賴錯、未取消 async、listener 與 timer 洩漏
@@ -133,10 +133,10 @@ fan-out 用 find→adversarial verify。第一段每個維度一個 finder agent
 用一個 workflow（多 agent 編排）查 SuSuGiGi 記帳 app（module no2_accounting_app）impl UI 是否照 design 做。純 review：只讀、不改檔、輸出報告。
 
 配對，design 仲裁、impl 跟進：
-- design token: no3_product_designs/no2_accounting_app/project/10_foundations/，含 no1_atomic_tokens、no2_canvas_tokens、no3_typography、no4_layout_tokens、no5_platform_tokens、no6_icon_library、component_tokens/
+- design token: no4_product_designs/no2_accounting_app/project/10_foundations/，含 no1_atomic_tokens、no2_canvas_tokens、no3_typography、no4_layout_tokens、no5_platform_tokens、no6_icon_library、component_tokens/
 - design 元件: project/20_components/components.jsx
 - design 畫面: project/30_screens/<screen>/，26 個 no1-no26
-- impl: no6_product_development/no2_accounting_app/src/screens/**、src/components/**、src/constants/theme.ts
+- impl: no5_product_development/no2_accounting_app/src/screens/**、src/components/**、src/constants/theme.ts
 
 關鍵：三層編號不一致、impl 把 26 畫面收進 9 個 feature 夾，照畫面名稱配對。
 
@@ -164,7 +164,7 @@ fan-out：每個畫面一個 agent，同時讀 design 側與 impl 側比對：
 用一個 workflow（多 agent 編排）查 SuSuGiGi 記帳 app（module no2_accounting_app）impl 行為與資料層是否照 Spec。純 review：只讀、不改檔、輸出報告。
 
 配對，spec 仲裁、impl 跟進：
-- data model: spec no4_product_specs/no2_accounting_app/no1_data_models/ ↔ impl src/database/models/、src/database/schema.ts
+- data model: spec no3_product_specs/no2_accounting_app/no1_data_models/ ↔ impl src/database/models/、src/database/schema.ts
 - logic: spec no3_logics/，20 份 ↔ impl src/contexts/**、src/services/**、src/hooks/**
 
 20 份 logic 涵蓋 bootstrap、login/logout、post-auth、batch sync、currency conversion、transfer、transaction、recurring、undo、firestore quota、home report、category、account、merge、subscription gate、preference sync、transaction backup、full backup 等。
@@ -190,7 +190,7 @@ fan-out：每條 logic 一個 agent、data model 另一組 agent，各自比對 
 ```
 用一個 workflow（多 agent 編排）做 SuSuGiGi 記帳 app 的 impl 架構與分層 review，從零查。純 review：只讀、不改檔、輸出報告。查 code 組織與抽象，不查 runtime bug（另一軸）。
 
-範圍：product/SuSuGiGi/no6_product_development/no2_accounting_app/src/。對照分層意圖：View=screens、Logic=contexts/services/hooks、Model=database/models。
+範圍：product/SuSuGiGi/no5_product_development/no2_accounting_app/src/。對照分層意圖：View=screens、Logic=contexts/services/hooks、Model=database/models。
 
 fan-out 用 find→verify。第一段每個維度一個 finder agent：
 1. 分層歸位：domain 與 business logic 跑進 screen 或 component，如畫面內直接做資料庫讀寫、金額或業務計算寫在 UI 元件裡，該下放 hooks/services/logic 層
@@ -213,7 +213,7 @@ fan-out 用 find→verify。第一段每個維度一個 finder agent：
 ```
 用一個 workflow（多 agent 編排）做 SuSuGiGi 記帳 app 的 impl 安全性 review。純 review：只讀、不改檔、輸出報告。技術棧 RN + Firebase Auth/Firestore + Google Sign-In + IAP。
 
-範圍：product/SuSuGiGi/no6_product_development/no2_accounting_app/，含 src/、firestore.rules、ios/、android/、.gitignore、package.json。
+範圍：product/SuSuGiGi/no5_product_development/no2_accounting_app/，含 src/、firestore.rules、ios/、android/、.gitignore、package.json。
 
 重要前提避免假陽性：Firebase client 設定金鑰（GoogleService-Info.plist 與 google-services.json 內的 AIza key）與 WEB_CLIENT_ID 是 public-by-design、不是 secret，且已被 .gitignore 排除，不要報這些為漏洞。真正要查的是後端規則與信任邊界。
 

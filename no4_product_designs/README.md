@@ -1,4 +1,4 @@
-# no3_product_designs/
+# no4_product_designs/
 
 本目錄是 **SuSuGiGi 落地層設計** 的容器，承載各 module 的 Module Design git。
 

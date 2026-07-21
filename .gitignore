@@ -1,9 +1,11 @@
-# Module Design git、Module Spec git 與 Module Impl git 各自獨立版本控制
-# 頂層 Product git 不追蹤這些子目錄，靠 decision_framework_router skill 的
-# products_registry.md 維護跨層配對關係
-/no3_product_designs/no2_accounting_app/
-/no4_product_specs/
-/no6_product_development/
+# Module Design git、Module Spec git、Module Impl git、Product Quality git 與
+# Product Release git 各自獨立版本控制。頂層 Product git 不追蹤這些子目錄，
+# 靠 decision_framework_router skill 的 products_registry.md 維護跨層配對關係
+/no3_product_specs/
+/no4_product_designs/no2_accounting_app/
+/no5_product_development/
+/no6_product_quality/
+/no7_product_release/
 
 # 機密金鑰絕不入 git（Apple App Store Server API .p8 等）
 *.p8
