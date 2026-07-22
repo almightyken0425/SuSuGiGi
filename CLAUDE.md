@@ -97,15 +97,6 @@ SuSuGiGi 產品拆為頂層 Product git 與依 module 拆分的各層 git。
 
 ## Product Map 使用規範
 
-Product Map 位於 `no2_product_planning/no2_product_map/`，依視角拆分。
+Product Map 位於 `no2_product_planning/no2_product_map/`，依**平台視角**拆分：`app/`、`web_console/`、`firebase/`、`cloud_service/`、`external_service/`。module 的內容落在對應平台子目錄（如記帳 App 在 `app/`）；module 對應的引用路徑由 registry 的 `product_map_paths` 登記。
 
-- **Module 視角子目錄：**
-    - 目錄名與 `no3_product_specs/<module_id>/`、`no4_product_designs/<module_id>/`、`no5_product_development/<module_id>/`、`no6_product_quality/<module_id>/`、`no7_product_release/<module_id>/` 逐字一致
-    - 例如 `no2_accounting_app/`
-- **平台服務視角子目錄：**
-    - 跨 module 共用的平台能力
-    - 例如 `firebase/`、`cloud_service/`、`external_service/`
-
-讀檔策略
-- 找方向或確認模組歸屬先讀 `structure.md`
-- 依主題只讀對應子目錄，不一次 glob 整個 Product Map
+讀檔指引的單一真相在 `no2_product_map/CLAUDE.md`：入口先讀 `structure.md` 確認目標模組所屬平台、依主題只讀對應子目錄、禁止一次讀入整個 Product Map。
