@@ -138,13 +138,16 @@
         - 降低後續帳號合併與權限管理的系統複雜度
       - **風險:**
         - 會流失排斥登入流程的潛在新用戶
-    - 提供身份: 僅 Google 登入 ★ 選用
+    - 提供身份: Google 加 Apple 雙門 ★ 選用
       - **描述:**
-        - 只支援 Google Sign-In，排除 Apple 登入等其他身分
+        - 支援 Google Sign-In 與 Sign in with Apple，排除帳號密碼與其他身分
+        - 一門一帳號，兩門各自獨立帳號，不連結、不合併
+        - Apple 門僅 iOS，Android 平台為 Google 單門
       - **效益:**
         - 與 Firestore 的權限管理可無縫整合
+        - Apple 門免除審核員與使用者被 Google 安全挑戰擋在登入外的風險
       - **風險:**
-        - iOS 使用者可能更偏好 Apple ID，造成使用摩擦
+        - 同 Email 兩門各自成帳，使用者可能誤走另一門見空帳本
 
 ## 多幣別報表架構
 

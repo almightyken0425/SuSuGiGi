@@ -1,32 +1,34 @@
 ## Auth / AppClient — 身份驗證用戶端
 
 - **功能：**
-    - Google 帳號登入與登出。
+    - Google 與 Apple 帳號登入與登出。
 - **目的：**
     - 提供使用者統一身份，作為雲端備份與付費授權的基礎。
 - **做法：**
-    - Firebase Authentication 管理 Google 登入狀態；首次登入初始化使用者設定，帳戶與類別由使用者自行新增。
+    - Firebase Authentication 管理登入狀態；首次登入初始化使用者設定，帳戶與類別由使用者自行新增。
+    - 一門一帳號；Google 與 Apple 各自獨立帳號，不連結、不合併；資料搬移走 CSV 匯出匯入。
+    - Apple 門僅 iOS 提供；Android 平台為 Google 單門。
 - **排除：**
-    - Apple ID 登入，因資料衝突問題暫不實作；其他第三方社交登入。
+    - 帳號密碼登入；其他第三方社交登入；帳號連結、帳號合併與客服搬家。
 - **利弊：**
-    - Firebase Authentication 支援 Google 帳號登入，免費使用。
-    - Apple ID 登入時使用者可選擇不分享 Email，造成帳號合併困難，故先排除。
+    - Firebase Authentication 支援 Google 與 Apple 登入，免費使用。
+    - 一門一帳號免除跨門合併複雜度；走錯門見空帳本，登出換門即回。
     - 保留主動登出按鈕，提供切換帳號的彈性；需處理本地資料與不同帳號間的隔離問題，但明確的登出選項能提供安全感。
 
 ---
 
-### LoginFlow — Google 登入流程
+### LoginFlow — 雙門登入流程
 
 - **功能：**
-    - Google Sign-In 介面。
+    - Google Sign-In 介面與 Sign in with Apple 原生面板。
     - Firebase Authentication 登入與登出。
 - **目的：**
-    - 讓使用者透過已有的 Google 帳號快速完成登入，無需額外註冊流程。
+    - 讓使用者透過已有的 Google 或 Apple 帳號快速完成登入，無需額外註冊流程。
 - **做法：**
-    - Firebase 登入套件整合
-    - 登入後取得身份憑證，供後續雲端資料存取驗證使用。
+    - Firebase 登入套件整合；兩門各自取得身份憑證，統一向 Firebase Auth 驗證。
+    - 登入後身份憑證供後續雲端資料存取驗證使用。
 - **排除：**
-    - 電子郵件加密碼登入；Apple ID 登入。
+    - 電子郵件加密碼登入。
 
 ---
 

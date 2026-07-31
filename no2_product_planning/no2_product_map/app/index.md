@@ -2,7 +2,7 @@
 
 | Module                | 文件                                   | 說明                                                                                 |
 | --------------------- | -------------------------------------- | ------------------------------------------------------------------------------------ |
-| Auth / AppClient      | [auth.md](auth.md)                     | Google 登入、首次初始化                                                              |
+| Auth / AppClient      | [auth.md](auth.md)                     | Google 與 Apple 登入、首次初始化                                                     |
 | RecordingCore         | [recording_core.md](recording_core.md) | 交易、轉帳、定期、合併、Undo                                                         |
 | HomeDashboard         | [home_dashboard.md](home_dashboard.md) | 期間分頁、篩選、圖表、交易清單、搜尋                                                 |
 | AppSetting            | [app_setting.md](app_setting.md)       | 資料管理含 CategoryCRUD、AccountCRUD、匯入匯出，偏好設定含外觀、貨幣、語言時區，方案 |

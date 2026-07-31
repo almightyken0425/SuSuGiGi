@@ -129,7 +129,7 @@ ExcludedModule
 
 | Module                | 平台     | 說明                                           | 詳細                       |
 | --------------------- | -------- | ---------------------------------------------- | -------------------------- |
-| Auth / AppClient      | App      | Google 登入與首次登入初始化                    | [app/auth.md](app/auth.md)           |
+| Auth / AppClient      | App      | Google 與 Apple 登入、首次登入初始化           | [app/auth.md](app/auth.md)           |
 | RecordingCore         | App      | 交易、轉帳、定期交易、合併、Undo | [app/recording_core.md](app/recording_core.md)           |
 | HomeDashboard         | App      | 期間檢視、篩選、圓餅圖、交易清單、搜尋         | [app/home_dashboard.md](app/home_dashboard.md) |
 | AppSetting            | App      | 資料管理含 CategoryCRUD、AccountCRUD、匯入匯出，偏好設定含外觀、貨幣、語言時區，方案 | [app/app_setting.md](app/app_setting.md) |
