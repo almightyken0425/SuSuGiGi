@@ -9,6 +9,11 @@
 
 # 機密金鑰絕不入 git（Apple App Store Server API .p8 等）
 *.p8
+# 歸檔 QA 工具的 Firestore service account key 與 node 依賴，只留腳本
+/no99_archive/manual_qa/no2_qa_tools/serviceAccountKey.json
+/no99_archive/manual_qa/no2_qa_tools/*.key.json
+/no99_archive/manual_qa/no2_qa_tools/node_modules/
+/no99_archive/manual_qa/no2_qa_tools/package-lock.json
 # Xcode Cloud secret 暫存（GoogleService-Info.plist 的 base64，貼進 ASC 後即刪）
 *gsi-base64-DELETE-AFTER-USE*
 
