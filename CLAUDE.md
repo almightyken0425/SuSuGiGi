@@ -25,7 +25,7 @@ SuSuGiGi 產品拆為頂層 Product git 與依 module 拆分的各層 git。
     - 由頂層 `.gitignore` 排除
 - **Module Quality git：**
     - 位於 `no6_product_quality/<module_id>/`
-    - 承載該 module 的 QA 計劃與執行紀錄
+    - 承載該 module 的能力側寫與回歸測試計劃，執行紀錄不入層 git
     - 選用層，module 有 QA 作業才建立
     - 由頂層 `.gitignore` 排除
 - **Module Release git：**
