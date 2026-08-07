@@ -8,73 +8,50 @@
 
 ---
 
-## 檢驗點清單的四項後續
+## Mac 側環境補齊與 marker 通道驗證
 
-2026-08-03 檢驗點清單重建完成後分派，四項彼此獨立。清單位於 Module Quality git 的 `no1_test_plan/`，入口是 `no0_index.md`。
+2026-08-06 於 Windows 側完成回歸計劃的環境解封與假訊號止血後分派。Windows 能做的都做完了，剩下五項只能在 Mac 上完成。
 
-背景：清單第一版 1315 條由單向自 Spec 展開，經 25 個代理獨立審查抓出 208 項問題。第二版按單一功能域軸重建為 1483 條分十五冊，同時吸收全部審查發現。下列四項是重建時判定超出品質層範圍、或需要另行拍板的。
+背景：計劃的手段條件原本假設單一環境，實際上兩台機可跑的手段不同。能力側寫已改為手段表加就緒探測表兩張，就緒欄逐台機各一。Mac 欄目前全是待實測，填回前不得當成成立。
 
-### 一、定 T2 與 T3 的界線，再編回歸場次
+### 一、裝依賴
 
-**爭點**——可測性分級的判準沒寫死。「非空前置是否即算 T3」各冊解讀不同，同樣要先建一筆定期交易，有的冊給 T2、有的給 T3。
+- app impl 主 checkout 跑 `npm ci --legacy-peer-deps`
+- 後端 impl 的 `functions/` 跑 `npm ci`
 
-`no0_index.md` 的「級」段目前只寫「判定基準是佈置成本、不是行為複雜度」，缺一條可機械套用的界線。候選判準是「是否需要超出單一操作的佈置」或「是否需要調系統時鐘、切帳號、注入 sqlite」。
+app 側必須帶 `--legacy-peer-deps`。裸 `npm ci` 會被 `@types/react-native` 的 peer 衝突擋下，lockfile 本身是完整的。
 
-界線定案後寫進索引，重掃十五冊改判不符者，再依 `前置` 欄分群編場次。場次分三層：commit 層跑 jest、merge 層跑 P0 加本次影響面、發版層全量。影響面反查用 `no4_impl_anchor_index.md`。
+### 二、確認 firebase CLI 登入
 
-自動化欄非 `—` 的 456 條已有 jest 把關，不進手動場次。
+跑 `firebase login:list`，要有有效帳號。這是 `firestore-read` 十一點與 `cloud-logging` 四點的前提。
 
-**動哪些 git**——只動 Quality git。
+Windows 側不裝 firebase CLI 屬既定決議，不是待補項。
 
-### 二、仲裁 39 條 Spec 與 Impl 矛盾
+### 三、驗 QA 標記擷取通道
 
-清單登記在 `no3_spec_impl_conflicts.md`，每條都標了 Spec 載明什麼、impl 實際做什麼、附查證證據，狀態全為待仲裁。
+**這項是十個 qa-markers 檢查點能否免人工的唯一前提，優先於其餘各項。**
 
-逐條決定方向：改 Spec 對齊 impl 現況，或改 impl 實現 Spec。
+跑一次 `/sim-review`，冷啟 app 後對該次 Metro log 檔 grep `QA BOOT`。抓得到即通道成立。
 
-較大的幾條：
+判準與後果：
 
-- 12 小時制——`date_picker_policy` 寫依使用者偏好切換，impl 完全沒實作、連偏好欄位都沒有
-- 搜尋關鍵字高亮——`no4_search_screen` 線框圖標了高亮，impl 是單一純文字節點
-- 匯入精靈三個功能——必填標記未渲染、無候選欄位時無提示、執行期無載入指示
-- 備註不去空白——Spec 三處明載寫入時去空白，impl 兩條寫入路徑皆無 trim
-- 購買成功不刷新授權——`no26_paywall_screen` 列了呼叫刷新，impl 只關頁
+- 抓得到——腳本那十列照現行寫法由 Claude 自動判讀，單輪省二十到三十分鐘
+- 抓不到——那十列退回使用者貼回 console 輸出，能力側寫的 `qa-markers` 執行者改回使用者
 
-**動哪些 git**——跨層。改 Spec 動 Spec git、改 impl 動 Impl git，兩層 branch 同名、commit 同 subject 與 body。仲裁結果會反過來影響檢驗點斷言，改完要回頭同步 Quality git。
+抓不到的常見原因是跑的是 Release build。`__DEV__` 為 false 時標記整批不輸出。
 
-### 三、補五支 jest 讓檢驗點退出手動
+通道細節與指令見 sim-review skill 的回歸驗證模式段。
 
-五處覆蓋不足，補上後對應檢驗點可退出手動場次：
+### 四、回填就緒探測表
 
-1. `sortOrder.nextSortOrder` 無專屬測試。該函式是帳戶與類別排序落點的單一真相，全 repo 無測試檔
-2. 匯入金額欄拒逗號與貨幣符號無案例。`$` 與 `NT$` 等符號無測試，逗號只由既有的略過測試間接驗到
-3. `quotaService.incrementWrites` 只有單筆斷言。1 筆時文件總數、批次數、呼叫次數三種語意無法區辨
-4. 搜尋結果 50 筆上限未斷言。現有案例只驗排序，未驗筆數上限，且轉帳側未跑
-5. 佔位匯率的值與時點共用同一案例。兩條檢驗點各取一半，宜拆兩個案例
+前三項各自實測後，把結果填進 Module Quality git 能力側寫的就緒探測表 Mac 欄，填時標日期。
 
-完成後回 Quality git 對應分冊填 `自動化` 欄，重跑六項機械自檢，並重新生成 `no6_test_to_checkpoint.md` 與 `no2_spec_gaps.md`。
+### 五、實測 sqlite-local 能否解阻
 
-**動哪些 git**——主要 Impl git，回填動 Quality git。
+能力側寫目前把 `sqlite-local` 判為受阻，理由是資料庫檔在 Mac simulator 容器、無既定查詢流程。
 
-### 四、實測名稱寫入是否去空白
+在 Mac 上試 `xcrun simctl get_app_container` 定位容器後直查 WatermelonDB 的 db 檔。成立就自己寫一支查詢腳本、側寫改為可用。封存的舊 QA 工具一律不回收，需要什麼重寫。
 
-兩冊檢驗點斷言方向相反，需實測定案。
+解阻後 LD-02 與 LD-03 的落庫斷言可由 manual-ui 加 jest 夾擊改為直接查證。
 
-- 共用 UI 冊寫「名稱寫入不去除前後空白」，錨在 `accountLogic.ts::createAccount`
-- 帳戶類別冊寫「帳戶名稱寫入時去除前後空白」，錨在 `Account.ts` 與 `Category.ts`
-
-兩冊錨在不同層。service 層確實不 trim，但 model 用 WatermelonDB 的 `@text` decorator，該 decorator 可能 sanitize。查不到 `node_modules` 內的原始碼，無法從程式碼定案。
-
-**查法**——在模擬器建一個名稱前後帶空白的帳戶，查 sqlite 該列 `name` 欄位的實際值。備註欄同一問題，一併驗 `transactions` 表的 `note`。sqlite 查詢腳本在本歸檔層的 `manual_qa/no2_qa_tools/dbq.sh`。
-
-定案後刪掉錯的那側，重跑六項自檢並重生成受影響的衍生檔。
-
-**動哪些 git**——只動 Quality git。
-
----
-
-## 分派順序
-
-第一項是主線，其餘三項彼此獨立、先後不拘。
-
-界線不定死就編場次，會拿到級別不一致的分群，返工代價高於先定判準。
+**動哪些 git**——第一、三項只跑指令不改檔；第四、五項動 Module Quality git。
